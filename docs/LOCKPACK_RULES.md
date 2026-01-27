@@ -54,3 +54,7 @@ PASS فقط اگر همزمان:
 - CODEOWNERS: فایل .github/CODEOWNERS اضافه شد (اگر روی GitHub هستید، مالک‌ها را جایگزین کنید).
 - HashLock: فایل state/HASHLOCK.json اضافه شد تا فایل‌های کنترل (runner/docs/handoff/.github) با SHA256 قفل شوند.
 - Protected Prod: workflow (lockpack_required) اضافه شد تا در CI یک Status Check ثابت داشته باشیم (برای فعال‌سازی اجباری روی main/prod باید Branch Protection را بعداً تنظیم کنیم).
+## G20 - Signed CI Artifact + Provenance
+- Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
+- Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
+- PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.

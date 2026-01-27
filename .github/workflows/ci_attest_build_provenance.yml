@@ -1,0 +1,33 @@
+name: ci-attest-build-provenance
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+permissions: {}
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build artifact (git archive zip)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force dist | Out-Null
+          $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
+          if (Test-Path $out) { Remove-Item $out -Force }
+          git archive --format=zip --output $out HEAD
+          "ARTIFACT_PATH=$out" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: ${{ env.ARTIFACT_PATH }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dental-Mina_repo
+          path: ${{ env.ARTIFACT_PATH }}

@@ -3263,7 +3263,7 @@ jobs:
   $rules = Read-TextNoBom $rulesPath
   if ($rules -notmatch "##\s+G19") {
     $addon = @'
-## G20 — Signed CI Artifact + Provenance
+## G20 - Signed CI Artifact + Provenance
 - Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
 - Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
 - PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
@@ -3510,7 +3510,7 @@ jobs:
   $rules = Read-TextNoBom $rulesPath
   if ($rules -notmatch "##\s+G20") {
     $addon = @'
-## G20 — Signed CI Artifact + Provenance
+## G20 - Signed CI Artifact + Provenance
 - Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
 - Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
 - PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
@@ -3537,8 +3537,22 @@ jobs:
   $gh = Get-Command gh -ErrorAction SilentlyContinue
   if (-not $gh) { throw "MISSING_GH_CLI" }
 
+  $tok = $env:GH_TOKEN
+if (-not $tok) { $tok = $env:GITHUB_TOKEN }
+if ($tok) {
+  & gh api user *> $null
+  if ($LASTEXITCODE -ne 0) { throw "GH_TOKEN_INVALID_OR_NETWORK" }
+} else {
+  $tok = $env:GH_TOKEN
+if (-not $tok) { $tok = $env:GITHUB_TOKEN }
+if ($tok) {
+  & gh api user *> $null
+  if ($LASTEXITCODE -ne 0) { throw "GH_TOKEN_INVALID_OR_NETWORK" }
+} else {
   & gh auth status -h github.com *> $null
   if ($LASTEXITCODE -ne 0) { throw "GH_NOT_AUTHENTICATED" }
+}
+}
 
   # Commit + push changes to main (so workflow exists in remote)
   $dirty = (& git status --porcelain)

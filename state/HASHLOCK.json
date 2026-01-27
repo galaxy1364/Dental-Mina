@@ -1,10 +1,10 @@
 {
     "version":  1,
-    "ts_utc":  "2026-01-26T21:58:39.0574045Z",
+    "ts_utc":  "2026-01-27T07:32:52.7502368Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "6374cd2ea6f6e378107f1aee155d63c33456719379d4ff446e052aea86b34839"
+                          "sha256":  "1f268c090c3960aaf24f48649eae308e243c593ea71bf533379911030bfb730d"
                       },
                       {
                           "path":  "docs/resume.md",
@@ -12,7 +12,7 @@
                       },
                       {
                           "path":  "docs/lockpack_rules.md",
-                          "sha256":  "907b87478f878a9af877009bf7c220fa68f8124fa18c5d5da5e7769223879d3a"
+                          "sha256":  "a38c285c2b10b95c76707d09a9e42401df2da618013ee46ed99cadc7be34a644"
                       },
                       {
                           "path":  "handoff/handoff_pack.txt",
@@ -25,6 +25,10 @@
                       {
                           "path":  ".github/workflows/lockpack_required.yml",
                           "sha256":  "07073a06471b2e938fb83502444b23f7872dfc25cf3f7f81617e6e20f0e71f91"
+                      },
+                      {
+                          "path":  ".github/workflows/ci_attest_build_provenance.yml",
+                          "sha256":  "ed415f5def644b73d264f8634734173dc29bf226b80aa591be5be182d9335943"
                       }
                   ]
 }
