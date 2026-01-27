@@ -3262,7 +3262,12 @@ jobs:
   if (-not (Test-Path $rulesPath)) { throw "MISSING_LOCKPACK_RULES" }
   $rules = Read-TextNoBom $rulesPath
   if ($rules -notmatch "##\s+G19") {
-    $addon = Decode-B64Utf8 "DQoNCiMjIEcxOSDigJQgQ09ERU9XTkVSUyArIEhhc2hMb2NrICsgUHJvdGVjdGVkIFByb2QNCi0gQ09ERU9XTkVSUzog2YHYp9uM2YQgLmdpdGh1Yi9DT0RFT1dORVJTINin2LbYp9mB2Ycg2LTYryAo2Kfar9ixINix2YjbjCBHaXRIdWIg2YfYs9iq24zYr9iMINmF2KfZhNqp4oCM2YfYpyDYsdinINis2KfbjNqv2LLbjNmGINqp2YbbjNivKS4NCi0gSGFzaExvY2s6INmB2KfbjNmEIHN0YXRlL0hBU0hMT0NLLmpzb24g2KfYttin2YHZhyDYtNivINiq2Kcg2YHYp9uM2YTigIzZh9in24wg2qnZhtiq2LHZhCAocnVubmVyL2RvY3MvaGFuZG9mZi8uZ2l0aHViKSDYqNinIFNIQTI1NiDZgtmB2YQg2LTZiNmG2K8uDQotIFByb3RlY3RlZCBQcm9kOiB3b3JrZmxvdyAobG9ja3BhY2tfcmVxdWlyZWQpINin2LbYp9mB2Ycg2LTYryDYqtinINiv2LEgQ0kg24zaqSBTdGF0dXMgQ2hlY2sg2KvYp9io2Kog2K/Yp9i02KrZhyDYqNin2LTbjNmFICjYqNix2KfbjCDZgdi52KfZhOKAjNiz2KfYstuMINin2KzYqNin2LHbjCDYsdmI24wgbWFpbi9wcm9kINio2KfbjNivIEJyYW5jaCBQcm90ZWN0aW9uINix2Kcg2KjYudiv2KfZiyDYqtmG2LjbjNmFINqp2YbbjNmFKS4NCg=="
+    $addon = @'
+## G20 — Signed CI Artifact + Provenance
+- Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
+- Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
+- PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
+'@
     $rules2 = $rules + $addon
     if (Test-HasMojibakeMarkers $rules2) { throw "LOCKPACK_RULES_ENCODING_BROKEN" }
     Write-TextNoBom $rulesPath $rules2
@@ -3462,7 +3467,41 @@ function Do-G20 {
   # Ensure CI workflow for build provenance attestation
   New-Item -ItemType Directory -Force ".github\workflows" | Out-Null
   $wfPath = ".github\workflows\ci_attest_build_provenance.yml"
-  $wf = Decode-B64Utf8 "bmFtZTogY2ktYXR0ZXN0LWJ1aWxkLXByb3ZlbmFuY2UKb246CiAgd29ya2Zsb3dfZGlzcGF0Y2g6CiAgcHVzaDoKICAgIGJyYW5jaGVzOiBbIG1haW4gXQpwZXJtaXNzaW9uczoge30Kam9iczoKICBidWlsZDoKICAgIHJ1bnMtb246IHdpbmRvd3MtbGF0ZXN0CiAgICBwZXJtaXNzaW9uczoKICAgICAgaWQtdG9rZW46IHdyaXRlCiAgICAgIGF0dGVzdGF0aW9uczogd3JpdGUKICAgICAgY29udGVudHM6IHJlYWQKICAgIHN0ZXBzOgogICAgICAtIHVzZXM6IGFjdGlvbnMvY2hlY2tvdXRAdjQKICAgICAgLSBuYW1lOiBCdWlsZCBhcnRpZmFjdCAoZ2l0IGFyY2hpdmUgemlwKQogICAgICAgIHNoZWxsOiBwd3NoCiAgICAgICAgcnVuOiB8CiAgICAgICAgICAkRXJyb3JBY3Rpb25QcmVmZXJlbmNlID0gIlN0b3AiCiAgICAgICAgICBOZXctSXRlbSAtSXRlbVR5cGUgRGlyZWN0b3J5IC1Gb3JjZSBkaXN0IHwgT3V0LU51bGwKICAgICAgICAgICRvdXQgPSAiZGlzdC9EZW50YWwtTWluYV9yZXBvXyR7eyBnaXRodWIuc2hhIH19LnppcCIKICAgICAgICAgIGlmIChUZXN0LVBhdGggJG91dCkgeyBSZW1vdmUtSXRlbSAkb3V0IC1Gb3JjZSB9CiAgICAgICAgICBnaXQgYXJjaGl2ZSAtLWZvcm1hdD16aXAgLS1vdXRwdXQgJG91dCBIRUFECiAgICAgICAgICAiQVJUSUZBQ1RfUEFUSD0kb3V0IiB8IE91dC1GaWxlIC1GaWxlUGF0aCAkZW52OkdJVEhVQl9FTlYgLUVuY29kaW5nIHV0ZjggLUFwcGVuZAogICAgICAtIG5hbWU6IEF0dGVzdCBidWlsZCBwcm92ZW5hbmNlCiAgICAgICAgdXNlczogYWN0aW9ucy9hdHRlc3QtYnVpbGQtcHJvdmVuYW5jZUB2MwogICAgICAgIHdpdGg6CiAgICAgICAgICBzdWJqZWN0LXBhdGg6ICR7eyBlbnYuQVJUSUZBQ1RfUEFUSDsgfX0KICAgICAgLSBuYW1lOiBVcGxvYWQgYXJ0aWZhY3QKICAgICAgICB1c2VzOiBhY3Rpb25zL3VwbG9hZC1hcnRpZmFjdEB2NAogICAgICAgIHdpdGg6CiAgICAgICAgICBuYW1lOiBEZW50YWwtTWluYV9yZXBvCiAgICAgICAgICBwYXRoOiAk{{IGVudi5BUlRJRkFDVF9QQVRIIH0K"
+  $wf = @'
+name: ci-attest-build-provenance
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+permissions: {}
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build artifact (git archive zip)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force dist | Out-Null
+          $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
+          if (Test-Path $out) { Remove-Item $out -Force }
+          git archive --format=zip --output $out HEAD
+          "ARTIFACT_PATH=$out" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: ${{ env.ARTIFACT_PATH }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dental-Mina_repo
+          path: ${{ env.ARTIFACT_PATH }}
+'@
   Write-TextNoBom $wfPath $wf
 
   # Update LOCKPACK_RULES with G20 section
@@ -3470,7 +3509,12 @@ function Do-G20 {
   if (-not (Test-Path $rulesPath)) { throw "MISSING_LOCKPACK_RULES" }
   $rules = Read-TextNoBom $rulesPath
   if ($rules -notmatch "##\s+G20") {
-    $addon = Decode-B64Utf8 "DQoNCiMjIEcyMCDigJQgU2lnbmVkIENJIEFydGlmYWN0ICsgUHJvdmVuYW5jZQ0KLSBBZGRzIEdpdEh1YiBBY3Rpb25zIHdvcmtmbG93IGAuZ2l0aHViL3dvcmtmbG93cy9jaV9hdHRlc3RfYnVpbGRfcHJvdmVuYW5jZS55bWxgIHRvIGdlbmVyYXRlIGJ1aWxkIHByb3ZlbmFuY2UgYXR0ZXN0YXRpb25zLg0KLSBWZXJpZmllcyBhcnRpZmFjdCBhdHRlc3RhdGlvbiBsb2NhbGx5IHZpYSBgZ2ggYXR0ZXN0YXRpb24gdmVyaWZ5YCAocmVxdWlyZXMgR2l0SHViIENMSSBhdXRoKS4NCi0gUEFTUyByZXF1aXJlczogd29ya2Zsb3cgcHJlc2VudCwgQ0kgcnVuIHN1Y2Nlc3MsIGFuZCB2ZXJpZmljYXRpb24gSlNPTiBjYXB0dXJlZCB1bmRlciBgYXJ0aWZhY3RzL2NpL2AuDQo="
+    $addon = @'
+## G20 — Signed CI Artifact + Provenance
+- Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
+- Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
+- PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
+'@
     $rules2 = $rules + $addon
     if (Test-HasMojibakeMarkers $rules2) { throw "LOCKPACK_RULES_ENCODING_BROKEN" }
     Write-TextNoBom $rulesPath $rules2
