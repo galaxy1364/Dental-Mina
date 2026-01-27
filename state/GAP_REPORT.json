@@ -1,0 +1,8 @@
+{
+    "ts_utc":  "2026-01-26T14:31:48.8852449Z",
+    "current_gate":  "G12_DESIGN_V6_ICON_SYSTEM",
+    "next_gate":  "DESIGN_FEEDBACK",
+    "missing":  [
+                    "G12_DESIGN_FEEDBACK_PENDING"
+                ]
+}

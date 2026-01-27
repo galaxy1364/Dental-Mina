@@ -1,0 +1,40 @@
+{
+    "project":  {
+                    "name":  "Dental-Mina",
+                    "signature":  "PYM JBZ"
+                },
+    "gate":  {
+                 "current":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+                 "locked_pass":  [
+                                     "G0_BOOTSTRAP",
+                                     "G1_SINGLE_COMMAND",
+                                     "G2_SANITY_HYGIENE",
+                                     "G3_ENCODING_HYGIENE",
+                                     "G4_EVIDENCE_PACK_OK",
+                                     "G5_REPLAY_RESTORE_OK",
+                                     "G6_PWA_INSTALL_OK",
+                                     "G7_SCALE_100K_OK",
+                                     "G8_SECURITY_BASE_OK",
+                                     "G9_IRAN_CORE_OK",
+                                     "G11_DESIGN_V2_COLORFUL",
+                                     "G12_DESIGN_V5_ICON_POLISH",
+                                     "G12_DESIGN_V6_ICON_SYSTEM",
+                                     "G13_LOCKPACK_CANON_DOCS_FIX",
+                                     "G14_LOCKPACK_PS51_UNICODE_SAFE",
+                                     "G15_CHECKLIST_AUTO_SYNC",
+                                     "G16_HANDOFF_AUTOGEN",
+                                     "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
+                                     "G18_DESIGN_CONTINUATION",
+                                     "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+                                 ],
+                 "last_pass":  "G10_DESIGN_REVIEW_PACK"
+             },
+    "last_pass":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+    "last_fail":  null,
+    "active_issue":  null,
+    "next_action_hash":  "5faf75cb973014a038e1d2191bf58e09a3899bae4f5cd1eca48c47cfd2cb8d66",
+    "updated_utc":  "2026-01-26T21:58:38.9320770Z",
+    "locked_pass":  [
+                        "G10_DESIGN_REVIEW_PACK"
+                    ]
+}

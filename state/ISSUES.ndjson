@@ -1,0 +1,2 @@
+﻿
+{"ts_utc":"2026-01-26T01:06:44.4088635Z","code":"HISTORIC_LEDGER_ANOMALY","severity":"low","note":"Ledger includes historical anomaly lines (append-only). Kept for audit; future writes are enforced.","count":1,"samples":{"line":3,"sha256":"2d9a4a87681d1f22da4c3e9e81dd3a6ad0cb6efb4e5eabe15ed99507153d609f"}}

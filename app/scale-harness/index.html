@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Scale Harness</title>
+<style>
+#box { height: 600px; overflow: auto; border: 1px solid #000; position: relative; }
+.row { position: absolute; left: 0; right: 0; height: 24px; line-height: 24px; border-bottom: 1px solid #eee; padding: 0 8px; box-sizing: border-box; font-family: sans-serif; }
+</style>
+<h1>Scale 100k Harness</h1>
+<div id="box"></div>
+<pre id="result">PENDING</pre>
+<script>
+(() => {
+  const t0 = performance.now();
+  const N = 100000;
+  const ROW_H = 24;
+  const data = Array.from({length:N}, (_,i) => ({ id:i+1, name:'Patient ' + (i+1) }));
+  const box = document.getElementById('box');
+  const spacer = document.createElement('div');
+  spacer.style.height = (N * ROW_H) + 'px';
+  box.appendChild(spacer);
+
+  const viewport = document.createElement('div');
+  viewport.style.position = 'absolute';
+  viewport.style.left = '0';
+  viewport.style.right = '0';
+  viewport.style.top = '0';
+  viewport.style.height = spacer.style.height;
+  box.appendChild(viewport);
+
+  let rendered = new Map();
+  function render() {
+    const scrollTop = box.scrollTop;
+    const start = Math.floor(scrollTop / ROW_H);
+    const visible = Math.ceil(box.clientHeight / ROW_H) + 10;
+    const end = Math.min(N, start + visible);
+    for (const [k, el] of rendered.entries()) {
+      if (k < start || k >= end) { el.remove(); rendered.delete(k); }
+    }
+    for (let i=start; i<end; i++) {
+      if (rendered.has(i)) continue;
+      const el = document.createElement('div');
+      el.className = 'row';
+      el.style.top = (i * ROW_H) + 'px';
+      el.textContent = data[i].id + ' â€” ' + data[i].name;
+      viewport.appendChild(el);
+      rendered.set(i, el);
+    }
+  }
+  box.addEventListener('scroll', () => requestAnimationFrame(render));
+  render();
+
+  const t1 = performance.now();
+  const q0 = performance.now();
+  const q = '999';
+  const filtered = data.filter(x => x.name.includes(q));
+  const q1 = performance.now();
+
+  const res = {
+    init_ms: Math.round((t1 - t0) * 100) / 100,
+    search_ms: Math.round((q1 - q0) * 100) / 100,
+    rendered_rows: rendered.size,
+    filtered_count: filtered.length
+  };
+  document.getElementById('result').textContent = JSON.stringify(res);
+})();
+</script>

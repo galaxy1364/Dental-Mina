@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#00c853" />
+  <title>Dental‑Mina — طراحی موبایل‌اول 2026 (G12 v5)</title>
+  <style>
+    :root{
+      --green:#00c853;
+      --bg:#0b0f14;
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.64);
+      --shadow:0 18px 60px rgba(0,0,0,.55);
+      --r:22px;
+
+      /* Module colors (editable) */
+      --c-sched:#36d1ff;
+      --c-fin:#ffd166;
+      --c-pat:#7c4dff;
+      --c-lab:#ff4d8d;
+      --c-inv:#34c759;
+      --c-crm:#ff9f0a;
+      --c-ai:#00e5ff;
+      --c-more:#b0bec5;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(1200px 800px at 10% 0%, rgba(0,200,83,.14), transparent 55%),
+                  radial-gradient(900px 700px at 90% 10%, rgba(54,209,255,.12), transparent 55%),
+                  radial-gradient(900px 800px at 70% 90%, rgba(255,77,141,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .shell{min-height:100%; display:flex; justify-content:center; padding:14px 10px 92px}
+    .phoneFrame{
+      width:min(430px, 100%);
+      border-radius:32px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(0,0,0,.22);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      backdrop-filter: blur(18px);
+    }
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 14px 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.12));
+      backdrop-filter: blur(16px);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .brand{display:flex; gap:10px; align-items:center}
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      display:grid; place-items:center;
+      background: radial-gradient(circle at 30% 25%, rgba(54,209,255,.55), rgba(0,0,0,.18) 52%),
+        radial-gradient(circle at 70% 75%, rgba(255,77,141,.35), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:none;
+      font-weight:1000;
+      letter-spacing:.5px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.50);
+    }
+    .brandText .t1{font-weight:1000; font-size:14px; line-height:1.1}
+    .brandText .t2{font-size:12px; color:var(--muted)}
+    .topActions{display:flex; gap:8px; align-items:center}
+    .iconBtn{
+      width:38px; height:38px; border-radius:14px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      display:grid; place-items:center;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .iconBtn:active{transform:scale(.98)}
+    .container{padding:14px}
+    .page{display:none; animation:fadeIn .18s ease}
+    .page.on{display:block}
+    @keyframes fadeIn{from{opacity:.0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+    .h1{font-size:20px; font-weight:1100; margin:0}
+    .green{color:var(--green)}
+    .sub{color:var(--muted); font-size:12px; margin-top:4px}
+    .row{display:flex; gap:10px; align-items:stretch}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .grid3{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+    .featureCard, .card{
+      width:100%;
+      border-radius: var(--r);
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: 0 14px 48px rgba(0,0,0,.38);
+      padding:14px;
+      position:relative;
+      overflow:hidden;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+    }
+    .featureCard:active, .card:active{transform:scale(.99)}
+    .cardTitle{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .badge{
+      font-size:11px; font-weight:1000; color:rgba(0,0,0,.78);
+      padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.88);
+    }
+
+    .chip{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(0,0,0,.18);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .featureCard .h2{margin:10px 0 6px; font-weight:1100; font-size:16px}
+    .desc{color:var(--muted); font-size:12px; line-height:1.45}
+    .cta{margin-top:10px; font-weight:1000; font-size:12px}
+
+    .accent{
+      position:absolute; inset:-120px -120px auto auto;
+      width:240px; height:240px; border-radius:50%;
+      filter: blur(0px);
+      opacity:.36;
+      transform: rotate(12deg);
+    }
+
+    /* Module accent helpers */
+    .cSched .accent{background: radial-gradient(circle at 30% 25%, var(--c-sched), transparent 60%)}
+    .cFin .accent{background: radial-gradient(circle at 30% 25%, var(--c-fin), transparent 60%)}
+    .cPat .accent{background: radial-gradient(circle at 30% 25%, var(--c-pat), transparent 60%)}
+    .cLab .accent{background: radial-gradient(circle at 30% 25%, var(--c-lab), transparent 60%)}
+    .cAI .accent{background: radial-gradient(circle at 30% 25%, var(--c-ai), transparent 60%)}
+
+    /* Emotive icons */
+    /* Sticker-grade, multi-color icons (no up/down movement) */
+    .emotive{width:30px;height:30px}
+    .iconBlob{isolation:isolate}
+    .iconBlob .emotive{animation: blink 5.8s ease-in-out infinite}
+    .iconBlob:active .emotive{transform:scale(.98)}
+    .tab .tI svg{width:22px;height:22px;display:block}
+    .tI{display:grid;place-items:center}
+    .featureCard .iconBlob{margin-top:-2px}
+    .featureCard .h1{line-height:1.05}
+    .featureCard .desc{margin-top:10px}
+    .tab .tI{margin-bottom:2px}
+
+    
+    .iconBlob{
+      width:46px; height:46px; border-radius:18px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      display:grid; place-items:center;
+      background: radial-gradient(circle at 28% 22%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(circle at 70% 82%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(145deg, rgba(255,255,255,.10), rgba(0,0,0,.22));
+      backdrop-filter: blur(10px);
+
+      position:relative;
+      overflow:hidden;
+    }
+    .iconBlob::before{
+      content:"";
+      position:absolute; inset:-30px;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), transparent 60%);
+      animation: floaty 4.6s ease-in-out infinite;
+      opacity:.8;
+    }
+    @keyframes floaty{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(-6deg) scale(1.03)}}
+    .svgIcon{width:28px; height:28px; position:relative; z-index:1}
+    .wiggle{animation: wiggle 3.2s ease-in-out infinite}
+    @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+    .bounce{animation: bounce 2.6s ease-in-out infinite}
+    @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    .blink{animation: blink 5.2s ease-in-out infinite}
+    @keyframes blink{0%,96%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+
+    /* Tabs (native iPhone feel) */
+    .tabbar{
+      position:fixed;
+      left: max(10px, env(safe-area-inset-left));
+      right: max(10px, env(safe-area-inset-right));
+      bottom: max(10px, env(safe-area-inset-bottom));
+      height:66px;
+      border-radius:24px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(0,0,0,.26);
+      backdrop-filter: blur(18px);
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      overflow:hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      z-index:30;
+      max-width:430px;
+      margin:0 auto;
+    }
+    @media (min-width: 720px){
+      .tabbar{left:0; right:0}
+    }
+    .tab{
+      border:none; background:transparent;
+      color:rgba(255,255,255,.62);
+      font-weight:1000; font-size:11px;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:4px;
+      cursor:pointer;
+      transition: color .12s ease, transform .12s ease;
+    }
+    .tab .tI{width:24px; height:24px; display:grid; place-items:center}
+    .tab.on{color:rgba(255,255,255,.94)}
+    .tab.on .tI{transform: translateY(-1px)}
+    .tab:active{transform:scale(.98)}
+    .tabDot{
+      width:6px; height:6px; border-radius:50%;
+      background:transparent;
+    }
+    .tab.on .tabDot{background:var(--green)}
+
+    /* Layout toggles */
+    .seg{
+      display:flex; gap:6px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(0,0,0,.16);
+      border-radius:999px;
+      padding:4px;
+    }
+    .seg button{
+      border:none; background:transparent; color:rgba(255,255,255,.68);
+      font-weight:1000; font-size:11px;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+    }
+    .seg button.on{
+      background: rgba(255,255,255,.12);
+      color:rgba(255,255,255,.94);
+    }
+    .list{display:flex; flex-direction:column; gap:10px}
+    .twoCol{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+    /* Checklist */
+    .progressWrap{display:flex; gap:10px; align-items:center; margin-top:10px}
+    .bar{flex:1; height:10px; border-radius:999px; background: rgba(255,255,255,.08); border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+ overflow:hidden}
+    .bar > div{height:100%; width:0%; background: linear-gradient(90deg, var(--green), rgba(54,209,255,.9), rgba(255,209,102,.9)); border-radius:999px}
+    .pct{font-size:12px; font-weight:1000; color:var(--muted); white-space:nowrap}
+
+    .checklist{margin-top:12px; display:flex; flex-direction:column; gap:8px}
+    .checkRow{
+      display:flex; align-items:flex-start; gap:10px;
+      padding:10px 10px;
+      border-radius:18px;
+      border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+
+      background: rgba(0,0,0,.16);
+    }
+    .checkRow input{margin-top:2px; width:18px; height:18px}
+    .checkMain{flex:1}
+    .checkTitle{font-weight:1100; font-size:12px}
+    .checkMeta{color:var(--muted); font-size:11px; margin-top:3px}
+    .miniFace{width:22px; height:22px; border-radius:10px; border:none;
+      box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+ display:grid; place-items:center; background: rgba(255,255,255,.06)}
+    .hint{color:var(--muted); font-size:12px; line-height:1.55}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .wiggle,.bounce,.blink,.iconBlob::before{animation:none}
+      .page{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="phoneFrame" id="frame">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">DM</div>
+          <div class="brandText">
+            <div class="t1">Dental‑Mina</div>
+            <div class="t2">موبایل‌اول • iOS26 • رنگی/مجزا • حس‌دار (نمونه)</div>
+          </div>
+        </div>
+        <div class="topActions">
+          <button class="iconBtn" type="button" title="نمایش موبایل" id="toggleFrame">📱</button>
+          <button class="iconBtn" type="button" title="رنگ‌ها" data-go="more">🎨</button>
+        </div>
+      </header>
+
+      <main class="container" id="app" aria-live="polite">
+        <!-- HOME -->
+        <section class="page on" data-route="home" aria-label="داشبورد">
+          <div class="pageHeader">
+            <h1 class="h1 green">داشبورد</h1>
+            <div class="sub">۴ بخش اصلی + ۲ بخش برجسته: نوبت‌دهی و مالی</div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button class="featureCard cSched" type="button" data-go="schedule" aria-label="نوبت‌دهی">
+              <div class="accent"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_schedule" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#36d1ff"/>
+      <stop offset="0.55" stop-color="#00c853"/>
+      <stop offset="1" stop-color="#ff4d8d"/>
+    </linearGradient>
+    <filter id="f_schedule" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00c853" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_schedule)">
+
+  <rect x="16" y="18" width="32" height="30" rx="9" fill="rgba(255,255,255,.05)" stroke="url(#g_schedule)" stroke-width="3"/>
+  <path d="M24 14v8M40 14v8" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M16 26h32" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+  <path d="M25 37c2.5 3 11.5 3 14 0" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="27.5" cy="33" r="2.2" fill="url(#g_schedule)"/>
+  <circle cx="38.5" cy="33" r="2.2" fill="url(#g_schedule)"/>
+
+  </g>
+</svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:16px; margin:0">نوبت‌دهی</div>
+                    <div class="sub">تقویم روزانه • لیست انتظار • یونیت‌ها</div>
+                  </div>
+                </div>
+                <div class="badge">برجسته ۱</div>
+              </div>
+              <div class="progressWrap">
+                <div class="bar"><div data-prog="sched"></div></div>
+                <div class="pct" data-pct="sched">0%</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+
+            <button class="featureCard cFin" type="button" data-go="finance" aria-label="مالی">
+              <div class="accent"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_finance" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="0.55" stop-color="#00c853"/>
+      <stop offset="1" stop-color="#7c4dff"/>
+    </linearGradient>
+    <filter id="f_finance" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00c853" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_finance)">
+
+  <rect x="15" y="19" width="34" height="26" rx="10" fill="rgba(255,255,255,.05)" stroke="url(#g_finance)" stroke-width="3"/>
+  <path d="M20 28h18" stroke="url(#g_finance)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+  <circle cx="41" cy="32" r="6.8" fill="rgba(255,255,255,.04)" stroke="url(#g_finance)" stroke-width="3"/>
+  <path d="M38.7 34.5c1.7 2 4 2 5.7 0" stroke="url(#g_finance)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39.6" cy="31.3" r="1.6" fill="url(#g_finance)"/>
+  <circle cx="44.4" cy="31.3" r="1.6" fill="url(#g_finance)"/>
+
+  </g>
+</svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:16px; margin:0">مالی</div>
+                    <div class="sub">POS/نقد/چک/قسط • هشدار سررسید</div>
+                  </div>
+                </div>
+                <div class="badge">برجسته ۲</div>
+              </div>
+              <div class="progressWrap">
+                <div class="bar"><div data-prog="fin"></div></div>
+                <div class="pct" data-pct="fin">0%</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+          </div>
+
+          <div class="grid2" style="margin-top:10px">
+            <button class="card cPat" type="button" data-go="patients">
+              <div class="accent"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon blink" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3c3.8 0 6.5 2.3 6.5 6.2 0 2.8-1.5 5.8-2.5 8-1 2.2-2.6 3.8-4 3.8s-3-1.6-4-3.8c-1-2.2-2.5-5.2-2.5-8C5.5 5.3 8.2 3 12 3Z" stroke="white" stroke-width="2" opacity=".9"/>
+                    <circle cx="9.2" cy="10.2" r="1" fill="white" opacity=".8"/>
+                    <circle cx="14.8" cy="10.2" r="1" fill="white" opacity=".8"/>
+                    <path d="M9.2 13.3c.9 1 1.8 1.5 2.8 1.5s1.9-.5 2.8-1.5" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+                  </svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:15px; margin:0">بیماران</div>
+                    <div class="sub">پرونده • چارت • داده‌های زیاد/ناقص</div>
+                  </div>
+                </div>
+                <div class="chip">قابل تغییر</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+
+            <button class="card cLab" type="button" data-go="lab">
+              <div class="accent"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon bounce" viewBox="0 0 24 24" fill="none">
+                    <path d="M10 3v6l-5 9a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 18l-5-9V3" stroke="white" stroke-width="2" opacity=".9"/>
+                    <path d="M9 14h6" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+                    <path d="M8.6 17h6.8" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+                  </svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:15px; margin:0">لابراتوار</div>
+                    <div class="sub">ارسال/دریافت • وضعیت‌ها</div>
+                  </div>
+                </div>
+                <div class="chip">صفحه مستقل</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+          </div>
+
+          <div class="grid2" style="margin-top:10px">
+            <button class="card cAI" type="button" data-go="innovation">
+              <div class="accent"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon wiggle" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2a7 7 0 0 0-4 12.7V18a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3.3A7 7 0 0 0 12 2Z" stroke="white" stroke-width="2" opacity=".9"/>
+                    <path d="M9 22h6" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+                    <path d="M9.5 10.5 12 13l2.5-2.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+                  </svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:15px; margin:0">نوآوری</div>
+                    <div class="sub">AI • اتوماسیون • ایده‌ها</div>
+                  </div>
+                </div>
+                <div class="chip">2026</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+
+            <button class="card" type="button" data-go="more">
+              <div class="accent" style="background: radial-gradient(circle at 30% 25%, rgba(176,190,197,.9), transparent 60%)"></div>
+              <div class="cardTitle">
+                <div style="display:flex; gap:10px; align-items:center">
+                  <div class="iconBlob"><svg class="svgIcon blink" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="white" stroke-width="2" opacity=".9"/>
+                    <path d="M19.4 15a8 8 0 0 0 .1-6" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+                    <path d="M4.5 9a8 8 0 0 0 .1 6" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+                    <path d="M16.5 19.3a8 8 0 0 1-9 0" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+                    <path d="M7.5 4.7a8 8 0 0 1 9 0" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+                  </svg></div>
+                  <div>
+                    <div class="h1 green" style="font-size:15px; margin:0">بیشتر</div>
+                    <div class="sub">رنگ‌ها • چیدمان • چک‌لیست ۰-۱۰۰</div>
+                  </div>
+                </div>
+                <div class="chip">تنظیمات</div>
+              </div>
+              <div class="cta">باز کردن صفحه</div>
+            </button>
+          </div>
+        </section>
+
+        <!-- SCHEDULE -->
+        <section class="page" data-route="schedule" aria-label="نوبت‌دهی">
+          <div class="pageHeader">
+            <h1 class="h1 green">نوبت‌دهی</h1>
+            <div class="sub">صفحه مستقل (مثل اپ آیفون) — رنگ اختصاصی + حس‌دار</div>
+          </div>
+          <div class="card cSched" style="margin-top:12px">
+            <div class="accent"></div>
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:16px">تقویم روزانه (نمونه)</div>
+              <div class="chip">اسکرول نرم</div>
+            </div>
+            <div class="desc">آیتم‌های نمونه: 09:00 معاینه • 10:30 ترمیم • 12:00 ایمپلنت</div>
+          </div>
+          <div class="grid2" style="margin-top:10px">
+            <div class="card cSched">
+              <div class="accent"></div>
+              <div class="cardTitle"><div class="h1 green" style="font-size:15px">یونیت‌ها</div><div class="chip">آبی/زرد</div></div>
+              <div class="desc">وضعیت: آزاد/مشغول — قابل توسعه</div>
+            </div>
+            <div class="card cSched">
+              <div class="accent"></div>
+              <div class="cardTitle"><div class="h1 green" style="font-size:15px">لیست انتظار</div><div class="chip">هوشمند</div></div>
+              <div class="desc">پیشنهاد زمان‌های خالی • پیامک یادآوری</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FINANCE -->
+        <section class="page" data-route="finance" aria-label="مالی">
+          <div class="pageHeader">
+            <h1 class="h1 green">مالی</h1>
+            <div class="sub">صفحه مستقل — کارت‌های رنگی + وضعیت حس‌دار</div>
+          </div>
+          <div class="grid2" style="margin-top:12px">
+            <div class="card cFin">
+              <div class="accent"></div>
+              <div class="cardTitle"><div class="h1 green" style="font-size:15px">پرداخت امروز</div><div class="chip">POS/نقد</div></div>
+              <div class="desc">۳ پرداخت ثبت شده • ۱ مورد در انتظار</div>
+            </div>
+            <div class="card cFin">
+              <div class="accent"></div>
+              <div class="cardTitle"><div class="h1 green" style="font-size:15px">چک/قسط</div><div class="chip">هشدار</div></div>
+              <div class="desc">۲ سررسید نزدیک • ۱ عقب‌افتاده</div>
+            </div>
+          </div>
+          <div class="card cFin" style="margin-top:10px">
+            <div class="accent"></div>
+            <div class="cardTitle"><div class="h1 green" style="font-size:15px">قالب رسید (نمونه)</div><div class="chip">قابل چاپ</div></div>
+            <div class="desc">QR • مهر دیجیتال • پیوست اسکن</div>
+          </div>
+        </section>
+
+        <!-- PATIENTS -->
+        <section class="page" data-route="patients" aria-label="بیماران">
+          <div class="pageHeader">
+            <div class="row" style="justify-content:space-between; align-items:center">
+              <div>
+                <h1 class="h1 green">بیماران</h1>
+                <div class="sub">داده زیاد/ناقص — تیترها رنگی و واضح</div>
+              </div>
+              <div class="seg" aria-label="چیدمان">
+                <button type="button" data-layout="patients" data-mode="list" class="on">لیستی</button>
+                <button type="button" data-layout="patients" data-mode="two">دو‌ستونه</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="patientsList" class="list" style="margin-top:12px"></div>
+        </section>
+
+        <!-- LAB -->
+        <section class="page" data-route="lab" aria-label="لابراتوار">
+          <div class="pageHeader">
+            <div class="row" style="justify-content:space-between; align-items:center">
+              <div>
+                <h1 class="h1 green">لابراتوار</h1>
+                <div class="sub">ارسال/دریافت — وضعیت رنگی</div>
+              </div>
+              <div class="seg" aria-label="چیدمان">
+                <button type="button" data-layout="lab" data-mode="list" class="on">لیستی</button>
+                <button type="button" data-layout="lab" data-mode="two">دو‌ستونه</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="labList" class="list" style="margin-top:12px"></div>
+        </section>
+
+        <!-- INNOVATION -->
+        <section class="page" data-route="innovation" aria-label="نوآوری">
+          <div class="pageHeader">
+            <h1 class="h1 green">نوآوری</h1>
+            <div class="sub">Duolingo‑like حس‌دار: انجام شد خوشحال، انجام نشده ناراحت، درحال‌انجام متعجب</div>
+          </div>
+          <div class="card cAI" style="margin-top:12px">
+            <div class="accent"></div>
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:15px">موتور پیشنهاد</div>
+              <div class="chip">Human‑in‑loop</div>
+            </div>
+            <div class="desc">پیشنهاد زمان نوبت • پیامک هوشمند • هشدار پرداخت</div>
+          </div>
+          <div class="card cAI" style="margin-top:10px">
+            <div class="accent"></div>
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:15px">داشبورد حس‌دار</div>
+              <div class="chip">حالت‌ها</div>
+            </div>
+            <div class="desc">با پیشرفت چک‌لیست، حالت چهره تغییر می‌کند.</div>
+          </div>
+        </section>
+
+        <!-- MORE -->
+        <section class="page" data-route="more" aria-label="بیشتر">
+          <div class="pageHeader">
+            <h1 class="h1 green">بیشتر</h1>
+            <div class="sub">رنگ‌های جدا برای هر بخش + چیدمان قابل تغییر + چک‌لیست ۰ تا ۱۰۰</div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:15px">رنگ‌ها (قابل تغییر)</div>
+              <div class="chip">Theme</div>
+            </div>
+            <div class="hint" style="margin-top:10px">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+                <label class="hint">نوبت‌دهی<br><input type="color" data-color="--c-sched" value="#36d1ff"></label>
+                <label class="hint">مالی<br><input type="color" data-color="--c-fin" value="#ffd166"></label>
+                <label class="hint">بیماران<br><input type="color" data-color="--c-pat" value="#7c4dff"></label>
+                <label class="hint">لابراتوار<br><input type="color" data-color="--c-lab" value="#ff4d8d"></label>
+                <label class="hint">نوآوری<br><input type="color" data-color="--c-ai" value="#00e5ff"></label>
+                <label class="hint">سبز تیترها<br><input type="color" data-color="--green" value="#00c853"></label>
+              </div>
+              <div class="hint" style="margin-top:10px">همه تغییرات ذخیره می‌شود (local).</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:10px">
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:15px">چک‌لیست ۰ تا ۱۰۰ (تیک‌زدنی)</div>
+              <div class="chip" id="moodChip">🙂</div>
+            </div>
+            <div class="progressWrap">
+              <div class="bar"><div id="overallBar"></div></div>
+              <div class="pct" id="overallPct">0%</div>
+            </div>
+            <div class="checklist" id="checklist"></div>
+          </div>
+
+          <div class="card" style="margin-top:10px">
+            <div class="cardTitle">
+              <div class="h1 green" style="font-size:15px">نمایش موبایل روی کامپیوتر</div>
+              <div class="chip">Preview</div>
+            </div>
+            <div class="hint" style="margin-top:8px">دکمه 📱 بالای صفحه را بزن تا حالت قاب موبایل روشن/خاموش شود.</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Native iPhone-like Tab Bar -->
+  <div class="tabbar" role="navigation" aria-label="ناوبری">
+    <button class="tab on" type="button" data-tab="home"><span class="tI"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_home" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#36d1ff"/>
+      <stop offset="0.55" stop-color="#00c853"/>
+      <stop offset="1" stop-color="#ffd166"/>
+    </linearGradient>
+    <filter id="f_home" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00c853" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_home)">
+
+  <path d="M16 30l16-14 16 14" stroke="url(#g_home)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 28v18h20V28" fill="rgba(255,255,255,.04)" stroke="url(#g_home)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M28 46c1.7-2 6.3-2 8 0" stroke="url(#g_home)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="28.8" cy="41" r="1.7" fill="url(#g_home)"/>
+  <circle cx="35.2" cy="41" r="1.7" fill="url(#g_home)"/>
+
+  </g>
+</svg></span><span>خانه</span><span class="tabDot"></span></button>
+    <button class="tab" type="button" data-tab="schedule"><span class="tI"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_schedule" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#36d1ff"/>
+      <stop offset="0.55" stop-color="#00c853"/>
+      <stop offset="1" stop-color="#ff4d8d"/>
+    </linearGradient>
+    <filter id="f_schedule" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00c853" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_schedule)">
+
+  <rect x="16" y="18" width="32" height="30" rx="9" fill="rgba(255,255,255,.05)" stroke="url(#g_schedule)" stroke-width="3"/>
+  <path d="M24 14v8M40 14v8" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M16 26h32" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+  <path d="M25 37c2.5 3 11.5 3 14 0" stroke="url(#g_schedule)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="27.5" cy="33" r="2.2" fill="url(#g_schedule)"/>
+  <circle cx="38.5" cy="33" r="2.2" fill="url(#g_schedule)"/>
+
+  </g>
+</svg></span><span>نوبت</span><span class="tabDot"></span></button>
+    <button class="tab" type="button" data-tab="patients"><span class="tI"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_patients" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7c4dff"/>
+      <stop offset="0.55" stop-color="#36d1ff"/>
+      <stop offset="1" stop-color="#00c853"/>
+    </linearGradient>
+    <filter id="f_patients" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#36d1ff" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_patients)">
+
+  <path d="M22 22c0-6 4.3-10 10-10s10 4 10 10c0 4-1.2 7.4-2.4 10.4-1.2 3.2-2.2 5.6-4.6 5.6-2 0-2.8-1.4-3-3-.2-1.4-1.2-2.4-2.9-2.4s-2.7 1-2.9 2.4c-.2 1.6-1 3-3 3-2.4 0-3.4-2.4-4.6-5.6C23.2 29.4 22 26 22 22Z"
+        fill="rgba(255,255,255,.04)" stroke="url(#g_patients)" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M27 27c.9 1.1 2.2 1.6 4 1.6s3.1-.5 4-1.6" stroke="url(#g_patients)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="28.5" cy="23.8" r="2" fill="url(#g_patients)"/>
+  <circle cx="35.5" cy="23.8" r="2" fill="url(#g_patients)"/>
+
+  </g>
+</svg></span><span>بیماران</span><span class="tabDot"></span></button>
+    <button class="tab" type="button" data-tab="lab"><span class="tI"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_lab" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff4d8d"/>
+      <stop offset="0.55" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#36d1ff"/>
+    </linearGradient>
+    <filter id="f_lab" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ffd166" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_lab)">
+
+  <path d="M26 14v10l-8.5 17c-1.1 2.1.4 5 3.2 5h22.6c2.8 0 4.3-2.9 3.2-5L40 24V14"
+        fill="rgba(255,255,255,.04)" stroke="url(#g_lab)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22.5 33h19" stroke="url(#g_lab)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+  <path d="M26.5 38c2.2 2.6 8.8 2.6 11 0" stroke="url(#g_lab)" stroke-width="3" stroke-linecap="round"/>
+
+  </g>
+</svg></span><span>لاب</span><span class="tabDot"></span></button>
+    <button class="tab" type="button" data-tab="finance"><span class="tI"><svg class="svgIcon emotive" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="g_finance" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="0.55" stop-color="#00c853"/>
+      <stop offset="1" stop-color="#7c4dff"/>
+    </linearGradient>
+    <filter id="f_finance" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.8" flood-color="rgba(0,0,0,.55)"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00c853" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#f_finance)">
+
+  <rect x="15" y="19" width="34" height="26" rx="10" fill="rgba(255,255,255,.05)" stroke="url(#g_finance)" stroke-width="3"/>
+  <path d="M20 28h18" stroke="url(#g_finance)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+  <circle cx="41" cy="32" r="6.8" fill="rgba(255,255,255,.04)" stroke="url(#g_finance)" stroke-width="3"/>
+  <path d="M38.7 34.5c1.7 2 4 2 5.7 0" stroke="url(#g_finance)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39.6" cy="31.3" r="1.6" fill="url(#g_finance)"/>
+  <circle cx="44.4" cy="31.3" r="1.6" fill="url(#g_finance)"/>
+
+  </g>
+</svg></span><span>مالی</span><span class="tabDot"></span></button>
+  </div>
+
+  <script>
+    const LS_KEY = "dm_design_v12_v5";
+    const qs = (s, el=document) => el.querySelector(s);
+    const qsa = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+    const state = loadState();
+    applyColors(state.colors);
+    setFrame(state.frameOn);
+
+    // Pages
+    function go(route){
+      qsa(".page").forEach(p => p.classList.toggle("on", p.dataset.route === route));
+      qsa(".tab").forEach(t => t.classList.toggle("on", t.dataset.tab === route));
+      location.hash = route;
+      saveState();
+    }
+
+    // Buttons with data-go
+    qsa("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+
+    // Tabs
+    qsa(".tab").forEach(t => t.addEventListener("click", () => go(t.dataset.tab)));
+
+    // Layout segmented controls
+    qsa("[data-layout]").forEach(btn => btn.addEventListener("click", () => {
+      const group = btn.dataset.layout;
+      const mode = btn.dataset.mode;
+      setLayout(group, mode);
+      qsa(`[data-layout="${group}"]`).forEach(x => x.classList.toggle("on", x === btn));
+      saveState();
+    }));
+
+    function setLayout(group, mode){
+      state.layouts[group] = mode;
+      const el = qs(group === "patients" ? "#patientsList" : "#labList");
+      el.classList.toggle("twoCol", mode === "two");
+      el.classList.toggle("list", mode !== "two");
+    }
+
+    // Frame toggle
+    qs("#toggleFrame").addEventListener("click", () => {
+      state.frameOn = !state.frameOn;
+      setFrame(state.frameOn);
+      saveState();
+    });
+
+    function setFrame(on){
+      const frame = qs("#frame");
+      frame.style.borderRadius = on ? "32px" : "0px";
+      frame.style.width = on ? "min(430px, 100%)" : "100%";
+      frame.style.maxWidth = on ? "430px" : "100%";
+    }
+
+    // Color pickers
+    qsa("input[type=color][data-color]").forEach(inp => {
+      const key = inp.dataset.color;
+      if(state.colors[key]) inp.value = state.colors[key];
+      inp.addEventListener("input", () => {
+        state.colors[key] = inp.value;
+        applyColors(state.colors);
+        saveState();
+      });
+    });
+
+    function applyColors(colors){
+      Object.entries(colors).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
+    }
+
+    // Checklist data (0..100) with moods
+    const categories = [
+      {name:"نوبت‌دهی", color:"var(--c-sched)"},
+      {name:"بیماران", color:"var(--c-pat)"},
+      {name:"لابراتوار", color:"var(--c-lab)"},
+      {name:"مالی", color:"var(--c-fin)"},
+      {name:"امنیت/کیفیت", color:"var(--green)"}
+    ];
+
+    const items = Array.from({length:100}, (_,i) => {
+      const n = i+1;
+      let c = categories[0];
+      if(n<=20) c=categories[0];
+      else if(n<=40) c=categories[1];
+      else if(n<=60) c=categories[3];
+      else if(n<=80) c=categories[2];
+      else c=categories[4];
+      return { id:n, title:`آیتم ${n}`, cat:c.name, color:c.color, note:"" };
+    });
+
+    const checklistEl = qs("#checklist");
+    renderChecklist();
+
+    function renderChecklist(){
+      checklistEl.innerHTML = "";
+      items.forEach(it => {
+        const done = !!state.check[it.id];
+        const row = document.createElement("div");
+        row.className = "checkRow";
+        row.innerHTML = `
+          <input type="checkbox" ${done ? "checked":""} aria-label="آیتم ${it.id}">
+          <div class="checkMain">
+            <div class="checkTitle"><span style="color:${it.color}; font-weight:1100">${it.cat}</span> — ${it.title}</div>
+            <div class="checkMeta">شماره ${it.id} • داده زیاد/ناقص: قابل توسعه</div>
+          </div>
+          <div class="miniFace" title="حس">
+            ${faceFor(it.id)}
+          </div>
+        `;
+        const cb = row.querySelector("input");
+        cb.addEventListener("change", () => {
+          state.check[it.id] = cb.checked;
+          updateProgress();
+          row.querySelector(".miniFace").textContent = faceFor(it.id);
+          saveState();
+        });
+        checklistEl.appendChild(row);
+      });
+      updateProgress();
+    }
+
+    function faceFor(id){
+      const done = !!state.check[id];
+      if(done) return "😄";
+      if(id % 3 === 0) return "😯";  // in-progress vibe
+      return "😕";
+    }
+
+    function updateProgress(){
+      const total = items.length;
+      const done = Object.values(state.check).filter(Boolean).length;
+      const pct = Math.round((done/total)*100);
+      qs("#overallBar").style.width = pct + "%";
+      qs("#overallPct").textContent = pct + "%";
+      qs('[data-pct="sched"]').textContent = pct + "%";
+      qs('[data-pct="fin"]').textContent = pct + "%";
+      qs('[data-prog="sched"]').style.width = Math.min(100, pct) + "%";
+      qs('[data-prog="fin"]').style.width = Math.min(100, pct) + "%";
+
+      const chip = qs("#moodChip");
+      chip.textContent = pct >= 70 ? "😄" : (pct >= 35 ? "😯" : "😕");
+    }
+
+    // Sample lists
+    const patients = [
+      {name:"مینا", id:"A-1024", phone:"09xx...", missing:"حساسیت", level:"ناقص"},
+      {name:"مهدی", id:"A-1025", phone:"09xx...", missing:"آدرس", level:"ناقص"},
+      {name:"عباسفرد", id:"A-1026", phone:"09xx...", missing:"کدملی", level:"ناقص"},
+      {name:"بیمار جدید", id:"A-1027", phone:"09xx...", missing:"پرونده", level:"درحال تکمیل"},
+    ];
+
+    const lab = [
+      {case:"قالب‌گیری", patient:"مینا", status:"ارسال شد", color:"var(--c-lab)"},
+      {case:"روکش", patient:"مهدی", status:"درحال ساخت", color:"var(--c-crm)"},
+      {case:"تحویل", patient:"عباسفرد", status:"آماده تحویل", color:"var(--c-fin)"},
+      {case:"اصلاح", patient:"بیمار جدید", status:"نیاز به تماس", color:"var(--c-sched)"},
+    ];
+
+    function renderCards(){
+      const pEl = qs("#patientsList");
+      pEl.innerHTML = "";
+      patients.forEach((p, i) => {
+        const c = document.createElement("div");
+        c.className = "card";
+        c.innerHTML = `
+          <div class="cardTitle">
+            <div class="h1 green" style="font-size:14px">${p.name}</div>
+            <div class="chip" style="border-color:rgba(255,255,255,.14)">پرونده: ${p.id}</div>
+          </div>
+          <div class="desc" style="margin-top:8px">
+            <span style="color:var(--c-pat); font-weight:1100">ناقص:</span> ${p.missing} • ${p.level}<br>
+            <span style="color:var(--muted)">تلفن:</span> ${p.phone}
+          </div>
+        `;
+        pEl.appendChild(c);
+      });
+
+      const lEl = qs("#labList");
+      lEl.innerHTML = "";
+      lab.forEach(x => {
+        const c = document.createElement("div");
+        c.className = "card cLab";
+        c.innerHTML = `
+          <div class="accent"></div>
+          <div class="cardTitle">
+            <div class="h1 green" style="font-size:14px">${x.case}</div>
+            <div class="chip" style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.14); background:rgba(0,0,0,.12)">${x.status}</div>
+          </div>
+          <div class="desc" style="margin-top:8px"><span style="color:${x.color}; font-weight:1100">${x.patient}</span></div>
+        `;
+        lEl.appendChild(c);
+      });
+    }
+
+    renderCards();
+    setLayout("patients", state.layouts.patients || "list");
+    setLayout("lab", state.layouts.lab || "list");
+
+    // Hash routing (default home)
+    const initial = (location.hash || "#home").replace("#","");
+    go(initial);
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(LS_KEY);
+        if(raw){
+          const s = JSON.parse(raw);
+          return {
+            colors: s.colors || {},
+            layouts: s.layouts || {patients:"list", lab:"list"},
+            check: s.check || {},
+            frameOn: (s.frameOn !== false)
+          };
+        }
+      }catch(e){}
+      return { colors:{}, layouts:{patients:"list", lab:"list"}, check:{}, frameOn:true };
+    }
+    function saveState(){
+      try{
+        localStorage.setItem(LS_KEY, JSON.stringify(state));
+      }catch(e){}
+    }
+  </script>
+</body>
+</html>

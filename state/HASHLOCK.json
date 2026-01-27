@@ -1,0 +1,30 @@
+{
+    "version":  1,
+    "ts_utc":  "2026-01-26T21:58:39.0574045Z",
+    "protected":  [
+                      {
+                          "path":  "tools/run.ps1",
+                          "sha256":  "6374cd2ea6f6e378107f1aee155d63c33456719379d4ff446e052aea86b34839"
+                      },
+                      {
+                          "path":  "docs/resume.md",
+                          "sha256":  "f42d7bec9b05c72346812c97e0b7fb656e525abd1d1f2b9201abe2f8a807b3b3"
+                      },
+                      {
+                          "path":  "docs/lockpack_rules.md",
+                          "sha256":  "907b87478f878a9af877009bf7c220fa68f8124fa18c5d5da5e7769223879d3a"
+                      },
+                      {
+                          "path":  "handoff/handoff_pack.txt",
+                          "sha256":  "a74bf0abd237a6eb8cf0fa4596bda0405174417089b31d5d3390fd5b86f0de9b"
+                      },
+                      {
+                          "path":  ".github/codeowners",
+                          "sha256":  "6924efe51301e766c8f1f0ec0a3b1b5c62e9630102b6519fadf74afced4b8961"
+                      },
+                      {
+                          "path":  ".github/workflows/lockpack_required.yml",
+                          "sha256":  "07073a06471b2e938fb83502444b23f7872dfc25cf3f7f81617e6e20f0e71f91"
+                      }
+                  ]
+}

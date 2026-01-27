@@ -1,0 +1,20 @@
+{
+    "name":  "Dental-Mina",
+    "short_name":  "Dental-Mina",
+    "start_url":  "./index.html",
+    "display":  "standalone",
+    "background_color":  "#ffffff",
+    "theme_color":  "#ffffff",
+    "icons":  [
+                  {
+                      "type":  "image/png",
+                      "sizes":  "192x192",
+                      "src":  "./icons/icon-192.png"
+                  },
+                  {
+                      "type":  "image/png",
+                      "sizes":  "512x512",
+                      "src":  "./icons/icon-512.png"
+                  }
+              ]
+}

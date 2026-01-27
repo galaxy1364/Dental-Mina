@@ -1,0 +1,191 @@
+:root{
+  --green:#00c853;
+  --bg:#0b0f14;
+  --card:rgba(255,255,255,.06);
+  --stroke:rgba(255,255,255,.10);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.64);
+  --shadow:0 18px 60px rgba(0,0,0,.55);
+  --r:22px;
+
+  --c-sched:#36d1ff;
+  --c-fin:#ffd166;
+  --c-pat:#7c4dff;
+  --c-lab:#ff4d8d;
+  --c-more:#b0bec5;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  background:
+    radial-gradient(1200px 800px at 10% 0%, rgba(0,200,83,.14), transparent 55%),
+    radial-gradient(900px 700px at 90% 10%, rgba(54,209,255,.12), transparent 55%),
+    radial-gradient(900px 800px at 70% 90%, rgba(255,77,141,.10), transparent 55%),
+    var(--bg);
+  color:var(--text);
+}
+
+.shell{min-height:100%; display:flex; justify-content:center; padding:14px 10px 92px}
+.phoneFrame{
+  width:min(430px, 100%);
+  border-radius:32px;
+  border: none;
+  background: rgba(0,0,0,.22);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  position:relative;
+  backdrop-filter: blur(18px);
+}
+
+.topbar{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 14px 10px;
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.12));
+  backdrop-filter: blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.brand{display:flex; gap:10px; align-items:center}
+.logo{
+  width:38px; height:38px; border-radius:14px;
+  display:grid; place-items:center;
+  background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+  box-shadow: 0 12px 28px rgba(0,0,0,.50);
+  overflow:hidden;
+}
+.logoSvg{width:38px;height:38px; display:block}
+.brandText .t1{font-weight:1000; font-size:14px; line-height:1.1}
+.brandText .t2{font-size:12px; color:var(--muted)}
+.topActions{display:flex; gap:8px; align-items:center}
+.iconBtn{
+  width:38px; height:38px; border-radius:14px;
+  border:none;
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  display:grid; place-items:center;
+  cursor:pointer;
+  box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+  transition: transform .12s ease, background .12s ease;
+}
+.iconBtn:active{transform:scale(.98)}
+.miniSvg{width:20px;height:20px;display:block}
+
+.container{padding:14px}
+.page{display:none; animation:fadeIn .18s ease}
+.page.on{display:block}
+@keyframes fadeIn{from{opacity:.0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+.h1{font-size:20px; font-weight:1100; margin:0}
+.green{color:var(--green)}
+.sub{color:var(--muted); font-size:12px; margin-top:4px}
+.desc{color:var(--muted); font-size:12px; line-height:1.45}
+
+.hero{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:12px}
+.chip{
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:999px;
+  background: rgba(0,0,0,.18);
+  color:var(--muted);
+  box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+  white-space:nowrap;
+}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px}
+@media (max-width: 380px){ .grid3{grid-template-columns:1fr 1fr} }
+
+.featureCard, .card{
+  width:100%;
+  border-radius: var(--r);
+  border: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  box-shadow: 0 14px 48px rgba(0,0,0,.38);
+  padding:14px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.featureCard:active, .card:active{transform:scale(.99)}
+.cardTitle{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+.badge{
+  font-size:11px; font-weight:1000; color:rgba(0,0,0,.78);
+  padding:6px 10px; border-radius:999px;
+  background: rgba(255,255,255,.88);
+}
+
+.featureCard .h2, .card .h2{margin:10px 0 6px; font-weight:1100; font-size:16px}
+.cta{margin-top:10px; font-weight:1000; font-size:12px}
+
+.accent{
+  position:absolute; inset:-120px -120px auto auto;
+  width:240px; height:240px; border-radius:50%;
+  opacity:.36;
+  transform: rotate(12deg);
+}
+.cSched .accent{background: radial-gradient(circle at 30% 25%, var(--c-sched), transparent 60%)}
+.cFin .accent{background: radial-gradient(circle at 30% 25%, var(--c-fin), transparent 60%)}
+.cPat .accent{background: radial-gradient(circle at 30% 25%, var(--c-pat), transparent 60%)}
+.cLab .accent{background: radial-gradient(circle at 30% 25%, var(--c-lab), transparent 60%)}
+.cMore .accent{background: radial-gradient(circle at 30% 25%, var(--c-more), transparent 60%)}
+
+.iconBlob{
+  width:46px; height:46px; border-radius:18px;
+  display:grid; place-items:center;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.16), transparent 60%),
+    radial-gradient(circle at 70% 82%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(145deg, rgba(255,255,255,.10), rgba(0,0,0,.22));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 0 1px rgba(255,255,255,.06) inset;
+  position:relative;
+  overflow:hidden;
+}
+.iconBlob::before{
+  content:"";
+  position:absolute; inset:-30px;
+  background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.18), transparent 60%);
+  animation: floaty 4.6s ease-in-out infinite;
+  opacity:.8;
+}
+@keyframes floaty{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(-6deg) scale(1.03)}}
+.svgIcon{width:28px; height:28px; position:relative; z-index:1}
+
+.tabbar{
+  position:fixed;
+  left: max(10px, env(safe-area-inset-left));
+  right: max(10px, env(safe-area-inset-right));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  height:66px;
+  border-radius:24px;
+  background: rgba(0,0,0,.26);
+  backdrop-filter: blur(18px);
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  overflow:hidden;
+  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+  z-index:30;
+  max-width:430px;
+  margin:0 auto;
+}
+@media (min-width: 720px){ .tabbar{left:0; right:0} }
+.tab{
+  border:none; background:transparent;
+  color:rgba(255,255,255,.62);
+  font-weight:1000; font-size:11px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:4px;
+  cursor:pointer;
+  transition: color .12s ease, transform .12s ease;
+}
+.tab:active{transform:scale(.98)}
+.tab.on{color:rgba(255,255,255,.94)}
+.tabDot{width:6px; height:6px; border-radius:50%; background:transparent}
+.tab.on .tabDot{background:var(--green)}
+
+.link{color: rgba(255,255,255,.92); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.18)}
+.link:active{opacity:.8}

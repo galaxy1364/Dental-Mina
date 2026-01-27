@@ -1,0 +1,8 @@
+# Dental-Mina (LOCKPACK) - CODEOWNERS
+# TODO: Replace @YOUR_GITHUB_USERNAME with a real GitHub username or @org/team.
+* @YOUR_GITHUB_USERNAME
+/docs/ @YOUR_GITHUB_USERNAME
+/tools/ @YOUR_GITHUB_USERNAME
+/state/ @YOUR_GITHUB_USERNAME
+/app/ @YOUR_GITHUB_USERNAME
+/.github/ @YOUR_GITHUB_USERNAME

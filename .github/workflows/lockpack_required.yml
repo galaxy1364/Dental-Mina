@@ -1,0 +1,27 @@
+name: lockpack-required
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+jobs:
+  lockpack:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HashLock verify (required check)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $hp = "state/HASHLOCK.json"
+          if (!(Test-Path $hp)) { throw "MISSING_HASHLOCK" }
+          $raw = Get-Content $hp -Raw
+          $j = $raw | ConvertFrom-Json
+          if (-not $j.protected) { throw "HASHLOCK_INVALID" }
+          foreach ($it in $j.protected) {
+            $p = ($it.path -replace "/","\\")
+            if (!(Test-Path $p)) { throw ("HASHLOCK_MISSING_FILE:" + $it.path) }
+            $h = (Get-FileHash -Algorithm SHA256 $p).Hash.ToLower()
+            $want = ($it.sha256.ToString()).ToLower()
+            if ($h -ne $want) { throw ("HASHLOCK_MISMATCH:" + $it.path) }
+          }
+          Write-Host "HASHLOCK_OK"

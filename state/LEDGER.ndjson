@@ -1,0 +1,6 @@
+﻿
+{"ts_utc":"2026-01-25T10:54:04.3766432Z","project":"Dental-Mina","gate":"G0_BOOTSTRAP","event":"TOOLCHAIN_EVIDENCE","evidence_file":"artifacts/evidence_toolchain.txt","evidence_sha256":"ca8a519308a7c7bd45e25df15a7dba8a1dc98cb61ccc8903a143f765f5f23b7d"}
+{"ts_utc":"2026-01-26T00:17:18.9206273Z","project":"Dental-Mina","gate":"G1_SINGLE_COMMAND","event":"G1_RUN","qg_sha256":"b464f26d8004a3bb8d46e75acb3172a1a827c2590b74f3e233790739ba0bd73b","manifest_sha256":"59b1a6de9dddf61adef5c41cad2523571c809d427429ac59e1da914f5d6aa2e2"}
+{"ts_utc":null,"project":"Dental-Mina","gate":null,"event":"G1_RUN","qg_sha256":"c7665f376d6bd5f12634429e8893114be0ef114c6852891f994d31c129ebec5a","manifest_sha256":"11e0b80f2fbe41e043a4abc234902f4f6de33e27fda2be7b6a33ca619c639860"}
+{"ts_utc":"2026-01-26T00:50:15.8780565Z","project":"Dental-Mina","gate":"G1_SINGLE_COMMAND","event":"G1_RUN","qg_sha256":"2220eedbf9a0a0908e4901caddac93d7d7a2869f43c820e1d88400038ba5deb2","manifest_sha256":"f4c655eaa1b9304567f3fa8b0d73d578c20eb8154f7b814798ab50c2d5b29adb"}
+{"ts_utc":"2026-01-26T01:06:44.4088635Z","project":"Dental-Mina","gate":"G2_SANITY_HYGIENE","event":"G2_RUN","qg_sha256":"f2a591ca13a67124399c1b584c396db24adb72967b5f70b02de5ffacae6e8cdd","manifest_sha256":"375b81d285e976090def29874db3194a1526e9fb4ac9dc78eae9d18bae77067d"}
