@@ -3,6 +3,19 @@ param(
 )
 
 Set-StrictMode -Version Latest
+
+# LAST_ERROR_TXT_BEGIN
+function Write-LastErrorTxt {
+  param([Parameter(Mandatory=$true)]$Err)
+  try { New-Item -ItemType Directory -Force -Path "artifacts" | Out-Null } catch {}
+  try {
+    $p = Join-Path (Get-Location).Path "artifacts\last_error.txt"
+    $e = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::WriteAllText($p, ($Err | Out-String), $e)
+  } catch {}
+}
+# LAST_ERROR_TXT_END
+
 $ErrorActionPreference = "Stop"
 
 function Get-UtcIso { (Get-Date).ToUniversalTime().ToString("o") }
