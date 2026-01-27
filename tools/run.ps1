@@ -3562,7 +3562,7 @@ if ($tok) {
     & git add -A
     & git commit -m "LOCKPACK G20: CI attest build provenance" *> $null
     if ($LASTEXITCODE -ne 0) { throw "GIT_COMMIT_FAILED" }
-    & git push origin HEAD:main *> $null
+    & git push origin HEAD:main *> $null 2>&1 | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "GIT_PUSH_FAILED" }
   }
 
