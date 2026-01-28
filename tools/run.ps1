@@ -3617,6 +3617,16 @@ try {
     "X-GitHub-Api-Version" = "2022-11-28"
   }
 
+
+  # Preflight (G20): GitHub Attestations are not available for user-owned private repositories.
+  $repoMeta = $null
+  try {
+    $repoMeta = Invoke-RestMethod -Method Get -Uri ("https://api.github.com/repos/$slug") -Headers $headers -TimeoutSec 30
+  } catch { }
+  if ($repoMeta -and ($repoMeta.private -eq $true)) {
+    Write-Host "G20_REQUIRES_PUBLIC_REPO: Make repo Public (Settings -> Change visibility -> Public), then rerun G20."
+    throw "G20_REQUIRES_PUBLIC_REPO"
+  }
     $RestTimeoutSec = 240
   $RestMaxTries   = 8
 
