@@ -3544,6 +3544,7 @@ jobs:
           name: sigstore_trusted_root
           path: dist/sigstore_trusted_root.jsonl
           if-no-files-found: error
+$($Matches.i)overwrite: true
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v3
