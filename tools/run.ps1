@@ -3599,14 +3599,14 @@ if ($tok) {
     $e = [System.IO.Path]::GetTempFileName()
     $runsJson = ""
     try {
-      $pp = Start-Process -FilePath "gh" -ArgumentList @("run","list","-R",$slug,"-w","ci_attest_build_provenance.yml","-L","20","--json","databaseId,status,conclusion,createdAt,event") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+      $pp = Start-Process -FilePath "gh" -ArgumentList @("run","list","-R",$slug,"-L","50","--json","databaseId,status,conclusion,createdAt,event,workflowName") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
       if ($pp.ExitCode -ne 0) { throw ("GH_RUN_LIST_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
       $runsJson = [IO.File]::ReadAllText($o,$Utf8NoBom)
     } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
 
     if ($runsJson) {
       $runs = $runsJson | ConvertFrom-Json
-      $cand = $runs | Where-Object { $_.event -eq "workflow_dispatch" -and ([DateTime]$_.createdAt).ToUniversalTime() -ge $startUtc.AddSeconds(-15) } | Select-Object -First 1
+      $cand = $runs | Where-Object { $_.workflowName -match "ci-attest-build-provenance" -and $_.event -eq "workflow_dispatch" -and ([DateTime]$_.createdAt).ToUniversalTime() -ge $startUtc.AddSeconds(-15) } | Select-Object -First 1
       if ($cand) { $runId = $cand.databaseId; break }
     }
     Start-Sleep -Seconds 2
@@ -3809,6 +3809,7 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
 
 
 
