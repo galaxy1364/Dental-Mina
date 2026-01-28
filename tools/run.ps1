@@ -3526,6 +3526,16 @@ jobs:
           $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
           if (Test-Path $out) { Remove-Item $out -Force }
           git archive --format=zip --output $out HEAD
+      - name: Write Sigstore trusted root (offline verification)
+        run: gh attestation trusted-root --outfile dist/sigstore_trusted_root.jsonl
+
+      - name: Upload Sigstore trusted root
+        uses: actions/upload-artifact@v4
+        with:
+          name: sigstore_trusted_root
+          path: dist/sigstore_trusted_root.jsonl
+          if-no-files-found: error
+
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v3
         with:
