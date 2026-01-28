@@ -1,6 +1,8 @@
 name: ci-attest-build-provenance
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
 permissions: {}
 jobs:
   build:
@@ -25,7 +27,6 @@ jobs:
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
         with:
-$($Matches.i)  overwrite: true
           name: sigstore_trusted_root
           path: dist/sigstore_trusted_root.jsonl
           if-no-files-found: error
@@ -35,7 +36,6 @@ $($Matches.i)  overwrite: true
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
         with:
-$($Matches.i)  overwrite: true
           name: sigstore_trusted_root
           path: dist/sigstore_trusted_root.jsonl
           if-no-files-found: error
@@ -52,6 +52,5 @@ $($Matches.i)overwrite: true
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-$($Matches.i)  overwrite: true
           name: Dental-Mina_repo
           path: dist/Dental-Mina_repo_${{ github.sha }}.zip
