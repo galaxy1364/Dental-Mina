@@ -3501,7 +3501,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force dist | Out-Null
-          $out = "dist/Dental-Mina_repo_$env:GITHUB_SHA.zip"
+          $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
           if (Test-Path $out) { Remove-Item $out -Force }
           git archive --format=zip --output $out HEAD
       - name: Attest build provenance
@@ -3597,21 +3597,14 @@ try {
 
   $startUtc = (Get-Date).ToUniversalTime()
 
-  $runsUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/runs?event=workflow_dispatch&per_page=5"
-
-  $beforeId = $null
-  try {
-    $before = Invoke-RestMethod -Method Get -Uri $runsUrl -Headers $headers -TimeoutSec 30
-    if ($before -and $before.workflow_runs -and $before.workflow_runs.Count -gt 0) { $beforeId = $before.workflow_runs[0].id }
-  } catch { }
-
   $dispatchUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/dispatches"
   Invoke-RestMethod -Method Post -Uri $dispatchUrl -Headers $headers -ContentType "application/json" -Body (@{ ref = "main" } | ConvertTo-Json) -TimeoutSec 30 | Out-Null
 
   $runId = $null
-  for ($i=0; $i -lt 180 -and -not $runId; $i++) {
+  for ($i=0; $i -lt 90 -and -not $runId; $i++) {
+    $runsUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/runs?event=workflow_dispatch&per_page=20"
     $resp = Invoke-RestMethod -Method Get -Uri $runsUrl -Headers $headers -TimeoutSec 30
-    $cand = $resp.workflow_runs | Where-Object { ($beforeId -eq $null) -or ($_.id -ne $beforeId) } | Select-Object -First 1
+    $cand = $resp.workflow_runs | Where-Object { ([DateTime]$_.created_at).ToUniversalTime() -ge $startUtc.AddSeconds(-30) } | Select-Object -First 1
     if ($cand) { $runId = $cand.id; break }
     Start-Sleep -Seconds 2
   }
@@ -3809,5 +3802,3 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
-
