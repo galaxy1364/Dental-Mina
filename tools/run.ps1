@@ -3682,8 +3682,17 @@ try {
     if ($before -and $before.workflow_runs -and $before.workflow_runs.Count -gt 0) { $beforeId = $before.workflow_runs[0].id }
   } catch { }
 
-  $dispatchUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/dispatches"
-  Invoke-GhApi -Method Post -Uri $dispatchUrl -Body @{ ref = "main" } | Out-Null
+  $refBranch = "main"
+  try {
+    $refBranch = (& gh api "repos/$slug" --jq ".default_branch" 2>$null)
+    if (-not $refBranch) { $refBranch = "main" }
+  } catch { $refBranch = "main" }
+
+  $dispatchEndpoint = "repos/$slug/actions/workflows/ci_attest_build_provenance.yml/dispatches"
+  $capDisp = Invoke-ProcCapture -FilePath "gh" -ArgumentList @("api","-X","POST",$dispatchEndpoint,"-f",("ref="+$refBranch))
+  if ($capDisp.ExitCode -ne 0) {
+    throw ("G20_WORKFLOW_DISPATCH_FAILED:" + $capDisp.Stderr + $capDisp.Stdout)
+  }
 
   $runId = $null
   for ($i=0; $i -lt 180 -and -not $runId; $i++) {
