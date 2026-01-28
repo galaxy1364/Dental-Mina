@@ -3584,16 +3584,44 @@ if ($tok) {
     }
   }
 
-  & gh workflow run "ci_attest_build_provenance.yml" -R $slug --ref main *> $null
+  $startUtc = (Get-Date).ToUniversalTime()
 
-  $runsJson = & gh run list -R $slug -w "ci_attest_build_provenance.yml" -L 1 --json databaseId,status,conclusion
-  if (-not $runsJson) { throw "CI_RUN_NOT_FOUND" }
-  $runs = $runsJson | ConvertFrom-Json
-  if (-not $runs -or $runs.Count -lt 1) { throw "CI_RUN_NOT_FOUND" }
+  $o = [System.IO.Path]::GetTempFileName()
+  $e = [System.IO.Path]::GetTempFileName()
+  try {
+    $pp = Start-Process -FilePath "gh" -ArgumentList @("workflow","run","ci_attest_build_provenance.yml","-R",$slug,"--ref","main") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+    if ($pp.ExitCode -ne 0) { throw ("GH_WORKFLOW_RUN_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
 
-  $runId = $runs[0].databaseId
-  & gh run watch $runId -R $slug --exit-status -i 10
-  if ($LASTEXITCODE -ne 0) { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
+  $runId = $null
+  for ($i=0; $i -lt 60 -and -not $runId; $i++) {
+    $o = [System.IO.Path]::GetTempFileName()
+    $e = [System.IO.Path]::GetTempFileName()
+    $runsJson = ""
+    try {
+      $pp = Start-Process -FilePath "gh" -ArgumentList @("run","list","-R",$slug,"-w","ci_attest_build_provenance.yml","-L","20","--json","databaseId,status,conclusion,createdAt,event") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+      if ($pp.ExitCode -ne 0) { throw ("GH_RUN_LIST_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+      $runsJson = [IO.File]::ReadAllText($o,$Utf8NoBom)
+    } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
+
+    if ($runsJson) {
+      $runs = $runsJson | ConvertFrom-Json
+      $cand = $runs | Where-Object { $_.event -eq "workflow_dispatch" -and ([DateTime]$_.createdAt).ToUniversalTime() -ge $startUtc.AddSeconds(-15) } | Select-Object -First 1
+      if ($cand) { $runId = $cand.databaseId; break }
+    }
+    Start-Sleep -Seconds 2
+  }
+  if (-not $runId) { throw "CI_RUN_NOT_FOUND_AFTER_TRIGGER" }
+
+  $o = [System.IO.Path]::GetTempFileName()
+  $e = [System.IO.Path]::GetTempFileName()
+  try {
+    $pp = Start-Process -FilePath "gh" -ArgumentList @("run","watch",$runId,"-R",$slug,"--exit-status","-i","10") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+    if ($pp.ExitCode -ne 0) {
+      try { Start-Process -FilePath "gh" -ArgumentList @("run","view",$runId,"-R",$slug,"--log-failed") -WorkingDirectory $RepoRoot -Wait -NoNewWindow } catch {}
+      throw "CI_RUN_FAILED_OR_NOT_FINISHED"
+    }
+  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
 
   $ciDir = "artifacts\ci"
   New-Item -ItemType Directory -Force $ciDir | Out-Null
@@ -3601,15 +3629,25 @@ if ($tok) {
   if (Test-Path $ciStage) { Remove-Item -Recurse -Force $ciStage }
   New-Item -ItemType Directory -Force $ciStage | Out-Null
 
-  & gh run download $runId -R $slug -n "Dental-Mina_repo" -D $ciStage *> $null
-  if ($LASTEXITCODE -ne 0) { throw "CI_ARTIFACT_DOWNLOAD_FAILED" }
+  $o = [System.IO.Path]::GetTempFileName()
+  $e = [System.IO.Path]::GetTempFileName()
+  try {
+    $pp = Start-Process -FilePath "gh" -ArgumentList @("run","download",$runId,"-R",$slug,"-n","Dental-Mina_repo","-D",$ciStage) -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+    if ($pp.ExitCode -ne 0) { throw ("CI_ARTIFACT_DOWNLOAD_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
 
   $artifact = Get-ChildItem -Path $ciStage -Recurse -File | Where-Object { $_.Name -like "*.zip" } | Select-Object -First 1
   if (-not $artifact) { throw "CI_ARTIFACT_ZIP_NOT_FOUND" }
 
   $signer = "github.com/$slug/.github/workflows/ci_attest_build_provenance.yml"
-  $verJson = & gh attestation verify $artifact.FullName --repo $slug --signer-workflow $signer --format json
-  if ($LASTEXITCODE -ne 0) { throw "ATTESTATION_VERIFY_FAILED" }
+  $o = [System.IO.Path]::GetTempFileName()
+  $e = [System.IO.Path]::GetTempFileName()
+  $verJson = ""
+  try {
+    $pp = Start-Process -FilePath "gh" -ArgumentList @("attestation","verify",$artifact.FullName,"--repo",$slug,"--signer-workflow",$signer,"--format","json") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+    if ($pp.ExitCode -ne 0) { throw ("ATTESTATION_VERIFY_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+    $verJson = [IO.File]::ReadAllText($o,$Utf8NoBom)
+  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
   $verPath = Join-Path $ciStage "attestation_verify.json"
   Write-TextNoBom $verPath $verJson
 
@@ -3771,6 +3809,7 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
 
 
 
