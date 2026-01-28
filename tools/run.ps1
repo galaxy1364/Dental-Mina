@@ -3501,7 +3501,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force dist | Out-Null
-          $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
+          $out = "dist/Dental-Mina_repo_$env:GITHUB_SHA.zip"
           if (Test-Path $out) { Remove-Item $out -Force }
           git archive --format=zip --output $out HEAD
       - name: Attest build provenance
@@ -3809,4 +3809,5 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
 
