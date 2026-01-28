@@ -1,10 +1,10 @@
 {
     "version":  1,
-    "ts_utc":  "2026-01-28T04:58:42.6275570Z",
+    "ts_utc":  "2026-01-28T05:22:26.2330258Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "015982da80677add1012e4041724738f5bbd1aadaaf1bc965b3b32dfd68746f2"
+                          "sha256":  "5a67c905cb5ecc4ec387bddfccffb6855e7e0ff263c8fcea9ac99a43d78193de"
                       },
                       {
                           "path":  "docs/resume.md",
@@ -28,7 +28,7 @@
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "905fcd963d63e7586d0e2cec81b6ff51d80b9cf1120e9cbdff2183f7b47dfe18"
+                          "sha256":  "11e771db1072affdd8f4a0025dd445b6d41e97f79c774115c669477ce49566e3"
                       }
                   ]
 }

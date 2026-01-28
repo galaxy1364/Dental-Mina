@@ -22,7 +22,7 @@ jobs:
           if (Test-Path $out) { Remove-Item $out -Force }
           git archive --format=zip --output $out HEAD
       - name: Write Sigstore trusted root (offline verification)
-        run: gh attestation trusted-root --outfile dist/sigstore_trusted_root.jsonl
+        run: New-Item -ItemType Directory -Force dist | Out-Null; gh attestation trusted-root | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
 
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
@@ -31,7 +31,7 @@ jobs:
           path: dist/sigstore_trusted_root.jsonl
           if-no-files-found: error
       - name: Write Sigstore trusted root (offline verification)
-        run: gh attestation trusted-root --outfile dist/sigstore_trusted_root.jsonl
+        run: New-Item -ItemType Directory -Force dist | Out-Null; gh attestation trusted-root | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
 
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
