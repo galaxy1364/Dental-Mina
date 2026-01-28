@@ -3718,7 +3718,24 @@ try {
   if (-not $artifact) { throw "CI_ARTIFACT_ZIP_NOT_FOUND" }
 
   $signer = "github.com/$slug/.github/workflows/ci_attest_build_provenance.yml"
-$av = Invoke-ProcCapture -FilePath "gh" -ArgumentList @("attestation","verify",$artifact.FullName,"--repo",$slug,"--signer-workflow",$signer,"--format","json") -WorkingDirectory $RepoRoot
+# Preflight: gh must support custom trusted root (offline/robust verifier init)
+$h = (& gh attestation verify -h 2>&1) -join "`n"
+if ($h -notmatch "--custom-trusted-root") {
+  throw "G20_REQUIRES_NEWER_GH_CLI: Update GitHub CLI (gh) so attestation verify supports --custom-trusted-root."
+}
+
+# Sigstore trusted root (fixes: public good verifier is not available)
+$tr = Invoke-ProcCapture -FilePath "gh" -ArgumentList @("attestation","trusted-root") -WorkingDirectory $RepoRoot
+if ($tr.ExitCode -ne 0 -or -not $tr.Stdout) {
+  throw ("G20_TRUSTED_ROOT_FAILED:" + ($tr.Stderr + $tr.Stdout))
+}
+$trustedRoot = Join-Path $ciStage "sigstore_trusted_root.jsonl"
+Write-TextNoBom $trustedRoot $tr.Stdout
+
+$av = Invoke-ProcCapture -FilePath "gh" -ArgumentList @(
+  "attestation","verify",$artifact.FullName,"--repo",$slug,"--signer-workflow",$signer,"--format","json",
+  "--custom-trusted-root",$trustedRoot
+) -WorkingDirectory $RepoRoot
 if ($av.ExitCode -ne 0) { throw ("ATTESTATION_VERIFY_FAILED:" + ($av.Stderr + $av.Stdout)) }
 $verJson = $av.Stdout
   $verPath = Join-Path $ciStage "attestation_verify.json"
