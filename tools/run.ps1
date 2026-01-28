@@ -3575,8 +3575,14 @@ if ($tok) {
     & git add -A
     & git commit -m "LOCKPACK G20: CI attest build provenance" *> $null
     if ($LASTEXITCODE -ne 0) { throw "GIT_COMMIT_FAILED" }
-    & git push origin HEAD:main *> $null 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "GIT_PUSH_FAILED" }
+        $o = [System.IO.Path]::GetTempFileName()
+    $e = [System.IO.Path]::GetTempFileName()
+    try {
+      $pp = Start-Process -FilePath "git" -ArgumentList @("push","origin","HEAD:main") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+      if ($pp.ExitCode -ne 0) { throw ("GIT_PUSH_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+    } finally {
+      Remove-Item $o,$e -Force -ErrorAction SilentlyContinue
+    }
   }
 
   & gh workflow run "ci_attest_build_provenance.yml" -R $slug --ref main *> $null
@@ -3766,3 +3772,4 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
