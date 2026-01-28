@@ -3595,17 +3595,46 @@ try {
     "X-GitHub-Api-Version" = "2022-11-28"
   }
 
-  $startUtc = (Get-Date).ToUniversalTime()
+    $RestTimeoutSec = 240
+  $RestMaxTries   = 8
+
+  function Invoke-GhApi {
+    param(
+      [Parameter(Mandatory=$true)][ValidateSet("Get","Post")][string]$Method,
+      [Parameter(Mandatory=$true)][string]$Uri,
+      [object]$Body = $null
+    )
+    for ($try=1; $try -le $RestMaxTries; $try++) {
+      try {
+        if ($null -ne $Body) {
+          return Invoke-RestMethod -Method $Method -Uri $Uri -Headers $headers -ContentType "application/json" -Body ($Body | ConvertTo-Json -Depth 10) -TimeoutSec $RestTimeoutSec
+        } else {
+          return Invoke-RestMethod -Method $Method -Uri $Uri -Headers $headers -TimeoutSec $RestTimeoutSec
+        }
+      } catch {
+        if ($try -ge $RestMaxTries) { throw }
+        Start-Sleep -Seconds ([Math]::Min(20, [Math]::Pow(2, $try)))
+      }
+    }
+  }
+
+  $runsUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/runs?event=workflow_dispatch&per_page=5"
+
+  $beforeId = $null
+  try {
+    $before = Invoke-GhApi -Method Get -Uri $runsUrl
+    if ($before -and $before.workflow_runs -and $before.workflow_runs.Count -gt 0) { $beforeId = $before.workflow_runs[0].id }
+  } catch { }
 
   $dispatchUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/dispatches"
-  Invoke-RestMethod -Method Post -Uri $dispatchUrl -Headers $headers -ContentType "application/json" -Body (@{ ref = "main" } | ConvertTo-Json) -TimeoutSec 30 | Out-Null
+  Invoke-GhApi -Method Post -Uri $dispatchUrl -Body @{ ref = "main" } | Out-Null
 
   $runId = $null
-  for ($i=0; $i -lt 90 -and -not $runId; $i++) {
-    $runsUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/runs?event=workflow_dispatch&per_page=20"
-    $resp = Invoke-RestMethod -Method Get -Uri $runsUrl -Headers $headers -TimeoutSec 30
-    $cand = $resp.workflow_runs | Where-Object { ([DateTime]$_.created_at).ToUniversalTime() -ge $startUtc.AddSeconds(-30) } | Select-Object -First 1
-    if ($cand) { $runId = $cand.id; break }
+  for ($i=0; $i -lt 180 -and -not $runId; $i++) {
+    $resp = Invoke-GhApi -Method Get -Uri $runsUrl
+    $latest = $null
+    if ($resp -and $resp.workflow_runs -and $resp.workflow_runs.Count -gt 0) { $latest = $resp.workflow_runs[0] }
+    if ($latest -and ($beforeId -eq $null -or $latest.id -ne $beforeId)) { $runId = $latest.id; break }
     Start-Sleep -Seconds 2
   }
   if (-not $runId) { throw "CI_RUN_NOT_FOUND_AFTER_TRIGGER" }
@@ -3613,7 +3642,7 @@ try {
   $run = $null
   for ($i=0; $i -lt 240; $i++) {
     $runUrl = "https://api.github.com/repos/$slug/actions/runs/$runId"
-    $run = Invoke-RestMethod -Method Get -Uri $runUrl -Headers $headers -TimeoutSec 30
+    $run = Invoke-GhApi -Method Get -Uri $runUrl
     if ($run.status -eq "completed") { break }
     Start-Sleep -Seconds 5
   }
@@ -3626,12 +3655,12 @@ try {
   New-Item -ItemType Directory -Force $ciStage | Out-Null
 
   $artsUrl = "https://api.github.com/repos/$slug/actions/runs/$runId/artifacts"
-  $arts = Invoke-RestMethod -Method Get -Uri $artsUrl -Headers $headers -TimeoutSec 30
+  $arts = Invoke-GhApi -Method Get -Uri $artsUrl
   $a = $arts.artifacts | Where-Object { $_.name -eq "Dental-Mina_repo" } | Select-Object -First 1
   if (-not $a) { throw "CI_ARTIFACT_NOT_FOUND" }
 
   $zipPath = Join-Path $ciStage "artifact.zip"
-  Invoke-WebRequest -UseBasicParsing -Uri $a.archive_download_url -Headers $headers -OutFile $zipPath -TimeoutSec 180
+  Invoke-WebRequest -UseBasicParsing -Uri $a.archive_download_url -Headers $headers -OutFile $zipPath -TimeoutSec 600
   Expand-Archive -Path $zipPath -DestinationPath $ciStage -Force
   Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
   $artifact = Get-ChildItem -Path $ciStage -Recurse -File | Where-Object { $_.Name -like "*.zip" } | Select-Object -First 1
