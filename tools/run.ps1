@@ -2,8 +2,30 @@ param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
 
-Set-StrictMode -Version Latest
 
+
+function Invoke-ProcCapture {
+  [CmdletBinding()]
+  param(
+    [Parameter(Mandatory=$true)][string]$FilePath,
+    [Parameter()][string[]]$ArgumentList = @(),
+    [Parameter()][string]$WorkingDirectory = $PWD.Path
+  )
+  $o = [System.IO.Path]::GetTempFileName()
+  $e = [System.IO.Path]::GetTempFileName()
+  try {
+    $pp = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -WorkingDirectory $WorkingDirectory -Wait -PassThru -NoNewWindow `
+      -RedirectStandardOutput $o -RedirectStandardError $e
+    $enc = New-Object System.Text.UTF8Encoding($false)
+    $stdout = ""
+    $stderr = ""
+    try { $stdout = [IO.File]::ReadAllText($o, $enc) } catch {}
+    try { $stderr = [IO.File]::ReadAllText($e, $enc) } catch {}
+    [pscustomobject]@{ ExitCode = $pp.ExitCode; Stdout = $stdout; Stderr = $stderr }
+  } finally {
+    Remove-Item $o, $e -Force -ErrorAction SilentlyContinue
+  }
+}
 # LAST_ERROR_TXT_BEGIN
 function Write-LastErrorTxt {
   param([Parameter(Mandatory=$true)]$Err)
