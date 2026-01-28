@@ -3574,54 +3574,50 @@ if ($tok) {
     & git add -A
     & git commit -m "LOCKPACK G20: CI attest build provenance" *> $null
     if ($LASTEXITCODE -ne 0) { throw "GIT_COMMIT_FAILED" }
-        $o = [System.IO.Path]::GetTempFileName()
-    $e = [System.IO.Path]::GetTempFileName()
-    try {
-      $pp = Start-Process -FilePath "git" -ArgumentList @("push","origin","HEAD:main") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-      if ($pp.ExitCode -ne 0) { throw ("GIT_PUSH_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
-    } finally {
-      Remove-Item $o,$e -Force -ErrorAction SilentlyContinue
-    }
+$o = [System.IO.Path]::GetTempFileName()
+$e = [System.IO.Path]::GetTempFileName()
+try {
+  $pp = Start-Process -FilePath "git" -ArgumentList @("push","origin","HEAD:main") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
+  if ($pp.ExitCode -ne 0) { throw ("GIT_PUSH_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
+} finally {
+  Remove-Item $o,$e -Force -ErrorAction SilentlyContinue
+}
+  }
+  # Use PowerShell REST (WinHTTP/SChannel) for Actions API to avoid Go TLS handshake timeouts.
+  $authTok = (& gh auth token 2>$null)
+  if (-not $authTok) { throw "GH_TOKEN_MISSING" }
+  $authTok = $authTok.Trim()
+
+  $headers = @{
+    Authorization      = "Bearer $authTok"
+    "User-Agent"       = "LOCKPACK"
+    Accept             = "application/vnd.github+json"
+    "X-GitHub-Api-Version" = "2022-11-28"
   }
 
   $startUtc = (Get-Date).ToUniversalTime()
 
-  $o = [System.IO.Path]::GetTempFileName()
-  $e = [System.IO.Path]::GetTempFileName()
-  try {
-    $pp = Start-Process -FilePath "gh" -ArgumentList @("workflow","run","ci_attest_build_provenance.yml","-R",$slug,"--ref","main") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-    if ($pp.ExitCode -ne 0) { throw ("GH_WORKFLOW_RUN_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
-  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
+  $dispatchUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/dispatches"
+  Invoke-RestMethod -Method Post -Uri $dispatchUrl -Headers $headers -ContentType "application/json" -Body (@{ ref = "main" } | ConvertTo-Json) -TimeoutSec 30 | Out-Null
 
   $runId = $null
-  for ($i=0; $i -lt 60 -and -not $runId; $i++) {
-    $o = [System.IO.Path]::GetTempFileName()
-    $e = [System.IO.Path]::GetTempFileName()
-    $runsJson = ""
-    try {
-      $pp = Start-Process -FilePath "gh" -ArgumentList @("run","list","-R",$slug,"-L","50","--json","databaseId,status,conclusion,createdAt,event,workflowName") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-      if ($pp.ExitCode -ne 0) { throw ("GH_RUN_LIST_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
-      $runsJson = [IO.File]::ReadAllText($o,$Utf8NoBom)
-    } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
-
-    if ($runsJson) {
-      $runs = $runsJson | ConvertFrom-Json
-      $cand = $runs | Where-Object { $_.workflowName -match "ci-attest-build-provenance" -and $_.event -eq "workflow_dispatch" -and ([DateTime]$_.createdAt).ToUniversalTime() -ge $startUtc.AddSeconds(-15) } | Select-Object -First 1
-      if ($cand) { $runId = $cand.databaseId; break }
-    }
+  for ($i=0; $i -lt 90 -and -not $runId; $i++) {
+    $runsUrl = "https://api.github.com/repos/$slug/actions/workflows/ci_attest_build_provenance.yml/runs?event=workflow_dispatch&per_page=20"
+    $resp = Invoke-RestMethod -Method Get -Uri $runsUrl -Headers $headers -TimeoutSec 30
+    $cand = $resp.workflow_runs | Where-Object { ([DateTime]$_.created_at).ToUniversalTime() -ge $startUtc.AddSeconds(-30) } | Select-Object -First 1
+    if ($cand) { $runId = $cand.id; break }
     Start-Sleep -Seconds 2
   }
   if (-not $runId) { throw "CI_RUN_NOT_FOUND_AFTER_TRIGGER" }
 
-  $o = [System.IO.Path]::GetTempFileName()
-  $e = [System.IO.Path]::GetTempFileName()
-  try {
-    $pp = Start-Process -FilePath "gh" -ArgumentList @("run","watch",$runId,"-R",$slug,"--exit-status","-i","10") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-    if ($pp.ExitCode -ne 0) {
-      try { Start-Process -FilePath "gh" -ArgumentList @("run","view",$runId,"-R",$slug,"--log-failed") -WorkingDirectory $RepoRoot -Wait -NoNewWindow } catch {}
-      throw "CI_RUN_FAILED_OR_NOT_FINISHED"
-    }
-  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
+  $run = $null
+  for ($i=0; $i -lt 240; $i++) {
+    $runUrl = "https://api.github.com/repos/$slug/actions/runs/$runId"
+    $run = Invoke-RestMethod -Method Get -Uri $runUrl -Headers $headers -TimeoutSec 30
+    if ($run.status -eq "completed") { break }
+    Start-Sleep -Seconds 5
+  }
+  if (-not $run -or $run.status -ne "completed" -or $run.conclusion -ne "success") { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
 
   $ciDir = "artifacts\ci"
   New-Item -ItemType Directory -Force $ciDir | Out-Null
@@ -3629,25 +3625,22 @@ if ($tok) {
   if (Test-Path $ciStage) { Remove-Item -Recurse -Force $ciStage }
   New-Item -ItemType Directory -Force $ciStage | Out-Null
 
-  $o = [System.IO.Path]::GetTempFileName()
-  $e = [System.IO.Path]::GetTempFileName()
-  try {
-    $pp = Start-Process -FilePath "gh" -ArgumentList @("run","download",$runId,"-R",$slug,"-n","Dental-Mina_repo","-D",$ciStage) -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-    if ($pp.ExitCode -ne 0) { throw ("CI_ARTIFACT_DOWNLOAD_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
-  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
+  $artsUrl = "https://api.github.com/repos/$slug/actions/runs/$runId/artifacts"
+  $arts = Invoke-RestMethod -Method Get -Uri $artsUrl -Headers $headers -TimeoutSec 30
+  $a = $arts.artifacts | Where-Object { $_.name -eq "Dental-Mina_repo" } | Select-Object -First 1
+  if (-not $a) { throw "CI_ARTIFACT_NOT_FOUND" }
 
+  $zipPath = Join-Path $ciStage "artifact.zip"
+  Invoke-WebRequest -UseBasicParsing -Uri $a.archive_download_url -Headers $headers -OutFile $zipPath -TimeoutSec 180
+  Expand-Archive -Path $zipPath -DestinationPath $ciStage -Force
+  Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
   $artifact = Get-ChildItem -Path $ciStage -Recurse -File | Where-Object { $_.Name -like "*.zip" } | Select-Object -First 1
   if (-not $artifact) { throw "CI_ARTIFACT_ZIP_NOT_FOUND" }
 
   $signer = "github.com/$slug/.github/workflows/ci_attest_build_provenance.yml"
-  $o = [System.IO.Path]::GetTempFileName()
-  $e = [System.IO.Path]::GetTempFileName()
-  $verJson = ""
-  try {
-    $pp = Start-Process -FilePath "gh" -ArgumentList @("attestation","verify",$artifact.FullName,"--repo",$slug,"--signer-workflow",$signer,"--format","json") -WorkingDirectory $RepoRoot -Wait -PassThru -NoNewWindow -RedirectStandardOutput $o -RedirectStandardError $e
-    if ($pp.ExitCode -ne 0) { throw ("ATTESTATION_VERIFY_FAILED:" + ([IO.File]::ReadAllText($e,$Utf8NoBom) + [IO.File]::ReadAllText($o,$Utf8NoBom))) }
-    $verJson = [IO.File]::ReadAllText($o,$Utf8NoBom)
-  } finally { Remove-Item $o,$e -Force -ErrorAction SilentlyContinue }
+$av = Invoke-ProcCapture -FilePath "gh" -ArgumentList @("attestation","verify",$artifact.FullName,"--repo",$slug,"--signer-workflow",$signer,"--format","json") -WorkingDirectory $RepoRoot
+if ($av.ExitCode -ne 0) { throw ("ATTESTATION_VERIFY_FAILED:" + ($av.Stderr + $av.Stdout)) }
+$verJson = $av.Stdout
   $verPath = Join-Path $ciStage "attestation_verify.json"
   Write-TextNoBom $verPath $verJson
 
@@ -3809,8 +3802,3 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
-
-
-
-
