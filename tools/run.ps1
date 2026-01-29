@@ -1,3 +1,4 @@
+try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
