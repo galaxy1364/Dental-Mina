@@ -4,7 +4,7 @@
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "a5acabc2e10c8a93a090f063e24fa0a2070431d088d433a310fa2709721684b4"
+                          "sha256":  "3bf73e4099dc730826e83cc5570e81f833bdfedbeb5a9864c0dd27f806d50c34"
                       },
                       {
                           "path":  "docs/resume.md",
@@ -28,7 +28,7 @@
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "e67ca74eac3226081c47b1678e876ee0f17931f5b5043300f9f53492dd9a6a32"
+                          "sha256":  "98df7a8a1fdd43ac18d8a5953cf20d1d4c981ef60bbac62b80666f64e4ebfafb"
                       }
                   ]
 }
