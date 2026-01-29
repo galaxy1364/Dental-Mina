@@ -9615,7 +9615,21 @@ try {
     if ($run.status -eq "completed") { break }
     Start-Sleep -Seconds 5
   }
-  if (-not $run -or $run.status -ne "completed" -or $run.conclusion -ne "success") { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
+  $wf = 'ci_attest_build_provenance.yml'
+  $head = (git rev-parse HEAD).Trim()
+  $ciOk = $false
+  for($t=0; $t -lt 180; $t++){
+    $runs = gh run list --workflow $wf --limit 25 --json databaseId,status,conclusion,headSha,createdAt,event | ConvertFrom-Json
+    $pick = $runs | Where-Object { $_.headSha -eq $head } | Select-Object -First 1
+    if($pick -and $pick.status -eq 'completed'){
+      if($pick.conclusion -eq 'success'){ $ciOk = $true; break }
+      $ciOk = $false; break
+    }
+    Start-Sleep -Seconds 10
+  }
+  if(-not $ciOk){
+    if (-not $run -or $run.status -ne "completed" -or $run.conclusion -ne "success") { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
+  }
 
   $ciDir = "artifacts\ci"
   New-Item -ItemType Directory -Force $ciDir | Out-Null
@@ -9817,5 +9831,6 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
 
 
