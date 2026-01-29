@@ -8798,7 +8798,7 @@ jobs:
 - Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
 
 
-- Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
+- Verifies artifact attestation locally via `gh attestation verify --custom-trusted-root dist/sigstore_trusted_root.jsonl` (requires GitHub CLI auth).
 
 
 - PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
@@ -9439,7 +9439,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force dist | Out-Null
-          gh attestation trusted-root --tuf-url https://sigstore.github.io/root-signing/ | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
+          gh attestation trusted-root| Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
 
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
@@ -9472,7 +9472,7 @@ jobs:
     $addon = @'
 ## G20 - Signed CI Artifact + Provenance
 - Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
-- Verifies artifact attestation locally via `gh attestation verify` (requires GitHub CLI auth).
+- Verifies artifact attestation locally via `gh attestation verify --custom-trusted-root dist/sigstore_trusted_root.jsonl` (requires GitHub CLI auth).
 - PASS requires: workflow present, CI run success, and `artifacts/ci/*/attestation_verify.json` captured in evidence.
 '@
     $rules2 = $rules + $addon
@@ -9635,7 +9635,7 @@ try {
 
   $signer = "github.com/$slug/.github/workflows/ci_attest_build_provenance.yml"
 # Preflight: gh must support custom trusted root (offline/robust verifier init)
-$h = (& gh attestation verify -h 2>&1) -join "`n"
+$h = (& gh attestation verify --custom-trusted-root dist/sigstore_trusted_root.jsonl -h 2>&1) -join "`n"
 if ($h -notmatch "--custom-trusted-root") {
   throw "G20_REQUIRES_NEWER_GH_CLI: Update GitHub CLI (gh) so attestation verify supports --custom-trusted-root."
 }
