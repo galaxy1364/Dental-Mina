@@ -8798,6 +8798,7 @@ jobs:
 - Adds workflow `.github/workflows/ci_attest_build_provenance.yml` to produce build provenance attestations.
 
 
+if(!(Test-Path 'dist/sigstore_trusted_root.jsonl')){ throw 'MISSING_TRUSTED_ROOT_FROM_CI: dist/sigstore_trusted_root.jsonl (CI must upload/download dist artifact before verify)' }
 - Verifies artifact attestation locally via `gh attestation verify --custom-trusted-root dist/sigstore_trusted_root.jsonl` (requires GitHub CLI auth).
 
 
@@ -9441,8 +9442,6 @@ jobs:
           New-Item -ItemType Directory -Force dist | Out-Null
           New-Item -ItemType Directory -Force dist | Out-Null
           try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
-          $tufBases=@("https://tuf-repo.sigstore.dev","https://tuf-repo-cdn.sigstore.dev"); $ok=$false; foreach($b in $tufBases){ try{ (New-Object Net.WebClient).DownloadFile(($b.TrimEnd("/") + "/14.root.json"), "dist/14.root.json"); $tufBase=$b; $ok=$true; break } catch {} }; if(-not $ok){ throw "TUF_ROOT_DOWNLOAD_FAILED" }
-          gh attestation trusted-root --tuf-url $tufBase --tuf-root dist/14.root.json | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
 
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
@@ -9818,4 +9817,5 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
+
 
