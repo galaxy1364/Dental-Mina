@@ -1,171 +1,56 @@
-
-
 name: ci-attest-build-provenance
-
-
 on:
-
-
   workflow_dispatch:
-
-
   push:
-
-
-    branches: [ main ]
-
+    branches:
+      - main
+      - master
 
 permissions: {}
 
-
 jobs:
-
-
   build:
-
-
     runs-on: windows-latest
-
-
     permissions:
-
-
       id-token: write
-
-
       attestations: write
-
-
       contents: read
-
-
     steps:
-
-
       - uses: actions/checkout@v4
 
-
       - name: Build artifact (git archive zip)
-
-
         shell: pwsh
-
-
         run: |
-
-
           $ErrorActionPreference = "Stop"
-
-
           New-Item -ItemType Directory -Force dist | Out-Null
-
-
           $out = "dist/Dental-Mina_repo_${{ github.sha }}.zip"
-
-
           if (Test-Path $out) { Remove-Item $out -Force }
-
-
           git archive --format=zip --output $out HEAD
 
-
       - name: Write Sigstore trusted root (offline verification)
-
-
-        run: New-Item -ItemType Directory -Force dist | Out-Null; gh attestation trusted-root | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
-
-
-
-
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force dist | Out-Null
+          gh attestation trusted-root | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
 
       - name: Upload Sigstore trusted root
-
-
         uses: actions/upload-artifact@v4
-
-
         with:
-$($Matches.i)  overwrite: true
-
-
+          overwrite: true
           name: sigstore_trusted_root
-
-
           path: dist/sigstore_trusted_root.jsonl
-
-
           if-no-files-found: error
-
-
-      - name: Write Sigstore trusted root (offline verification)
-
-
-        run: New-Item -ItemType Directory -Force dist | Out-Null; gh attestation trusted-root | Set-Content -Path dist/sigstore_trusted_root.jsonl -Encoding utf8NoBOM
-
-
-
-
-
-      - name: Upload Sigstore trusted root
-
-
-        uses: actions/upload-artifact@v4
-
-
-        with:
-$($Matches.i)  overwrite: true
-
-
-          name: sigstore_trusted_root
-
-
-          path: dist/sigstore_trusted_root.jsonl
-
-
-          if-no-files-found: error
-
-
-$($Matches.i)overwrite: true
-
-
-$($Matches.i)overwrite: true
-
-
-$($Matches.i)overwrite: true
-
-
-$($Matches.i)overwrite: true
-
-
-$($Matches.i)overwrite: true
-
-
-
-
 
       - name: Attest build provenance
-
-
         uses: actions/attest-build-provenance@v3
-
-
         with:
-
-
           subject-path: dist/Dental-Mina_repo_${{ github.sha }}.zip
 
-
       - name: Upload artifact
-
-
         uses: actions/upload-artifact@v4
-
-
         with:
-$($Matches.i)  overwrite: true
-
-
+          overwrite: true
           name: Dental-Mina_repo
-
-
           path: dist/Dental-Mina_repo_${{ github.sha }}.zip
+          if-no-files-found: error
