@@ -35,12 +35,20 @@ jobs:
           New-Item -ItemType Directory -Force dist | Out-Null
           try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
+      - name: Ensure Sigstore trusted root exists
+        shell: pwsh
+        run: |
+          $outDir  = Join-Path $env:GITHUB_WORKSPACE 'dist'
+          New-Item -ItemType Directory -Force $outDir | Out-Null
+          $outFile = Join-Path $outDir 'sigstore_trusted_root.jsonl'
+          gh attestation trusted-root | Set-Content -Path $outFile -Encoding utf8NoBOM
+          if(!(Test-Path $outFile)){ throw ("MISSING_TRUSTED_ROOT_FILE:" + $outFile) }
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
         with:
           overwrite: true
           name: sigstore_trusted_root
-          path: dist/sigstore_trusted_root.jsonl
+          path: ${{ github.workspace }}/dist/sigstore_trusted_root.jsonl
           if-no-files-found: error
 
       - name: Attest build provenance

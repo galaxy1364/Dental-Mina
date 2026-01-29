@@ -28,7 +28,7 @@
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "5342ba45514b3f68fad1775a227802b3e3843a163bcf46718dc8afd2de0e378f"
+                          "sha256":  "8ccd32e9d2dba069ed7fe55fccf694930180a0db3b67ad87e22b30dc4eb7ccff"
                       }
                   ]
 }
