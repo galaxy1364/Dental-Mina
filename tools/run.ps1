@@ -9888,7 +9888,7 @@ switch ($GateSel) {
 
 
 
-.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
+$_.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
     if(-not $pick){ Start-Sleep -Seconds 10; continue }
 
     $runId = [string]$pick.databaseId
