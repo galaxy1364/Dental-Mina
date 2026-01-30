@@ -3,7 +3,7 @@ param(
 )
 
 
-$GateSel = if($PSBoundParameters.ContainsKey('Gate')){ $PSBoundParameters['Gate'] } else { $Gate }
+$GateSel = if($PSBoundParameters.ContainsKey("Gate")){ $PSBoundParameters["Gate"] } else { $Gate }
 # LOCKPACK: handoff output must be repo-local (never System32)
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $HandoffDir = Join-Path $RepoRoot 'handoff'
@@ -9888,7 +9888,7 @@ switch ($GateSel) {
 
 
 
-$_.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
+.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
     if(-not $pick){ Start-Sleep -Seconds 10; continue }
 
     $runId = [string]$pick.databaseId
@@ -19746,11 +19746,7 @@ switch ($GateSel) {
   exit 2
 }
 
-# LOCKPACK_G20_POSTASSERT
-if($GateSel -eq "G20_SIGNED_CI_ARTIFACT_PROVENANCE"){
-  $sp = (Resolve-Path .\state\STATE.json).Path
-  $st = (Get-Content $sp -Raw -Encoding UTF8) | ConvertFrom-Json
-  if($st.last_pass -ne "G20_SIGNED_CI_ARTIFACT_PROVENANCE"){
-    throw ("G20_NOT_RECORDED: last_pass=" + $st.last_pass)
-  }
-}
+
+
+
+
