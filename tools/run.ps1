@@ -19489,6 +19489,11 @@ try {
       [Parameter(Mandatory=$true)][string]$Uri,
       [object]$Body = $null
     )
+
+# LOCKPACK: force Gate override when -Gate is provided
+$__LOCKPACK_FORCED_GATE = $null
+if($PSBoundParameters.ContainsKey("Gate") -and $Gate){ $__LOCKPACK_FORCED_GATE = $Gate }
+
     for ($try=1; $try -le $RestMaxTries; $try++) {
       try {
         if ($null -ne $Body) {
@@ -19764,7 +19769,6 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
 
 
 
