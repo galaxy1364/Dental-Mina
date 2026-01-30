@@ -1,1 +1,1 @@
-.\tools\run.ps1 -Gate G4_DONE
+.\tools\run.ps1 -Gate G20_SIGNED_CI_ARTIFACT_PROVENANCE

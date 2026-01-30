@@ -32,11 +32,11 @@
                       },
                       {
                           "path":  "state/STATE.json",
-                          "sha256":  "70fa921a32911d4bfe2d697445b2c0ccbccf1832f085c37b16b6d4758592c88f"
+                          "sha256":  "06c6e683c2801bbf00a90fbfd28bd51d62bad182a07cc4d835fa6acc0dedefde"
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
-                          "sha256":  "11240769840fa9a47272cb5a5735488d4389feddf48e0e7af3797abd2335e224"
+                          "sha256":  "febb6573294b3e46c4826c9165ecb4aac738c65840daff42a53ba5f5de32bae5"
                       }
                   ]
 }
