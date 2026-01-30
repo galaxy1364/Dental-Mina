@@ -1,4 +1,37 @@
 param(
+
+# LOCKPACK_CI_WAIT_HELPER_BEGIN
+function Wait-ForCiHeadSuccess {
+  param(
+    [Parameter(Mandatory=$true)][string]$Workflow,
+    [Parameter(Mandatory=$true)][string]$HeadSha,
+    [int]$TimeoutSec = 2400
+  )
+  $start = Get-Date
+  while(((Get-Date) - $start).TotalSeconds -lt $TimeoutSec){
+    try {
+      $runs = gh run list --workflow $Workflow --limit 30 --json databaseId,status,conclusion,headSha,createdAt,event | ConvertFrom-Json
+    } catch {
+      return $false
+    }
+    $pick = $runs | Where-Object { $_.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
+    if(-not $pick){ Start-Sleep -Seconds 10; continue }
+    $runId = [string]$pick.databaseId
+    if($pick.status -ne 'completed'){
+      $w = Start-Process -FilePath 'gh' -ArgumentList @('run','watch',$runId,'--interval','10','--exit-status') -Wait -PassThru -NoNewWindow
+      if($w.ExitCode -eq 0){ return $true }
+      try { gh run view $runId --log-failed } catch {}
+      return $false
+    }
+    if($pick.conclusion -eq 'success'){ return $true }
+    try { gh run view $runId --log-failed } catch {}
+    return $false
+  }
+  return $false
+}
+# LOCKPACK_CI_WAIT_HELPER_END
+
+param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
 
@@ -9844,34 +9877,5 @@ switch ($Gate) {
 
 
 
-# LOCKPACK_CI_WAIT_HELPER_BEGIN
-function Wait-ForCiHeadSuccess {
-  param(
-    [Parameter(Mandatory=$true)][string]$Workflow,
-    [Parameter(Mandatory=$true)][string]$HeadSha,
-    [int]$TimeoutSec = 2400
-  )
-  $start = Get-Date
-  while(((Get-Date) - $start).TotalSeconds -lt $TimeoutSec){
-    try {
-      $runs = gh run list --workflow $Workflow --limit 30 --json databaseId,status,conclusion,headSha,createdAt,event | ConvertFrom-Json
-    } catch {
-      return $false
-    }
-    $pick = $runs | Where-Object { $_.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
-    if(-not $pick){ Start-Sleep -Seconds 10; continue }
-    $runId = [string]$pick.databaseId
-    if($pick.status -ne 'completed'){
-      $w = Start-Process -FilePath 'gh' -ArgumentList @('run','watch',$runId,'--interval','10','--exit-status') -Wait -PassThru -NoNewWindow
-      if($w.ExitCode -eq 0){ return $true }
-      try { gh run view $runId --log-failed } catch {}
-      return $false
-    }
-    if($pick.conclusion -eq 'success'){ return $true }
-    try { gh run view $runId --log-failed } catch {}
-    return $false
-  }
-  return $false
-}
-# LOCKPACK_CI_WAIT_HELPER_END
+
 

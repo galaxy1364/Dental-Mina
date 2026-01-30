@@ -4,7 +4,7 @@
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "dd05a76882a31285a57c15fd23d8b33a0c00d5e525cfd669abecf3c1581a6efa"
+                          "sha256":  "2c0a5dde276fbc43679ea3f12f0a33e4a50b4095a46e697df035701c0ee685c6"
                       },
                       {
                           "path":  "docs/resume.md",
