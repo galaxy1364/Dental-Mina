@@ -1,6 +1,12 @@
 param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
+
+# LOCKPACK: handoff output must be repo-local (never System32)
+$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$HandoffDir = Join-Path $RepoRoot 'handoff'
+$HandoffPackPath = Join-Path $HandoffDir 'HANDOFF_PACK.txt'
+New-Item -ItemType Directory -Force -Path $HandoffDir | Out-Null
 # LOCKPACK_CI_WAIT_HELPER_BEGIN
 function Wait-ForCiHeadSuccess {
   param(
