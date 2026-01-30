@@ -1,5 +1,6 @@
 param(
-
+  [string]$Gate = "G4_EVIDENCE_PACK_OK"
+)
 # LOCKPACK_CI_WAIT_HELPER_BEGIN
 function Wait-ForCiHeadSuccess {
   param(
@@ -7,15 +8,18 @@ function Wait-ForCiHeadSuccess {
     [Parameter(Mandatory=$true)][string]$HeadSha,
     [int]$TimeoutSec = 2400
   )
+  try { gh auth status | Out-Null } catch {}
   $start = Get-Date
   while(((Get-Date) - $start).TotalSeconds -lt $TimeoutSec){
     try {
       $runs = gh run list --workflow $Workflow --limit 30 --json databaseId,status,conclusion,headSha,createdAt,event | ConvertFrom-Json
     } catch {
-      return $false
+      Start-Sleep -Seconds 10
+      continue
     }
-    $pick = $runs | Where-Object { $_.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
+    $pick = $runs | Where-Object { $.headSha -eq $HeadSha } | Sort-Object createdAt -Descending | Select-Object -First 1
     if(-not $pick){ Start-Sleep -Seconds 10; continue }
+
     $runId = [string]$pick.databaseId
     if($pick.status -ne 'completed'){
       $w = Start-Process -FilePath 'gh' -ArgumentList @('run','watch',$runId,'--interval','10','--exit-status') -Wait -PassThru -NoNewWindow
@@ -23,6 +27,7 @@ function Wait-ForCiHeadSuccess {
       try { gh run view $runId --log-failed } catch {}
       return $false
     }
+
     if($pick.conclusion -eq 'success'){ return $true }
     try { gh run view $runId --log-failed } catch {}
     return $false
@@ -31,9 +36,7 @@ function Wait-ForCiHeadSuccess {
 }
 # LOCKPACK_CI_WAIT_HELPER_END
 
-param(
-  [string]$Gate = "G4_EVIDENCE_PACK_OK"
-)
+
 
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
@@ -9872,7 +9875,6 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
 
 
 
