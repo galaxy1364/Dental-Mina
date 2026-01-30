@@ -1,4 +1,4 @@
-﻿{
+{
     "project":  {
                     "name":  "Dental-Mina",
                     "signature":  "PYM JBZ"
@@ -30,7 +30,7 @@
                                  ],
                  "last_pass":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
              },
-    "last_pass":  "G20_SIGNED_CI_ARTIFACT_PROVENANCE",
+    "last_pass":  "G4_EVIDENCE_PACK_OK",
     "last_fail":  null,
     "active_issue":  null,
     "next_action_hash":  "271c00f58340c1c1b61dd32431aa8c4219819164c12c6d007e172c2c7b0a740e",
