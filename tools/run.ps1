@@ -9631,7 +9631,11 @@ try {
     $wf = 'ci_attest_build_provenance.yml'
     $head = (git rev-parse HEAD).Trim()
     if(-not (Wait-ForCiHeadSuccess -Workflow $wf -HeadSha $head -TimeoutSec 2400)){
-      if (-not $run -or $run.status -ne "completed" -or $run.conclusion -ne "success") { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
+      $wf = 'ci_attest_build_provenance.yml'
+      $head = (git rev-parse HEAD).Trim()
+      if(-not (Wait-ForCiHeadSuccess -Workflow $wf -HeadSha $head -TimeoutSec 2400)){
+        if (-not $run -or $run.status -ne "completed" -or $run.conclusion -ne "success") { throw "CI_RUN_FAILED_OR_NOT_FINISHED" }
+      }
     }
   }
 
@@ -9870,3 +9874,4 @@ function Wait-ForCiHeadSuccess {
   return $false
 }
 # LOCKPACK_CI_WAIT_HELPER_END
+
