@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-01-30T22:39:24.9256479Z",
+    "ts_utc":  "2026-01-30T22:39:25.9640738Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -29,10 +29,6 @@
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
                           "sha256":  "5342ba45514b3f68fad1775a227802b3e3843a163bcf46718dc8afd2de0e378f"
-                      },
-                      {
-                          "path":  "state/STATE.json",
-                          "sha256":  "bfa2ba2b5cdb17878da8d41cec4139dba13c443d8985b542009b6e9d989dd2e8"
                       }
                   ]
 }
