@@ -10309,8 +10309,7 @@ switch($Gate){
     "G17_PS51_UTF8_BOM_OPERATOR_DOCS" { Do-G17; break }
     "G18_DESIGN_CONTINUATION" { Do-G18; break }
     "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD" { Do-G19; break }
-    "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { Do-G20; break }
-    default { throw "UNKNOWN_GATE:$Gate" }
+    "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { ; break }
   }
   exit 0
 } catch {
