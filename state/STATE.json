@@ -4,56 +4,18 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G5_REPLAY_RESTORE_OK",
+                 "current":  "",
                  "locked_pass":  [
-                                     "G1_SINGLE_COMMAND",
-                                     "G2_SANITY_HYGIENE",
-                                     "G3_ENCODING_HYGIENE",
-                                     "G4_EVIDENCE_PACK_OK",
-                                     "G5_REPLAY_RESTORE_OK",
-                                     "G6_PWA_INSTALL_OK",
-                                     "G7_SCALE_100K_OK",
-                                     "G8_SECURITY_BASE_OK",
-                                     "G9_IRAN_CORE_OK",
-                                     "G10_DESIGN_REVIEW_PACK",
-                                     "G11_DESIGN_V2_COLORFUL",
-                                     "G12_DESIGN_V5_ICON_POLISH",
-                                     "G12_DESIGN_V6_ICON_SYSTEM",
-                                     "G13_LOCKPACK_CANON_DOCS_FIX",
-                                     "G14_LOCKPACK_PS51_UNICODE_SAFE",
-                                     "G15_CHECKLIST_AUTO_SYNC",
-                                     "G16_HANDOFF_AUTOGEN",
-                                     "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
-                                     "G18_DESIGN_CONTINUATION",
-                                     "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+
                                  ],
-                 "last_pass":  "G5_REPLAY_RESTORE_OK"
+                 "last_pass":  ""
              },
-    "last_pass":  "G5_REPLAY_RESTORE_OK",
+    "last_pass":  "",
     "last_fail":  null,
     "active_issue":  null,
-    "next_action_hash":  "c792de679f7a941f61d5f89d3e8315080999735bc00703d952522e496494e77c",
-    "updated_utc":  "2026-01-31T02:50:14.9783285Z",
+    "next_action_hash":  "d9f06f179be65563f8f106a81ae532b27b8c2442d24b15e72078c2eca42f88ec",
+    "updated_utc":  "2026-01-31T02:56:53.4567751Z",
     "locked_pass":  [
-                        "G1_SINGLE_COMMAND",
-                        "G2_SANITY_HYGIENE",
-                        "G3_ENCODING_HYGIENE",
-                        "G4_EVIDENCE_PACK_OK",
-                        "G5_REPLAY_RESTORE_OK",
-                        "G6_PWA_INSTALL_OK",
-                        "G7_SCALE_100K_OK",
-                        "G8_SECURITY_BASE_OK",
-                        "G9_IRAN_CORE_OK",
-                        "G10_DESIGN_REVIEW_PACK",
-                        "G11_DESIGN_V2_COLORFUL",
-                        "G12_DESIGN_V5_ICON_POLISH",
-                        "G12_DESIGN_V6_ICON_SYSTEM",
-                        "G13_LOCKPACK_CANON_DOCS_FIX",
-                        "G14_LOCKPACK_PS51_UNICODE_SAFE",
-                        "G15_CHECKLIST_AUTO_SYNC",
-                        "G16_HANDOFF_AUTOGEN",
-                        "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
-                        "G18_DESIGN_CONTINUATION",
-                        "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+
                     ]
 }
