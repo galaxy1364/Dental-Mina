@@ -1,6 +1,9 @@
 param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
+# --- LOCKPACK: early-dispatch for G11_RUN (no-op guard) ---
+if ($Gate -eq "G11_RUN") { Do-G11_RUN; return }
+
 function Do-G11_RUN {
   $gate = "G11_RUN"
   $utc  = (Get-Date).ToUniversalTime().ToString("o")
