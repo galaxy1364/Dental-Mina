@@ -1,17 +1,17 @@
-# NEXT_ACTION (G1_SINGLE_COMMAND)
+# NEXT_ACTION (G20_SIGNED_CI_ARTIFACT_PROVENANCE)
 Status: STOP
 
 Goal: Run the next authorized gate (Step 1 only).
 
 Allowed Path: PROCEED
-Scope: One-change (Gate=G1_SINGLE_COMMAND)
+Scope: One-change (Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE)
 
 ## Step 1 (Only) — Copy/Paste
-powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G1_SINGLE_COMMAND"
+powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G20_SIGNED_CI_ARTIFACT_PROVENANCE"
 
 PASS Criteria
-- Prints: G1_SINGLE_COMMAND_DONE
-- Appends event:"_RUN" (or gate-specific RUN) to state/LEDGER_v2.ndjson
-- Updates state/STATE.json gate.current and last_pass to G1_SINGLE_COMMAND
+- Prints: G20_SIGNED_CI_ARTIFACT_PROVENANCE_DONE
+- Appends a new *_RUN entry to state/LEDGER_v2.ndjson
+- Updates state/STATE.json (gate.current and last_pass set to G20_SIGNED_CI_ARTIFACT_PROVENANCE)
 
 AI_SIGNATURE: PYM JBZ
