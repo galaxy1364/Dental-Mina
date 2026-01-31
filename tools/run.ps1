@@ -2,6 +2,20 @@ param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
 
+# LOCKPACK: VSCode CLI shim (makes code available even when PATH is not persisted in child PowerShell)
+if(-not (Get-Command code -ErrorAction SilentlyContinue)) {
+  $candidates = @(
+    "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd",
+    "$env:ProgramFiles\Microsoft VS Code\bin\code.cmd",
+    "${env:ProgramFiles(x86)}\Microsoft VS Code\bin\code.cmd"
+  ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+  if($candidates){
+    $script:__LOCKPACK_CODE_CMD = $candidates
+    function global:code { param([Parameter(ValueFromRemainingArguments=$true)][object[]]$Args) & $script:__LOCKPACK_CODE_CMD @Args }
+  }
+}
+
+
 # LOCKPACK: handoff output must be repo-local (never System32)
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $HandoffDir = Join-Path $RepoRoot 'handoff'
@@ -19769,7 +19783,6 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
 
 
 
