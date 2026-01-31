@@ -12,6 +12,11 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
 
+  # pick workflow file (push-trigger target)
+  $wf = Get-ChildItem .github/workflows -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match 'attest|proven|provenance' } | Select-Object -First 1
+  if(-not $wf){ throw 'G20_BLOCKED: workflow file not found in .github/workflows (expected attest/provenance workflow)' }
+
   function Invoke-SafeGit([string[]]$ArgList){
     $ArgListSafe = @($ArgList) | Where-Object { $_ -ne $null -and $_ -ne '' }
     if(-not $ArgListSafe -or $ArgListSafe.Count -eq 0){ throw 'G20_BLOCKED: Invoke-SafeGit arglist empty' }
@@ -22,7 +27,7 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
 
     $p = Start-Process -FilePath git -ArgumentList $ArgListSafe -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
     if($p.ExitCode -ne 0){
-      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 240) -join "
+      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 260) -join "
 "
       throw ("G20_BLOCKED: git " + ($ArgListSafe -join ' ') + " failed exit=" + $p.ExitCode + "
 " + $e)
@@ -34,7 +39,6 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
 
   $headSha   = (& git rev-parse HEAD 2>$null).Trim()
   if($LASTEXITCODE -ne 0 -or -not $headSha){ throw 'G20_BLOCKED: cannot rev-parse HEAD' }
-
   $remoteSha = (& git rev-parse ("origin/" + $defaultBranch) 2>$null).Trim()
   if($LASTEXITCODE -ne 0 -or -not $remoteSha){ throw 'G20_BLOCKED: cannot rev-parse origin/defaultBranch' }
 
@@ -47,6 +51,52 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
 
   Invoke-SafeGit @('push','origin',("HEAD:" + $defaultBranch)) *> $null
   Write-Host ("G20_TRIGGERED_VIA_PUSH headSha=" + $headSha)
+
+  # find NEW run for this headSha under this workflow
+  $deadline = (Get-Date).AddMinutes(10)
+  $id = $null
+  while((Get-Date) -lt $deadline){
+    $json = & gh run list --workflow $wf.Name --branch $defaultBranch --limit 40 --json databaseId,headSha,status,conclusion
+    if($LASTEXITCODE -eq 0 -and $json){
+      try { $runs = ($json | ConvertFrom-Json) } catch { $runs = $null }
+      if($runs){
+        foreach($r in $runs){
+          if($r.headSha -eq $headSha -and $r.databaseId){
+            $id = [string]$r.databaseId
+            break
+          }
+        }
+      }
+    }
+    if($id){ break }
+    Start-Sleep -Seconds 4
+  }
+  if(-not $id){ throw 'G20_TIMEOUT: could not obtain workflow run id for current HEAD sha within 10 minutes' }
+
+  Write-Host ("G20_RUN_ID=" + $id)
+  & gh run watch $id --interval 5 --exit-status
+  if($LASTEXITCODE -ne 0){ throw ("G20_FAILED: workflow concluded with failure databaseId=" + $id) }
+
+  # download artifacts (temp) then attest verify common package types
+  $tmp = Join-Path $env:TEMP ("DentalMina_G20_" + [guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+  & gh run download $id --dir $tmp *> $null
+
+  $cand = Get-ChildItem -Path $tmp -Recurse -File -ErrorAction SilentlyContinue |
+           Where-Object { $_.Name -match '\.(zip|tgz|tar\.gz|msix|apk|aab|ipa)$' }
+  if(-not $cand){ throw ("G20_BLOCKED: no artifacts found to attest-verify under " + $tmp) }
+
+  $ok = 0
+  foreach($f in $cand){
+    & gh attestation verify "$($f.FullName)" --repo "$env:GITHUB_REPOSITORY" *> $null
+    if($LASTEXITCODE -ne 0){
+      & gh attestation verify "$($f.FullName)" --repo ( (& gh repo view --json nameWithOwner -q .nameWithOwner) ) *> $null
+    }
+    if($LASTEXITCODE -ne 0){ throw ("G20_ATTEST_FAILED: " + $f.FullName) }
+    $ok++
+  }
+
+  Write-Host ("G20_OK: workflow_completed databaseId=" + $id + " attest_ok=" + $ok)
 }
 
 if ($Gate -eq 'G20_SIGNED_CI_ARTIFACT_PROVENANCE') { Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE; return }
