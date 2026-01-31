@@ -28,12 +28,28 @@ jobs:
           git archive --format=zip --output $out HEAD
 
       - name: Write Sigstore trusted root (offline verification)
+
         shell: pwsh
+
+        env:
+
+          GH_TOKEN: ${{ github.token }}
+
         run: |
+
           $ErrorActionPreference = "Stop"
+
           New-Item -ItemType Directory -Force dist | Out-Null
-          New-Item -ItemType Directory -Force dist | Out-Null
-          try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+
+          $root = & gh attestation trusted-root
+
+          if($LASTEXITCODE -ne 0 -or -not $root){ throw "trusted-root failed" }
+
+          $utf8 = New-Object System.Text.UTF8Encoding($false)
+
+          [IO.File]::WriteAllText((Join-Path (Get-Location) "dist/sigstore_trusted_root.jsonl"), $root, $utf8)
+
+          if(-not (Test-Path "dist/sigstore_trusted_root.jsonl")){ throw "missing dist/sigstore_trusted_root.jsonl" }
 
       - name: Upload Sigstore trusted root
         uses: actions/upload-artifact@v4
