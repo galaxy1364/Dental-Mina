@@ -4,9 +4,8 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G4_EVIDENCE_PACK_OK",
+                 "current":  "G5_REPLAY_RESTORE_OK",
                  "locked_pass":  [
-                                     "G0_BOOTSTRAP",
                                      "G1_SINGLE_COMMAND",
                                      "G2_SANITY_HYGIENE",
                                      "G3_ENCODING_HYGIENE",
@@ -28,15 +27,14 @@
                                      "G18_DESIGN_CONTINUATION",
                                      "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
                                  ],
-                 "last_pass":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+                 "last_pass":  "G5_REPLAY_RESTORE_OK"
              },
-    "last_pass":  "G4_EVIDENCE_PACK_OK",
+    "last_pass":  "G5_REPLAY_RESTORE_OK",
     "last_fail":  null,
     "active_issue":  null,
-    "next_action_hash":  "271c00f58340c1c1b61dd32431aa8c4219819164c12c6d007e172c2c7b0a740e",
-    "updated_utc":  "2026-01-31T01:47:55.9050911Z",
+    "next_action_hash":  "c792de679f7a941f61d5f89d3e8315080999735bc00703d952522e496494e77c",
+    "updated_utc":  "2026-01-31T02:50:14.9783285Z",
     "locked_pass":  [
-                        "G0_BOOTSTRAP",
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",
                         "G3_ENCODING_HYGIENE",
