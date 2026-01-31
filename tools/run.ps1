@@ -2,6 +2,9 @@ param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
 
+
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
 # LOCKPACK: VSCode CLI shim (makes code available even when PATH is not persisted in child PowerShell)
 if(-not (Get-Command code -ErrorAction SilentlyContinue)) {
   $candidates = @(
@@ -24,7 +27,10 @@ New-Item -ItemType Directory -Force -Path $HandoffDir | Out-Null
 # LOCKPACK_CI_WAIT_HELPER_BEGIN
 function Wait-ForCiHeadSuccess {
   param(
-    [Parameter(Mandatory=$true)][string]$Workflow,
+    [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][string]$Workflow,
     [Parameter(Mandatory=$true)][string]$HeadSha,
     [int]$TimeoutSec = 2400
   )
@@ -43,7 +49,10 @@ function Wait-ForCiHeadSuccess {
 # LOCKPACK_CI_WAIT_HELPER_BEGIN
 function Wait-ForCiHeadSuccess {
   param(
-    [Parameter(Mandatory=$true)][string]$Workflow,
+    [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][string]$Workflow,
     [Parameter(Mandatory=$true)][string]$HeadSha,
     [int]$TimeoutSec = 2400
   )
@@ -84,7 +93,10 @@ try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::
 function Invoke-ProcCapture {
   [CmdletBinding()]
   param(
-    [Parameter(Mandatory=$true)][string]$FilePath,
+    [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][string]$FilePath,
     [Parameter()][string[]]$ArgumentList = @(),
     [Parameter()][string]$WorkingDirectory = $PWD.Path
   )
@@ -105,7 +117,10 @@ function Invoke-ProcCapture {
 }
 # LAST_ERROR_TXT_BEGIN
 function Write-LastErrorTxt {
-  param([Parameter(Mandatory=$true)]$Err)
+  param([Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+]$Err)
   try { New-Item -ItemType Directory -Force -Path "artifacts" | Out-Null } catch {}
   try {
     $p = Join-Path (Get-Location).Path "artifacts\last_error.txt"
@@ -248,7 +263,10 @@ function Get-HashLockProtectedPaths {
 
 function Write-HashLock {
   param([string[]]$Paths)
-  $items = @()
+  
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+$items = @()
   foreach ($p in $Paths) {
     if (-not (Test-Path $p)) { throw ("HASHLOCK_MISSING_FILE:" + $p) }
     $items += [ordered]@{
@@ -9635,7 +9653,10 @@ try {
 
   function Invoke-GhApi {
     param(
-      [Parameter(Mandatory=$true)][ValidateSet("Get","Post")][string]$Method,
+      [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][ValidateSet("Get","Post")][string]$Method,
       [Parameter(Mandatory=$true)][string]$Uri,
       [object]$Body = $null
     )
@@ -9908,11 +9929,11 @@ switch($Gate){
     "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { Do-G20; break }
     default { throw "UNKNOWN_GATE:$Gate" }
   }
-  exit 0
+if(-not $script:__LOCKPACK_REQUESTED_GATE -or $script:__LOCKPACK_REQUESTED_GATE -eq "G4_EVIDENCE_PACK_OK"){ exit 0 }
 } catch {
   $msg = $_.Exception.Message
   Write-Host "ABORTED gate=$Gate reason=$msg"
-  exit 2
+if(-not $script:__LOCKPACK_REQUESTED_GATE -or $script:__LOCKPACK_REQUESTED_GATE -eq "G4_EVIDENCE_PACK_OK"){ exit 2 }
 }
 
 
@@ -9948,7 +9969,10 @@ try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::
 function Invoke-ProcCapture {
   [CmdletBinding()]
   param(
-    [Parameter(Mandatory=$true)][string]$FilePath,
+    [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][string]$FilePath,
     [Parameter()][string[]]$ArgumentList = @(),
     [Parameter()][string]$WorkingDirectory = $PWD.Path
   )
@@ -9969,7 +9993,10 @@ function Invoke-ProcCapture {
 }
 # LAST_ERROR_TXT_BEGIN
 function Write-LastErrorTxt {
-  param([Parameter(Mandatory=$true)]$Err)
+  param([Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+]$Err)
   try { New-Item -ItemType Directory -Force -Path "artifacts" | Out-Null } catch {}
   try {
     $p = Join-Path (Get-Location).Path "artifacts\last_error.txt"
@@ -10112,7 +10139,10 @@ function Get-HashLockProtectedPaths {
 
 function Write-HashLock {
   param([string[]]$Paths)
-  $items = @()
+  
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+$items = @()
   foreach ($p in $Paths) {
     if (-not (Test-Path $p)) { throw ("HASHLOCK_MISSING_FILE:" + $p) }
     $items += [ordered]@{
@@ -19499,7 +19529,10 @@ try {
 
   function Invoke-GhApi {
     param(
-      [Parameter(Mandatory=$true)][ValidateSet("Get","Post")][string]$Method,
+      [Parameter(Mandatory=$true)
+$script:__LOCKPACK_REQUESTED_GATE = $null
+if($PSBoundParameters.ContainsKey('Gate')){ $script:__LOCKPACK_REQUESTED_GATE = [string]$PSBoundParameters['Gate'] }
+][ValidateSet("Get","Post")][string]$Method,
       [Parameter(Mandatory=$true)][string]$Uri,
       [object]$Body = $null
     )
@@ -19777,9 +19810,9 @@ switch($Gate){
     "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { Do-G20; break }
     default { throw "UNKNOWN_GATE:$Gate" }
   }
-  exit 0
+if(-not $script:__LOCKPACK_REQUESTED_GATE -or $script:__LOCKPACK_REQUESTED_GATE -eq "G4_EVIDENCE_PACK_OK"){ exit 0 }
 } catch {
   $msg = $_.Exception.Message
   Write-Host "ABORTED gate=$Gate reason=$msg"
-  exit 2
+if(-not $script:__LOCKPACK_REQUESTED_GATE -or $script:__LOCKPACK_REQUESTED_GATE -eq "G4_EVIDENCE_PACK_OK"){ exit 2 }
 }
