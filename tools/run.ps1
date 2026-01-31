@@ -19784,4 +19784,3 @@ switch($Gate){
   exit 2
 }
 
-
