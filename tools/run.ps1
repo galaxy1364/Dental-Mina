@@ -9909,6 +9909,15 @@ $verJson = $av.Stdout
   # HashLock verify (if present)
   Assert-HashLockIfPresent $Gate
 if($PSBoundParameters.ContainsKey("Gate") -and $PSBoundParameters["Gate"]){ $Gate = $PSBoundParameters["Gate"] }
+
+# LOCKPACK: skip early gate-dispatch for gates >= 10 (e.g., G20) so final dispatcher runs
+$__LOCKPACK_LATE_DISPATCH = $false
+if($PSBoundParameters.ContainsKey("Gate") -and $PSBoundParameters["Gate"]){
+  $m = [regex]::Match([string]$PSBoundParameters["Gate"], "^G(\d+)_")
+  if($m.Success -and [int]$m.Groups[1].Value -ge 10){ $__LOCKPACK_LATE_DISPATCH = $true }
+}
+
+if(-not $__LOCKPACK_LATE_DISPATCH){
 switch($Gate){
     "G4_EVIDENCE_PACK_OK"     { Do-G4; break }
     "G5_REPLAY_RESTORE_OK"   { Do-G5; break }
@@ -9929,6 +9938,7 @@ switch($Gate){
     "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { Do-G20; break }
     default { throw "UNKNOWN_GATE:$Gate" }
   }
+}
 if(-not $script:__LOCKPACK_REQUESTED_GATE -or $script:__LOCKPACK_REQUESTED_GATE -eq "G4_EVIDENCE_PACK_OK"){ exit 0 }
 } catch {
   $msg = $_.Exception.Message
