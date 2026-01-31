@@ -1,18 +1,19 @@
-# NEXT_ACTION (G_STATE_POINTER_REPAIR_AFTER_G9)
+# NEXT_ACTION (G10_DESIGN_REVIEW_PACK)
 Status: STOP
 
-Goal: Repair STATE pointer mismatch after G9 (align gate.last_pass with last_pass=G9_IRAN_CORE_OK) and sync HASHLOCK.
+Goal: Fix UNKNOWN_GATE for G10_DESIGN_REVIEW_PACK in tools/run.ps1 (dispatch/registry) then run G10_DESIGN_REVIEW_PACK (Step 1 only).
 
 Allowed Path: FIX-to-PASS
-Scope: One-change (STATE pointer repair + HASHLOCK sync + LEDGER repair append)
+Scope: One-change (Patch tools/run.ps1 dispatch + Sync HASHLOCK + append LEDGER + then run G10_DESIGN_REVIEW_PACK)
 
 ## Step 1 (Only) - Copy/Paste
-# This repair is applied by the script that generated this NEXT_ACTION.
-# Do NOT run any other gate until a new NEXT_ACTION is issued.
+powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G10_DESIGN_REVIEW_PACK"
 
 PASS Criteria
-- state/STATE.json: gate.current == G9_IRAN_CORE_OK AND gate.last_pass == G9_IRAN_CORE_OK AND last_pass == G9_IRAN_CORE_OK
-- state/LEDGER_v2.ndjson appended: gate=G_STATE_POINTER_REPAIR_AFTER_G9 event=REPAIR
-- state/HASHLOCK.json protected hashes match actual files
+- tools/run.ps1 recognizes gate=G10_DESIGN_REVIEW_PACK (no UNKNOWN_GATE abort)
+- Prints: G10_DONE ...
+- Appends event:"G10_RUN" to state/LEDGER_v2.ndjson
+- Updates state/STATE.json (gate.current and last_pass set to G10_DESIGN_REVIEW_PACK; LOCKED_PASS includes G10_DESIGN_REVIEW_PACK)
+- Produces latest artifacts evidence/resume packs
 
 AI_SIGNATURE: PYM JBZ
