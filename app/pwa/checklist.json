@@ -3,603 +3,403 @@
     "items":  [
                   {
                       "id":  "001",
-                      "title":  "G0_BOOTSTRAP",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G0_BOOTSTRAP"
                   },
                   {
                       "id":  "002",
-                      "title":  "G1_SINGLE_COMMAND",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G1_SINGLE_COMMAND"
                   },
                   {
                       "id":  "003",
-                      "title":  "G2_SANITY_HYGIENE",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G2_SANITY_HYGIENE"
                   },
                   {
                       "id":  "004",
-                      "title":  "G3_ENCODING_HYGIENE",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G3_ENCODING_HYGIENE"
                   },
                   {
                       "id":  "005",
-                      "title":  "G4_EVIDENCE_PACK_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G4_EVIDENCE_PACK_OK"
                   },
                   {
                       "id":  "006",
-                      "title":  "G5_REPLAY_RESTORE_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G5_REPLAY_RESTORE_OK"
                   },
                   {
                       "id":  "007",
-                      "title":  "G6_PWA_INSTALL_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G6_PWA_INSTALL_OK"
                   },
                   {
                       "id":  "008",
-                      "title":  "G7_SCALE_100K_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G7_SCALE_100K_OK"
                   },
                   {
                       "id":  "009",
-                      "title":  "G8_SECURITY_BASE_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G8_SECURITY_BASE_OK"
                   },
                   {
                       "id":  "010",
-                      "title":  "G9_IRAN_CORE_OK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "G9_IRAN_CORE_OK"
                   },
                   {
                       "id":  "011",
-                      "title":  "G10_DESIGN_REVIEW_PACK",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 011"
                   },
                   {
                       "id":  "012",
-                      "title":  "G11_DESIGN_V2_COLORFUL",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 012"
                   },
                   {
                       "id":  "013",
-                      "title":  "G12_DESIGN_V5_ICON_POLISH",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 013"
                   },
                   {
                       "id":  "014",
-                      "title":  "G12_DESIGN_V6_ICON_SYSTEM",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 014"
                   },
                   {
                       "id":  "015",
-                      "title":  "G13_LOCKPACK_CANON_DOCS_FIX",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 015"
                   },
                   {
                       "id":  "016",
-                      "title":  "G14_LOCKPACK_PS51_UNICODE_SAFE",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 016"
                   },
                   {
                       "id":  "017",
-                      "title":  "G15_CHECKLIST_AUTO_SYNC",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 017"
                   },
                   {
                       "id":  "018",
-                      "title":  "G16_HANDOFF_AUTOGEN",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 018"
                   },
                   {
                       "id":  "019",
-                      "title":  "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 019"
                   },
                   {
                       "id":  "020",
-                      "title":  "G18_DESIGN_CONTINUATION",
-                      "locked":  true,
-                      "checked":  true
+                      "title":  "Item 020"
                   },
                   {
                       "id":  "021",
-                      "title":  "Item 021",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 021"
                   },
                   {
                       "id":  "022",
-                      "title":  "Item 022",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 022"
                   },
                   {
                       "id":  "023",
-                      "title":  "Item 023",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 023"
                   },
                   {
                       "id":  "024",
-                      "title":  "Item 024",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 024"
                   },
                   {
                       "id":  "025",
-                      "title":  "Item 025",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 025"
                   },
                   {
                       "id":  "026",
-                      "title":  "Item 026",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 026"
                   },
                   {
                       "id":  "027",
-                      "title":  "Item 027",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 027"
                   },
                   {
                       "id":  "028",
-                      "title":  "Item 028",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 028"
                   },
                   {
                       "id":  "029",
-                      "title":  "Item 029",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 029"
                   },
                   {
                       "id":  "030",
-                      "title":  "Item 030",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 030"
                   },
                   {
                       "id":  "031",
-                      "title":  "Item 031",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 031"
                   },
                   {
                       "id":  "032",
-                      "title":  "Item 032",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 032"
                   },
                   {
                       "id":  "033",
-                      "title":  "Item 033",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 033"
                   },
                   {
                       "id":  "034",
-                      "title":  "Item 034",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 034"
                   },
                   {
                       "id":  "035",
-                      "title":  "Item 035",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 035"
                   },
                   {
                       "id":  "036",
-                      "title":  "Item 036",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 036"
                   },
                   {
                       "id":  "037",
-                      "title":  "Item 037",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 037"
                   },
                   {
                       "id":  "038",
-                      "title":  "Item 038",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 038"
                   },
                   {
                       "id":  "039",
-                      "title":  "Item 039",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 039"
                   },
                   {
                       "id":  "040",
-                      "title":  "Item 040",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 040"
                   },
                   {
                       "id":  "041",
-                      "title":  "Item 041",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 041"
                   },
                   {
                       "id":  "042",
-                      "title":  "Item 042",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 042"
                   },
                   {
                       "id":  "043",
-                      "title":  "Item 043",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 043"
                   },
                   {
                       "id":  "044",
-                      "title":  "Item 044",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 044"
                   },
                   {
                       "id":  "045",
-                      "title":  "Item 045",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 045"
                   },
                   {
                       "id":  "046",
-                      "title":  "Item 046",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 046"
                   },
                   {
                       "id":  "047",
-                      "title":  "Item 047",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 047"
                   },
                   {
                       "id":  "048",
-                      "title":  "Item 048",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 048"
                   },
                   {
                       "id":  "049",
-                      "title":  "Item 049",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 049"
                   },
                   {
                       "id":  "050",
-                      "title":  "Item 050",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 050"
                   },
                   {
                       "id":  "051",
-                      "title":  "Item 051",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 051"
                   },
                   {
                       "id":  "052",
-                      "title":  "Item 052",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 052"
                   },
                   {
                       "id":  "053",
-                      "title":  "Item 053",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 053"
                   },
                   {
                       "id":  "054",
-                      "title":  "Item 054",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 054"
                   },
                   {
                       "id":  "055",
-                      "title":  "Item 055",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 055"
                   },
                   {
                       "id":  "056",
-                      "title":  "Item 056",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 056"
                   },
                   {
                       "id":  "057",
-                      "title":  "Item 057",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 057"
                   },
                   {
                       "id":  "058",
-                      "title":  "Item 058",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 058"
                   },
                   {
                       "id":  "059",
-                      "title":  "Item 059",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 059"
                   },
                   {
                       "id":  "060",
-                      "title":  "Item 060",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 060"
                   },
                   {
                       "id":  "061",
-                      "title":  "Item 061",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 061"
                   },
                   {
                       "id":  "062",
-                      "title":  "Item 062",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 062"
                   },
                   {
                       "id":  "063",
-                      "title":  "Item 063",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 063"
                   },
                   {
                       "id":  "064",
-                      "title":  "Item 064",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 064"
                   },
                   {
                       "id":  "065",
-                      "title":  "Item 065",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 065"
                   },
                   {
                       "id":  "066",
-                      "title":  "Item 066",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 066"
                   },
                   {
                       "id":  "067",
-                      "title":  "Item 067",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 067"
                   },
                   {
                       "id":  "068",
-                      "title":  "Item 068",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 068"
                   },
                   {
                       "id":  "069",
-                      "title":  "Item 069",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 069"
                   },
                   {
                       "id":  "070",
-                      "title":  "Item 070",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 070"
                   },
                   {
                       "id":  "071",
-                      "title":  "Item 071",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 071"
                   },
                   {
                       "id":  "072",
-                      "title":  "Item 072",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 072"
                   },
                   {
                       "id":  "073",
-                      "title":  "Item 073",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 073"
                   },
                   {
                       "id":  "074",
-                      "title":  "Item 074",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 074"
                   },
                   {
                       "id":  "075",
-                      "title":  "Item 075",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 075"
                   },
                   {
                       "id":  "076",
-                      "title":  "Item 076",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 076"
                   },
                   {
                       "id":  "077",
-                      "title":  "Item 077",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 077"
                   },
                   {
                       "id":  "078",
-                      "title":  "Item 078",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 078"
                   },
                   {
                       "id":  "079",
-                      "title":  "Item 079",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 079"
                   },
                   {
                       "id":  "080",
-                      "title":  "Item 080",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 080"
                   },
                   {
                       "id":  "081",
-                      "title":  "Item 081",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 081"
                   },
                   {
                       "id":  "082",
-                      "title":  "Item 082",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 082"
                   },
                   {
                       "id":  "083",
-                      "title":  "Item 083",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 083"
                   },
                   {
                       "id":  "084",
-                      "title":  "Item 084",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 084"
                   },
                   {
                       "id":  "085",
-                      "title":  "Item 085",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 085"
                   },
                   {
                       "id":  "086",
-                      "title":  "Item 086",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 086"
                   },
                   {
                       "id":  "087",
-                      "title":  "Item 087",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 087"
                   },
                   {
                       "id":  "088",
-                      "title":  "Item 088",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 088"
                   },
                   {
                       "id":  "089",
-                      "title":  "Item 089",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 089"
                   },
                   {
                       "id":  "090",
-                      "title":  "Item 090",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 090"
                   },
                   {
                       "id":  "091",
-                      "title":  "Item 091",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 091"
                   },
                   {
                       "id":  "092",
-                      "title":  "Item 092",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 092"
                   },
                   {
                       "id":  "093",
-                      "title":  "Item 093",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 093"
                   },
                   {
                       "id":  "094",
-                      "title":  "Item 094",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 094"
                   },
                   {
                       "id":  "095",
-                      "title":  "Item 095",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 095"
                   },
                   {
                       "id":  "096",
-                      "title":  "Item 096",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 096"
                   },
                   {
                       "id":  "097",
-                      "title":  "Item 097",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 097"
                   },
                   {
                       "id":  "098",
-                      "title":  "Item 098",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 098"
                   },
                   {
                       "id":  "099",
-                      "title":  "Item 099",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 099"
                   },
                   {
                       "id":  "100",
-                      "title":  "Item 100",
-                      "locked":  false,
-                      "checked":  false
+                      "title":  "Item 100"
                   }
               ]
 }

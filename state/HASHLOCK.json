@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-01-31T06:45:47.6365189Z",
+    "ts_utc":  "2026-01-31T06:47:08.5056169Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -8,11 +8,11 @@
                       },
                       {
                           "path":  "docs/resume.md",
-                          "sha256":  "2e085f534c9cbbcb0cdbf4655ac93f20c07cae06a26ebaaa932bff810117ddd6"
+                          "sha256":  "f42d7bec9b05c72346812c97e0b7fb656e525abd1d1f2b9201abe2f8a807b3b3"
                       },
                       {
                           "path":  "docs/lockpack_rules.md",
-                          "sha256":  "10ca6dd170f9ea473ec3ec4d05d4cd91b02304afa1ae9a8b7e8df73ee8077521"
+                          "sha256":  "c6f127a7cc6fd2f8c85ff685490c88fc3d9dd13064ad295a58f69922cdbb5d56"
                       },
                       {
                           "path":  "handoff/handoff_pack.txt",
