@@ -10310,7 +10310,6 @@ switch($Gate){
     "G18_DESIGN_CONTINUATION" { Do-G18; break }
     "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD" { Do-G19; break }
     "G20_SIGNED_CI_ARTIFACT_PROVENANCE" { ; break }
-  }
   exit 0
 } catch {
   $msg = $_.Exception.Message
