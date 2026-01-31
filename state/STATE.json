@@ -32,8 +32,8 @@
     "last_pass":  "G4_EVIDENCE_PACK_OK",
     "last_fail":  null,
     "active_issue":  null,
-    "next_action_hash":  "ec0cde767c2d0066b7093f725f70ac5d9d0130547da4df579c07438d691dd4d0",
-    "updated_utc":  "2026-01-31T08:47:34.1374427Z",
+    "next_action_hash":  "eb544277b289c4f1a3aea092a2d1429595efaba6ca33a1b031786bb0847c3226",
+    "updated_utc":  "2026-01-31T08:51:50.7919275Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",

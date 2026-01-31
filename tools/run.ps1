@@ -12,29 +12,38 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
 
-  # Safe push helper (no stderr -> no NativeCommandError)
-  function Invoke-SafeGitPush([string]$refspec){
-    $outStd = Join-Path $env:TEMP ("dm_gitpush_out_" + [guid]::NewGuid().ToString("N") + ".txt")
-    $outErr = Join-Path $env:TEMP ("dm_gitpush_err_" + [guid]::NewGuid().ToString("N") + ".txt")
+  function Invoke-SafeGit([string[]]$args){
+    $outStd = Join-Path $env:TEMP ("dm_git_" + [guid]::NewGuid().ToString("N") + "_out.txt")
+    $outErr = Join-Path $env:TEMP ("dm_git_" + [guid]::NewGuid().ToString("N") + "_err.txt")
     Remove-Item $outStd,$outErr -Force -ErrorAction SilentlyContinue
-    $p = Start-Process -FilePath git -ArgumentList @('push','origin',$refspec) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
+    $p = Start-Process -FilePath git -ArgumentList $args -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
     if($p.ExitCode -ne 0){
-      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 200) -join "
+      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 220) -join "
 "
-      throw ("G20_BLOCKED: git push failed exit=" + $p.ExitCode + "
+      throw ("G20_BLOCKED: git " + ($args -join ' ') + " failed exit=" + $p.ExitCode + "
 " + $e)
     }
+    return (Get-Content -LiteralPath $outStd -ErrorAction SilentlyContinue -Raw)
   }
 
-  # Always trigger via push (dispatch is currently 422)
-  git fetch origin $defaultBranch *> $null
-  $headSha = (git rev-parse HEAD).Trim()
-  $remoteSha = (git rev-parse ("origin/" + $defaultBranch)).Trim()
+  # SAFE fetch (prevents 'From https://...' stderr from killing the gate under Stop)
+  Invoke-SafeGit @('fetch','origin',$defaultBranch) *> $null
+
+  # Read-only commands with stderr suppressed (no ErrorRecord), exitcode checked
+  $headSha   = (& git rev-parse HEAD 2>$null).Trim()
+  if($LASTEXITCODE -ne 0 -or -not $headSha){ throw 'G20_BLOCKED: cannot rev-parse HEAD' }
+  $remoteSha = (& git rev-parse ("origin/" + $defaultBranch) 2>$null).Trim()
+  if($LASTEXITCODE -ne 0 -or -not $remoteSha){ throw 'G20_BLOCKED: cannot rev-parse origin/defaultBranch' }
+
   if($headSha -eq $remoteSha){
-    git commit --allow-empty -m "ci: trigger G20 via push (fallback)" *> $null
-    $headSha = (git rev-parse HEAD).Trim()
+    & git commit --allow-empty -m "ci: trigger G20 via push (fallback)" 2>$null *> $null
+    if($LASTEXITCODE -ne 0){ throw 'G20_BLOCKED: allow-empty commit failed' }
+    $headSha = (& git rev-parse HEAD 2>$null).Trim()
+    if($LASTEXITCODE -ne 0 -or -not $headSha){ throw 'G20_BLOCKED: cannot rev-parse HEAD after allow-empty commit' }
   }
-  Invoke-SafeGitPush ("HEAD:" + $defaultBranch)
+
+  # SAFE push (no stderr -> no NativeCommandError)
+  Invoke-SafeGit @('push','origin',("HEAD:" + $defaultBranch)) *> $null
 
   Write-Host ("G20_TRIGGERED_VIA_PUSH headSha=" + $headSha)
 }
