@@ -1,17 +1,18 @@
-# NEXT_ACTION (G6_PWA_INSTALL_OK)
+# NEXT_ACTION (G7_SCALE_100K_OK)
 Status: STOP
 
-Goal: Run the next authorized gate (Step 1 only).
+Goal: fix HASHLOCK_MISMATCH for docs/resume.md then rerun G7_SCALE_100K_OK.
 
-Allowed Path: PROCEED
-Scope: One-change (Gate=G6_PWA_INSTALL_OK)
+Allowed Path: FIX-to-PASS
+Scope: One-change (HashLock sync docs/resume.md + rerun G7_SCALE_100K_OK)
 
 ## Step 1 (Only) — Copy/Paste
-powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G6_PWA_INSTALL_OK"
+powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G7_SCALE_100K_OK"
 
 PASS Criteria
-- Prints: G6_PWA_INSTALL_OK_DONE
-- Appends a new *_RUN entry to state/LEDGER_v2.ndjson
-- Updates state/STATE.json (gate.current and last_pass set to G6_PWA_INSTALL_OK)
+- Gate prints: G7_DONE ...
+- No HASHLOCK_MISMATCH abort
+- state/LEDGER_v2.ndjson appends event:"G7_RUN"
+- state/STATE.json updated (gate.current and last_pass set to G7_SCALE_100K_OK; LOCKED_PASS includes G7)
 
 AI_SIGNATURE: PYM JBZ
