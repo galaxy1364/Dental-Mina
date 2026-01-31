@@ -1,11 +1,9 @@
 name: ci-attest-build-provenance
-on:
+'on':
   workflow_dispatch:
   push:
     branches:
-      - mainpermissions: {}
-
-jobs:
+      - mainjobs:
   build:
     runs-on: windows-latest
     permissions:
