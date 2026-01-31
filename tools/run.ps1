@@ -1,6 +1,11 @@
 param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
+# --- LOCKPACK_G20_EARLY_DISPATCH_V1 ---
+# FAIL-FAST: If Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE, force correct handler and stop any other dispatch path.
+if ($Gate -eq "G20_SIGNED_CI_ARTIFACT_PROVENANCE") { ; return }
+# --- /LOCKPACK_G20_EARLY_DISPATCH_V1 ---
+
 # --- LOCKPACK_G11_EARLY_DISPATCH_V1 ---
 function __LP_Do_G11_RUN {
   $gate = "G11_RUN"

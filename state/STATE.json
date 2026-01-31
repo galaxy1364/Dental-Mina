@@ -4,7 +4,7 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G11_RUN",
+                 "current":  "G4_EVIDENCE_PACK_OK",
                  "locked_pass":  [
                                      "G1_SINGLE_COMMAND",
                                      "G2_SANITY_HYGIENE",
@@ -29,11 +29,11 @@
                                  ],
                  "last_pass":  "G11_RUN"
              },
-    "last_pass":  "G11_RUN",
+    "last_pass":  "G4_EVIDENCE_PACK_OK",
     "last_fail":  null,
     "active_issue":  null,
-    "next_action_hash":  "bbce80a3682d0cb4232c232ad32ea8f31ec65ea1bb5aaea4de4a9687a08507f0",
-    "updated_utc":  "2026-01-31T06:45:47.6365189Z",
+    "next_action_hash":  "bb61cbead3da275457c0ea38e92e1f2de942589dc6681604f58e6df288354277",
+    "updated_utc":  "2026-01-31T06:52:33.1743915Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",
