@@ -1,8 +1,8 @@
 {
-    "ts_utc":  "2026-01-31T05:11:35.5889173Z",
-    "current_gate":  "G9_IRAN_CORE_OK",
-    "next_gate":  "DESIGN_STAGE",
+    "ts_utc":  "2026-01-31T06:48:30.6078052Z",
+    "current_gate":  "G4_EVIDENCE_PACK_OK",
+    "next_gate":  "G5_REPLAY_RESTORE_OK",
     "missing":  [
-                    "DESIGN_REVIEW_PACK_NOT_YET"
+                    "G5_NOT_YET_RUN"
                 ]
 }
