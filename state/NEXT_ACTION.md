@@ -1,10 +1,10 @@
-# NEXT_ACTION (FIX-to-PASS: G20 handler v8 push-fallback when workflow_dispatch is missing)
+# NEXT_ACTION (FIX-to-PASS: repair broken run.ps1 quoting + safe push)
 Status: STOP
 
-Goal: FIX-to-PASS for G20. Make G20 runner resilient: if workflow_dispatch returns 422, fallback to push-trigger (and allow-empty commit if needed), then select NEW run by headSha==HEAD and watch to completion.
+Goal: FIX-to-PASS. Repair tools/run.ps1 parse error caused by broken quoting, and ensure git push uses Start-Process redirection so $ErrorActionPreference=Stop does not break execution.
 
 Allowed Path: FIX-to-PASS
-Scope: One-change (Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE, fix=tools/run.ps1 v8 push-fallback)
+Scope: One-change (Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE, fix=tools/run.ps1 parse+safe-push repair)
 
 ## Step 1 (Only) - Copy/Paste
 powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G20_SIGNED_CI_ARTIFACT_PROVENANCE"

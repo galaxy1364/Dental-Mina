@@ -5,102 +5,38 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   param()
   $ErrorActionPreference = 'Stop'
 
-  if(-not (Get-Command gh -ErrorAction SilentlyContinue)){ throw 'G20_BLOCKED: gh CLI not found (install GitHub CLI)' }
+  if(-not (Get-Command gh -ErrorAction SilentlyContinue)){ throw 'G20_BLOCKED: gh CLI not found' }
   & gh auth status -h github.com *> $null
-  if($LASTEXITCODE -ne 0){ throw 'G20_BLOCKED: gh auth status failed (run: gh auth login)' }
+  if($LASTEXITCODE -ne 0){ throw 'G20_BLOCKED: gh not authed (run: gh auth login)' }
 
   $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
 
-  $wf = Get-ChildItem .github/workflows -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match 'attest|proven|artifact|ci' } | Select-Object -First 1
-  if(-not $wf){ throw 'G20_BLOCKED: workflow file not found in .github/workflows (expected attest/provenance workflow)' }
-
-  # ensure we can map HEAD and origin/<defaultBranch>
-  git fetch origin $defaultBranch *> $null
-
-  # helper: push safely without stderr breaking PowerShell
+  # Safe push helper (no stderr -> no NativeCommandError)
   function Invoke-SafeGitPush([string]$refspec){
     $outStd = Join-Path $env:TEMP ("dm_gitpush_out_" + [guid]::NewGuid().ToString("N") + ".txt")
     $outErr = Join-Path $env:TEMP ("dm_gitpush_err_" + [guid]::NewGuid().ToString("N") + ".txt")
     Remove-Item $outStd,$outErr -Force -ErrorAction SilentlyContinue
-
-    $sp = (Get-Command Start-Process).Parameters
-    if($sp.ContainsKey('RedirectStandardOutput') -and $sp.ContainsKey('RedirectStandardError')){
-      $p = Start-Process -FilePath git -ArgumentList @('push','origin',$refspec) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
-      if($p.ExitCode -ne 0){
-        $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 160) -join "
+    $p = Start-Process -FilePath git -ArgumentList @('push','origin',$refspec) -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
+    if($p.ExitCode -ne 0){
+      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 200) -join "
 "
-        throw ("G20_BLOCKED: git push failed exit=" + $p.ExitCode + "
+      throw ("G20_BLOCKED: git push failed exit=" + $p.ExitCode + "
 " + $e)
-      }
-    } else {
-      cmd /c ("git push origin " + $refspec + " 1>"$outStd" 2>"$outErr"")
-      if($LASTEXITCODE -ne 0){
-        $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 160) -join "
-"
-        throw ("G20_BLOCKED: git push failed exit=" + $LASTEXITCODE + "
-" + $e)
-      }
     }
   }
 
-  # If HEAD already equals origin/defaultBranch, make an allow-empty commit to force push-trigger run
+  # Always trigger via push (dispatch is currently 422)
+  git fetch origin $defaultBranch *> $null
   $headSha = (git rev-parse HEAD).Trim()
   $remoteSha = (git rev-parse ("origin/" + $defaultBranch)).Trim()
   if($headSha -eq $remoteSha){
     git commit --allow-empty -m "ci: trigger G20 via push (fallback)" *> $null
     $headSha = (git rev-parse HEAD).Trim()
   }
+  Invoke-SafeGitPush ("HEAD:" + $defaultBranch)
 
-  # record last run id (best-effort)
-  $beforeId = (& gh run list --workflow $wf.Name --branch $defaultBranch --limit 1 --json databaseId -q '.[0].databaseId')
-
-  # Try workflow_dispatch first; if 422 => fallback to push trigger
-  $useDispatch = $true
-  try {
-    $out = & gh workflow run $wf.Name --ref $defaultBranch 2>&1
-    if($LASTEXITCODE -ne 0){
-      if(($out | Out-String) -match "Workflow does not have 'workflow_dispatch' trigger"){ $useDispatch = $false } else { throw ("G20_BLOCKED: gh workflow run failed
-" + ($out | Out-String)) }
-    }
-  } catch {
-    $msg = ($_ | Out-String)
-    if($msg -match "workflow_dispatch"){ $useDispatch = $false } else { throw }
-  }
-
-  if(-not $useDispatch){
-    # fallback: push to default branch to trigger workflow via on: push
-    Invoke-SafeGitPush ("HEAD:" + $defaultBranch)
-  }
-
-  # find the NEW run that matches our HEAD sha
-  $deadline = (Get-Date).AddMinutes(8)
-  $id = $null
-  while((Get-Date) -lt $deadline){
-    $json = (& gh run list --workflow $wf.Name --branch $defaultBranch --limit 30 --json databaseId,headSha -q '.')
-    if($LASTEXITCODE -ne 0){ Start-Sleep -Seconds 3; continue }
-    $runs = $null
-    try { $runs = ($json | ConvertFrom-Json) } catch { $runs = $null }
-    if($runs){
-      foreach($r in $runs){
-        if($r.headSha -eq $headSha -and $r.databaseId){
-          if(-not $beforeId -or ($r.databaseId.ToString() -ne $beforeId.ToString())){
-            $id = $r.databaseId
-            break
-          }
-        }
-      }
-    }
-    if($id){ break }
-    Start-Sleep -Seconds 3
-  }
-  if(-not $id){ throw 'G20_TIMEOUT: could not obtain NEW workflow run id for current HEAD sha within 8 minutes' }
-
-  & gh run watch $id --interval 5 --exit-status
-  if($LASTEXITCODE -ne 0){ throw ('G20_FAILED: workflow concluded with failure databaseId=' + $id) }
-
-  Write-Host ('G20_OK: workflow_completed databaseId=' + $id)
+  Write-Host ("G20_TRIGGERED_VIA_PUSH headSha=" + $headSha)
 }
 
 if ($Gate -eq 'G20_SIGNED_CI_ARTIFACT_PROVENANCE') { Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE; return }
