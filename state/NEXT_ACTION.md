@@ -1,12 +1,12 @@
-# NEXT_ACTION (FIX-to-PASS: G11_RUN early-dispatch)
+# NEXT_ACTION ()
 Status: STOP
 
-Goal: FIX-to-PASS for G11_RUN no-op. After fix, run G11_RUN (Step 1 only).
+Goal: Run  using tools/run.ps1 (Step 1 only).
 
-Allowed Path: FIX-to-PASS
-Scope: One-change (Gate=G11_RUN, fix=tools/run.ps1 early-dispatch)
+Allowed Path: PROCEED
+Scope: One-change (Gate=)
 
 ## Step 1 (Only) - Copy/Paste
-powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G11_RUN"
+powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate ""
 
 AI_SIGNATURE: PYM JBZ

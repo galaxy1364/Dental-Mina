@@ -4,7 +4,7 @@
     "signature": "PYM JBZ"
   },
   "gate": {
-    "current": "G10_DESIGN_REVIEW_PACK",
+    "current": "G11_RUN",
     "locked_pass": [
       "G1_SINGLE_COMMAND",
       "G2_SANITY_HYGIENE",
@@ -27,13 +27,13 @@
       "G18_DESIGN_CONTINUATION",
       "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
     ],
-    "last_pass": "G10_DESIGN_REVIEW_PACK"
+    "last_pass": "G11_RUN"
   },
-  "last_pass": "G10_DESIGN_REVIEW_PACK",
+  "last_pass": "G11_RUN",
   "last_fail": null,
   "active_issue": null,
-  "next_action_hash": "1fa1859f462f513a2f2db1b354eaef2a6f93fadf81c7de460ff248cae4c3ef32",
-  "updated_utc": "2026-01-31T06:39:18.2774702Z",
+  "next_action_hash": "4130d771214405945acd89a92d52723b9ed3e7acffd2d597a5a291051b495f82",
+  "updated_utc": "2026-01-31T06:43:22.2285606Z",
   "locked_pass": [
     "G1_SINGLE_COMMAND",
     "G2_SANITY_HYGIENE",
@@ -54,6 +54,7 @@
     "G16_HANDOFF_AUTOGEN",
     "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
     "G18_DESIGN_CONTINUATION",
-    "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+    "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+    "G11_RUN"
   ]
 }
