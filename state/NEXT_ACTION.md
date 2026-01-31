@@ -1,18 +1,18 @@
-# NEXT_ACTION (G8_SECURITY_BASE_OK)
+# NEXT_ACTION (G_STATE_POINTER_REPAIR_AFTER_G8)
 Status: STOP
 
-Goal: Run G8_SECURITY_BASE_OK (Step 1 only).
+Goal: Repair STATE pointer mismatch after G8 (align gate.last_pass with last_pass=G8_SECURITY_BASE_OK) and sync HASHLOCK.
 
-Allowed Path: PROCEED
-Scope: One-change (Gate=G8_SECURITY_BASE_OK)
+Allowed Path: FIX-to-PASS
+Scope: One-change (STATE pointer repair + HASHLOCK sync + LEDGER repair append)
 
 ## Step 1 (Only) - Copy/Paste
-powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G8_SECURITY_BASE_OK"
+# This repair is applied by the script that generated this NEXT_ACTION.
+# Do NOT run any other gate until a new NEXT_ACTION is issued.
 
 PASS Criteria
-- Prints: G8_DONE ...
-- Appends event:"G8_RUN" to state/LEDGER_v2.ndjson
-- Updates state/STATE.json (gate.current and last_pass set to G8_SECURITY_BASE_OK; LOCKED_PASS includes G8_SECURITY_BASE_OK)
-- Produces latest artifacts evidence/resume packs
+- state/STATE.json: gate.current == G8_SECURITY_BASE_OK AND gate.last_pass == G8_SECURITY_BASE_OK AND last_pass == G8_SECURITY_BASE_OK
+- state/LEDGER_v2.ndjson appended: gate=G_STATE_POINTER_REPAIR_AFTER_G8 event=REPAIR
+- state/HASHLOCK.json protected hashes match actual files
 
 AI_SIGNATURE: PYM JBZ
