@@ -56,15 +56,12 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $deadline = (Get-Date).AddMinutes(10)
   $id = $null
   while((Get-Date) -lt $deadline){
-    $json = & gh run list --workflow $wf.Name --branch $defaultBranch --limit 40 --json databaseId,headSha,status,conclusion
+    $json = & gh run list --workflow $wf.Name --branch $defaultBranch --limit 60 --json databaseId,headSha
     if($LASTEXITCODE -eq 0 -and $json){
       try { $runs = ($json | ConvertFrom-Json) } catch { $runs = $null }
       if($runs){
         foreach($r in $runs){
-          if($r.headSha -eq $headSha -and $r.databaseId){
-            $id = [string]$r.databaseId
-            break
-          }
+          if($r.headSha -eq $headSha -and $r.databaseId){ $id = [string]$r.databaseId; break }
         }
       }
     }
@@ -77,7 +74,7 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   & gh run watch $id --interval 5 --exit-status
   if($LASTEXITCODE -ne 0){ throw ("G20_FAILED: workflow concluded with failure databaseId=" + $id) }
 
-  # download artifacts (temp) then attest verify common package types
+  # download artifacts (temp) then attest verify
   $tmp = Join-Path $env:TEMP ("DentalMina_G20_" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Force -Path $tmp | Out-Null
   & gh run download $id --dir $tmp *> $null
@@ -86,12 +83,13 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
            Where-Object { $_.Name -match '\.(zip|tgz|tar\.gz|msix|apk|aab|ipa)$' }
   if(-not $cand){ throw ("G20_BLOCKED: no artifacts found to attest-verify under " + $tmp) }
 
+  # FIX: resolve repo nameWithOwner (local env may not have GITHUB_REPOSITORY)
+  $repo = (& gh repo view --json nameWithOwner -q .nameWithOwner).Trim()
+  if(-not $repo){ throw 'G20_BLOCKED: cannot determine repo nameWithOwner for attestation verify' }
+
   $ok = 0
   foreach($f in $cand){
-    & gh attestation verify "$($f.FullName)" --repo "$env:GITHUB_REPOSITORY" *> $null
-    if($LASTEXITCODE -ne 0){
-      & gh attestation verify "$($f.FullName)" --repo ( (& gh repo view --json nameWithOwner -q .nameWithOwner) ) *> $null
-    }
+    & gh attestation verify "$($f.FullName)" --repo $repo *> $null
     if($LASTEXITCODE -ne 0){ throw ("G20_ATTEST_FAILED: " + $f.FullName) }
     $ok++
   }
