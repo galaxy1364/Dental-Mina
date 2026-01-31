@@ -12,11 +12,6 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
 
-  # pick workflow file (push-trigger target)
-  $wf = Get-ChildItem .github/workflows -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match 'attest|proven|provenance' } | Select-Object -First 1
-  if(-not $wf){ throw 'G20_BLOCKED: workflow file not found in .github/workflows (expected attest/provenance workflow)' }
-
   function Invoke-SafeGit([string[]]$ArgList){
     $ArgListSafe = @($ArgList) | Where-Object { $_ -ne $null -and $_ -ne '' }
     if(-not $ArgListSafe -or $ArgListSafe.Count -eq 0){ throw 'G20_BLOCKED: Invoke-SafeGit arglist empty' }
