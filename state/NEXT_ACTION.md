@@ -1,18 +1,18 @@
-# NEXT_ACTION (G7_SCALE_100K_OK)
+# NEXT_ACTION (G_STATE_POINTER_REPAIR)
 Status: STOP
 
-Goal: fix HASHLOCK_MISMATCH for docs/lockpack_rules.md then rerun G7_SCALE_100K_OK.
+Goal: Repair STATE pointer mismatch after G7 (align gate.last_pass with last_pass=G7_SCALE_100K_OK) and sync HASHLOCK.
 
 Allowed Path: FIX-to-PASS
-Scope: One-change (HashLock sync docs/lockpack_rules.md + rerun G7_SCALE_100K_OK)
+Scope: One-change (STATE pointer repair + HASHLOCK sync)
 
 ## Step 1 (Only) — Copy/Paste
-powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G7_SCALE_100K_OK"
+# This repair is already applied by the script that generated this NEXT_ACTION.
+# Do NOT run any other gate until a new NEXT_ACTION is issued.
 
 PASS Criteria
-- Gate prints: G7_DONE ...
-- No HASHLOCK_MISMATCH abort
-- state/LEDGER_v2.ndjson appends event:"G7_RUN"
-- state/STATE.json updated (gate.current and last_pass set to G7_SCALE_100K_OK; LOCKED_PASS includes G7)
+- state/STATE.json: gate.last_pass == G7_SCALE_100K_OK AND last_pass == G7_SCALE_100K_OK
+- state/HASHLOCK.json hashes match current file contents
+- state/LEDGER_v2.ndjson appended a REPAIR record for this action
 
 AI_SIGNATURE: PYM JBZ

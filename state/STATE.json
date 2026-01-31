@@ -4,7 +4,7 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G6_PWA_INSTALL_OK",
+                 "current":  "G7_SCALE_100K_OK",
                  "locked_pass":  [
                                      "G1_SINGLE_COMMAND",
                                      "G2_SANITY_HYGIENE",
@@ -27,13 +27,13 @@
                                      "G18_DESIGN_CONTINUATION",
                                      "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
                                  ],
-                 "last_pass":  "G5_REPLAY_RESTORE_OK"
+                 "last_pass":  "G7_SCALE_100K_OK"
              },
-    "last_pass":  "G6_PWA_INSTALL_OK",
+    "last_pass":  "G7_SCALE_100K_OK",
     "last_fail":  null,
     "active_issue":  null,
-    "next_action_hash":  "21d3e52aa17f1ad303b9e186178f112bd9cb5e9a39b75287fb727aaaac540ff5",
-    "updated_utc":  "2026-01-31T03:35:05.6361572Z",
+    "next_action_hash":  "5853aba38af3f459f63acd3ed5bbe7eed713eec4b064e2144a9dd6db9d2b7cb5",
+    "updated_utc":  "2026-01-31T03:51:20.8821812Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",
