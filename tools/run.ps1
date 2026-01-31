@@ -12,26 +12,29 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
 
-  function Invoke-SafeGit([string[]]$args){
+  function Invoke-SafeGit([string[]]$ArgList){
+    $ArgListSafe = @($ArgList) | Where-Object { $_ -ne $null -and $_ -ne '' }
+    if(-not $ArgListSafe -or $ArgListSafe.Count -eq 0){ throw 'G20_BLOCKED: Invoke-SafeGit arglist empty' }
+
     $outStd = Join-Path $env:TEMP ("dm_git_" + [guid]::NewGuid().ToString("N") + "_out.txt")
     $outErr = Join-Path $env:TEMP ("dm_git_" + [guid]::NewGuid().ToString("N") + "_err.txt")
     Remove-Item $outStd,$outErr -Force -ErrorAction SilentlyContinue
-    $p = Start-Process -FilePath git -ArgumentList $args -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
+
+    $p = Start-Process -FilePath git -ArgumentList $ArgListSafe -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outStd -RedirectStandardError $outErr
     if($p.ExitCode -ne 0){
-      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 220) -join "
+      $e = (Get-Content -LiteralPath $outErr -ErrorAction SilentlyContinue | Select-Object -Last 240) -join "
 "
-      throw ("G20_BLOCKED: git " + ($args -join ' ') + " failed exit=" + $p.ExitCode + "
+      throw ("G20_BLOCKED: git " + ($ArgListSafe -join ' ') + " failed exit=" + $p.ExitCode + "
 " + $e)
     }
     return (Get-Content -LiteralPath $outStd -ErrorAction SilentlyContinue -Raw)
   }
 
-  # SAFE fetch (prevents 'From https://...' stderr from killing the gate under Stop)
   Invoke-SafeGit @('fetch','origin',$defaultBranch) *> $null
 
-  # Read-only commands with stderr suppressed (no ErrorRecord), exitcode checked
   $headSha   = (& git rev-parse HEAD 2>$null).Trim()
   if($LASTEXITCODE -ne 0 -or -not $headSha){ throw 'G20_BLOCKED: cannot rev-parse HEAD' }
+
   $remoteSha = (& git rev-parse ("origin/" + $defaultBranch) 2>$null).Trim()
   if($LASTEXITCODE -ne 0 -or -not $remoteSha){ throw 'G20_BLOCKED: cannot rev-parse origin/defaultBranch' }
 
@@ -42,9 +45,7 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
     if($LASTEXITCODE -ne 0 -or -not $headSha){ throw 'G20_BLOCKED: cannot rev-parse HEAD after allow-empty commit' }
   }
 
-  # SAFE push (no stderr -> no NativeCommandError)
   Invoke-SafeGit @('push','origin',("HEAD:" + $defaultBranch)) *> $null
-
   Write-Host ("G20_TRIGGERED_VIA_PUSH headSha=" + $headSha)
 }
 
