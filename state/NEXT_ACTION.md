@@ -1,10 +1,10 @@
 # NEXT_ACTION (G7_SCALE_100K_OK)
 Status: STOP
 
-Goal: fix HASHLOCK_MISMATCH for docs/resume.md then rerun G7_SCALE_100K_OK.
+Goal: fix HASHLOCK_MISMATCH for docs/lockpack_rules.md then rerun G7_SCALE_100K_OK.
 
 Allowed Path: FIX-to-PASS
-Scope: One-change (HashLock sync docs/resume.md + rerun G7_SCALE_100K_OK)
+Scope: One-change (HashLock sync docs/lockpack_rules.md + rerun G7_SCALE_100K_OK)
 
 ## Step 1 (Only) — Copy/Paste
 powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G7_SCALE_100K_OK"

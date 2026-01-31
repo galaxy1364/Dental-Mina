@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-01-31T03:24:17.6167823Z",
+    "ts_utc":  "2026-01-31T03:35:05.6361572Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -12,7 +12,7 @@
                       },
                       {
                           "path":  "docs/lockpack_rules.md",
-                          "sha256":  "a38c285c2b10b95c76707d09a9e42401df2da618013ee46ed99cadc7be34a644"
+                          "sha256":  "10ca6dd170f9ea473ec3ec4d05d4cd91b02304afa1ae9a8b7e8df73ee8077521"
                       },
                       {
                           "path":  "handoff/handoff_pack.txt",
