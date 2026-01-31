@@ -1,10 +1,10 @@
-# NEXT_ACTION (FIX-to-PASS: G20 patch ACTIVE workflow by id via gh api)
+# NEXT_ACTION (FIX-to-PASS: G20 canonical on: workflow_dispatch for ACTIVE workflow id=227242153)
 Status: STOP
 
-Goal: FIX-to-PASS for G20. Use gh api to resolve workflow path for id=227242153, force top-level on: to include workflow_dispatch:, push to default branch, then run G20 once.
+Goal: FIX-to-PASS for G20. Resolve workflow path via gh api for id=227242153, force SINGLE top-level on: with workflow_dispatch:, push to default branch, verify remote file includes workflow_dispatch, then run G20 once.
 
 Allowed Path: FIX-to-PASS
-Scope: One-change (Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE, fix=workflow_dispatch trigger on ACTIVE workflow id)
+Scope: One-change (Gate=G20_SIGNED_CI_ARTIFACT_PROVENANCE, fix=canonical on: block for ACTIVE workflow id)
 
 ## Step 1 (Only) - Copy/Paste
 powershell -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate "G20_SIGNED_CI_ARTIFACT_PROVENANCE"
