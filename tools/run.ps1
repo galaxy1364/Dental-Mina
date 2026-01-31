@@ -9887,8 +9887,8 @@ $verJson = $av.Stdout
 
   # HashLock verify (if present)
   Assert-HashLockIfPresent $Gate
-
-switch ($Gate) {
+if($PSBoundParameters.ContainsKey("Gate") -and $PSBoundParameters["Gate"]){ $Gate = $PSBoundParameters["Gate"] }
+switch($Gate){
     "G4_EVIDENCE_PACK_OK"     { Do-G4; break }
     "G5_REPLAY_RESTORE_OK"   { Do-G5; break }
     "G6_PWA_INSTALL_OK"      { Do-G6; break }
@@ -19756,8 +19756,8 @@ $verJson = $av.Stdout
 
   # HashLock verify (if present)
   Assert-HashLockIfPresent $Gate
-
-switch ($Gate) {
+if($PSBoundParameters.ContainsKey("Gate") -and $PSBoundParameters["Gate"]){ $Gate = $PSBoundParameters["Gate"] }
+switch($Gate){
     "G4_EVIDENCE_PACK_OK"     { Do-G4; break }
     "G5_REPLAY_RESTORE_OK"   { Do-G5; break }
     "G6_PWA_INSTALL_OK"      { Do-G6; break }
