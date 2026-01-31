@@ -29648,7 +29648,6 @@ switch ($Gate) {
 
 
 
-
 _LOCKPACK_FORCED_GATE){ $Gate = param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
@@ -49420,7 +49419,6 @@ switch ($Gate) {
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
 
 
 
@@ -79069,7 +79067,6 @@ switch ($Gate) {
 
 
 
-
 _LOCKPACK_FORCED_GATE){ $Gate = param(
   [string]$Gate = "G4_EVIDENCE_PACK_OK"
 )
@@ -98845,7 +98842,6 @@ switch ($Gate) {
 
 
 
-
 _LOCKPACK_FORCED_GATE }
 switch($Gate){
     "G4_EVIDENCE_PACK_OK"     { Do-G4; break }
@@ -98873,7 +98869,6 @@ switch($Gate){
   Write-Host "ABORTED gate=$Gate reason=$msg"
   exit 2
 }
-
 
 
 
