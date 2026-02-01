@@ -1,0 +1,19 @@
+{
+    "gate":  "G24_UI_FOUNDATION_DESIGN_SYSTEM",
+    "ts_utc":  "2026-02-01T13:16:03.8584160Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "design_doc":  true,
+                   "postcss_ok":  true,
+                   "tailwind_ok":  true,
+                   "build_ok":  true
+               }
+}
