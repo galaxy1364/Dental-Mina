@@ -5,12 +5,18 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   param()
   $ErrorActionPreference = 'Stop'
 
+  if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -Scope Global -ErrorAction SilentlyContinue) {
+    $global:PSNativeCommandUseErrorActionPreference = $false
+  }
+
   if(-not (Get-Command gh -ErrorAction SilentlyContinue)){ throw 'G20_BLOCKED: gh CLI not found' }
   & gh auth status -h github.com *> $null
   if($LASTEXITCODE -ne 0){ throw 'G20_BLOCKED: gh not authed (run: gh auth login)' }
 
-  $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+  $defaultBranch = (& gh repo view --json defaultBranchRef -q .defaultBranchRef.name).Trim()
   if(-not $defaultBranch){ throw 'G20_BLOCKED: cannot determine default branch' }
+
+  $wfName = 'ci-attest-build-provenance'
 
   function Invoke-SafeGit([string[]]$ArgList){
     $ArgListSafe = @($ArgList) | Where-Object { $_ -ne $null -and $_ -ne '' }
@@ -47,11 +53,10 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   Invoke-SafeGit @('push','origin',("HEAD:" + $defaultBranch)) *> $null
   Write-Host ("G20_TRIGGERED_VIA_PUSH headSha=" + $headSha)
 
-  # find NEW run for this headSha under this workflow
   $deadline = (Get-Date).AddMinutes(10)
   $id = $null
   while((Get-Date) -lt $deadline){
-    $json = & gh run list --workflow $wf.Name --branch $defaultBranch --limit 60 --json databaseId,headSha
+    $json = & gh run list --workflow $wfName --branch $defaultBranch --limit 60 --json databaseId,headSha
     if($LASTEXITCODE -eq 0 -and $json){
       try { $runs = ($json | ConvertFrom-Json) } catch { $runs = $null }
       if($runs){
@@ -69,23 +74,29 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   & gh run watch $id --interval 5 --exit-status
   if($LASTEXITCODE -ne 0){ throw ("G20_FAILED: workflow concluded with failure databaseId=" + $id) }
 
-  # download artifacts (temp) then attest verify
   $tmp = Join-Path $env:TEMP ("DentalMina_G20_" + [guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Force -Path $tmp | Out-Null
   & gh run download $id --dir $tmp *> $null
 
   $cand = Get-ChildItem -Path $tmp -Recurse -File -ErrorAction SilentlyContinue |
-           Where-Object { $_.Name -match '\.(zip|tgz|tar\.gz|msix|apk|aab|ipa)$' }
+           Where-Object { $_.Name -match '\.zip$' -and $_.Name -match '^Dental-Mina_repo_' }
+  if(-not $cand){
+    $cand = Get-ChildItem -Path $tmp -Recurse -File -ErrorAction SilentlyContinue |
+             Where-Object { $_.Name -match '\.(zip|tgz|tar\.gz|msix|apk|aab|ipa)$' }
+  }
   if(-not $cand){ throw ("G20_BLOCKED: no artifacts found to attest-verify under " + $tmp) }
 
-  # FIX: resolve repo nameWithOwner (local env may not have GITHUB_REPOSITORY)
   $repo = (& gh repo view --json nameWithOwner -q .nameWithOwner).Trim()
   if(-not $repo){ throw 'G20_BLOCKED: cannot determine repo nameWithOwner for attestation verify' }
 
   $ok = 0
   foreach($f in $cand){
-    & gh attestation verify "$($f.FullName)" --repo $repo *> $null
-    if($LASTEXITCODE -ne 0){ throw ("G20_ATTEST_FAILED: " + $f.FullName) }
+    $out = (& gh attestation verify "$($f.FullName)" --repo $repo 2>&1 | Out-String).Trim()
+    if($LASTEXITCODE -ne 0){
+      if(-not $out){ $out = 'no output from gh attestation verify' }
+      throw ("G20_ATTEST_FAILED: " + $f.FullName + "
+" + $out)
+    }
     $ok++
   }
 
