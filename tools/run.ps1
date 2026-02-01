@@ -19,6 +19,99 @@ param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
 
 
 
+
+# --- G38_LOCK_FROM_G20 ---
+if ($Gate -eq "G38_LOCK_FROM_G20") {
+  try {
+    $GateName = "G38_CAPACITOR_DEVICE_SMOKE"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function AppendNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      [IO.File]::AppendAllText([IO.Path]::GetFullPath($p), $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK" }
+
+    # read last G38_RUN record (for qg/manifest linkage)
+    $last = (Get-Content -LiteralPath $ledger -Tail 200 | Where-Object { $_ -match '"gate":"G38_CAPACITOR_DEVICE_SMOKE"' -and $_ -match '"event":"G38_RUN"' } | Select-Object -Last 1)
+    if(-not $last){ throw "NO_G38_RUN_IN_LEDGER" }
+    $j = $last | ConvertFrom-Json
+
+    # best-effort read CI run id from runner output cache (state file)
+    # If not present, store as unknown but still lock using headSha from git
+    $headSha = (git rev-parse HEAD).Trim()
+    $ciRunId = ""
+    try {
+      $na = Get-Content -LiteralPath (Join-Path $root "state\NEXT_ACTION.md") -Raw -ErrorAction SilentlyContinue
+      if($na -match 'G20_RUN_ID=(\d+)'){ $ciRunId = $Matches[1] }
+    } catch { }
+
+    # Resync HASHLOCK protected hashes
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){ $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Update STATE (locked_pass += G38)
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    # Append LOCKED_PASS to ledger (append-only)
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "LOCKED_PASS"
+      headSha = $headSha
+      ci_databaseId = $ciRunId
+      qg_sha256 = $j.qg_sha256
+      manifest_sha256 = $j.manifest_sha256
+      signature = "PYM JBZ"
+    }
+    AppendNoBom $ledger (($evt | ConvertTo-Json -Compress -Depth 20) + "
+")
+
+    # HOLD
+    $hold = "# HOLD (LOCKPACK)
+Last LOCKED_PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    Write-Host ("G38_LOCKED_PASS headSha=" + $headSha + " ci=" + $ciRunId)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G38_LOCK_FROM_G20 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G38_LOCK_FROM_G20 ---
+
 # --- G38_CAPACITOR_DEVICE_SMOKE_EARLY_DISPATCH ---
 if ($Gate -eq "G38_CAPACITOR_DEVICE_SMOKE") {
   try {
