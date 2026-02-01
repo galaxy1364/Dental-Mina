@@ -108,7 +108,11 @@ document.documentElement.dir  = 'rtl';
         throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
       }
 
-      if($p.ExitCode -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $p.ExitCode) }
+      try { $p.WaitForExit() } catch {}
+try { $p.Refresh() } catch {}
+$exit = $p.ExitCode
+if($exit -eq $null){ throw ("FAIL_" + $tag + "_EXIT=UNKNOWN") }
+if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
     }
 
     # Prefer npm ci if lockfile exists (deterministic + faster)
