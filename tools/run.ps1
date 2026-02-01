@@ -126,43 +126,70 @@ document.documentElement.dir  = 'rtl';
   $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
 
   $line = $cmdLine.Trim()
-  if($line -notmatch '^(?i)npm(\s+.+)?$'){ throw ("ONLY_NPM_ALLOWED_" + $tag) }
-  $argsText = ""
-  if($line -match '^(?i)npm\s+(.+)$'){ $argsText = $matches[1] }
 
-  # Resolve absolute paths (written to logs)
-  $nodePath = ""
-  $npmCmdPath = ""
-  try { $nodePath = (Get-Command node -ErrorAction Stop).Source } catch {}
-  try { $npmCmdPath = (Get-Command npm.cmd -ErrorAction Stop).Source } catch {}
+  # Special-case npm: ALWAYS use npm.cmd via System32 cmd.exe (Win32-safe)
+  if($line -match '^(?i)npm(\s+.+)?$'){
+    $argsText = ""
+    if($line -match '^(?i)npm\s+(.+)$'){ $argsText = $matches[1] }
 
-  $cmdExe = (Join-Path $env:WINDIR 'System32\cmd.exe')
-  if(-not (Test-Path $cmdExe)){ throw ("MISSING_CMD_EXE_" + $tag) }
+    $npmCmdPath = ""
+    try { $npmCmdPath = (Get-Command npm.cmd -ErrorAction Stop).Source } catch {}
+    if([string]::IsNullOrWhiteSpace($npmCmdPath)){ throw ("NPM_CMD_NOT_FOUND_ON_PATH_" + $tag) }
 
-  # Write diagnostic header
-  Set-Content -LiteralPath $o -Encoding UTF8 -Value ("G39_DIAG tag=" + $tag + "`r`nPS=" + $PSVersionTable.PSVersion + "`r`nCMD=" + $cmdExe + "`r`nNODE=" + $nodePath + "`r`nNPMCMD=" + $npmCmdPath + "`r`nARGS=" + $argsText + "`r`n---")
-  Set-Content -LiteralPath $e -Encoding UTF8 -Value ""
+    $cmdExe = (Join-Path $env:WINDIR 'System32\cmd.exe')
+    if(-not (Test-Path $cmdExe)){ throw ("MISSING_CMD_EXE_" + $tag) }
 
-  if([string]::IsNullOrWhiteSpace($nodePath)){ throw ("NODE_NOT_FOUND_ON_PATH_" + $tag) }
-  if([string]::IsNullOrWhiteSpace($npmCmdPath)){ throw ("NPM_CMD_NOT_FOUND_ON_PATH_" + $tag) }
+    # write diag header
+    Set-Content -LiteralPath $o -Encoding UTF8 -Value ("G39_DIAG tag=" + $tag + "`r`nCMD=" + $cmdExe + "`r`nNPMCMD=" + $npmCmdPath + "`r`nARGS=" + $argsText + "`r`n---")
+    Set-Content -LiteralPath $e -Encoding UTF8 -Value ""
 
-  # Run via cmd.exe, but call absolute npm.cmd to avoid PATH/bat shim issues
-  $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmdPath + '" ' + $argsText + ' 1>>"' + $o + '" 2>>"' + $e + '" & exit /b %errorlevel%'
-  $alist = @('/v:on','/d','/s','/c',$cmd)
+    $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmdPath + '" ' + $argsText + ' 1>>"' + $o + '" 2>>"' + $e + '" & exit /b %errorlevel%'
+    $alist = @('/v:on','/d','/s','/c',$cmd)
 
-  try {
-    $p = Start-Process -FilePath $cmdExe -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru
-  } catch {
-    Add-Content -LiteralPath $e -Encoding UTF8 -Value ("START_PROCESS_EXCEPTION: " + $_.Exception.Message)
-    throw ("ABORT_START_PROCESS_" + $tag)
+    try {
+      $p = Start-Process -FilePath $cmdExe -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru
+    } catch {
+      Add-Content -LiteralPath $e -Encoding UTF8 -Value ("START_PROCESS_EXCEPTION: " + $_.Exception.Message)
+      throw ("ABORT_START_PROCESS_" + $tag)
+    }
+
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+      Start-Sleep -Seconds 2
+      try { $p.Refresh() } catch {}
+    }
+    if(-not $p.HasExited){
+      Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+      throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+    }
+
+    try { $p.WaitForExit() } catch {}
+    try { $p.Refresh() } catch {}
+
+    if($p.ExitCode -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $p.ExitCode) }
+    return
   }
+
+  # Non-npm: keep existing semantics (Start-Process on resolved command)
+  $parts = $line -split '\s+',2
+  $exe = $parts[0]
+  $rest = ""
+  if($parts.Count -gt 1){ $rest = $parts[1] }
+
+  $exePath = ""
+  try { $exePath = (Get-Command $exe -ErrorAction Stop).Source } catch {}
+  if([string]::IsNullOrWhiteSpace($exePath)){ throw ("CMD_NOT_FOUND_" + $tag + "_" + $exe) }
+
+  $args = @()
+  if(-not [string]::IsNullOrWhiteSpace($rest)){ $args = $rest -split '\s+' }
+
+  $p = Start-Process -FilePath $exePath -ArgumentList $args -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
 
   $sw = [System.Diagnostics.Stopwatch]::StartNew()
   while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
     Start-Sleep -Seconds 2
     try { $p.Refresh() } catch {}
   }
-
   if(-not $p.HasExited){
     Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
     throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
@@ -171,8 +198,7 @@ document.documentElement.dir  = 'rtl';
   try { $p.WaitForExit() } catch {}
   try { $p.Refresh() } catch {}
 
-  $exit = $p.ExitCode
-  if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
+  if($p.ExitCode -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $p.ExitCode) }
 }
 
     # Prefer npm ci if lockfile exists (deterministic + faster)
