@@ -115,40 +115,51 @@ document.documentElement.dir  = 'rtl';
   }
 
     function RunCmdWithTimeout([string]$cmdLine,[int]$timeoutSec,[string]$tag){
-      if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
-      $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
-      New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-      $o = Join-Path $logDir ("$tag_$ts.out.log.txt")
-      $e = Join-Path $logDir ("$tag_$ts.err.log.txt")
+  if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
 
-      $comspec = $env:ComSpec
-      if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
+  $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
+  New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+  $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
+  $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
 
-      # ensure deterministic + no audit/fund noise
-      $cmd = 'set ""NPM_CONFIG_AUDIT=false"" && set ""NPM_CONFIG_FUND=false"" && ' + $cmdLine
-# Force cmd to emit exitcode marker reliably (requires /v:on for !errorlevel!)
-$cmd = 'setlocal EnableDelayedExpansion && ' + $cmd + ' & echo __DM_EXITCODE__=!errorlevel! & endlocal' + ' & exit /b %errorlevel%'
-      $alist = @('/d','/s','/c',$cmd)
+  # G39 only: enforce npm commands, but run via cmd.exe so redirects are safe
+  $line = $cmdLine.Trim()
+  if($line -notmatch '^(?i)npm(\s+.+)?$'){ throw ("ONLY_NPM_ALLOWED_" + $tag) }
+  $argsText = ""
+  if($line -match '^(?i)npm\s+(.+)$'){ $argsText = $matches[1] }
 
-      $p = Start-Process -FilePath $comspec -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+  $npmCmd = $null
+  try { $npmCmd = (Get-Command npm.cmd -ErrorAction Stop).Source } catch { $npmCmd = $null }
+  if(-not $npmCmd){
+    try { $npmCmd = (Get-Command npm -ErrorAction Stop).Source } catch { $npmCmd = $null }
+  }
+  if(-not $npmCmd){ throw ("NPM_NOT_FOUND_" + $tag) }
 
-      $sw = [System.Diagnostics.Stopwatch]::StartNew()
-      while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
-        Start-Sleep -Seconds 2
-        try { $p.Refresh() } catch {}
-      }
+  $comspec = $env:ComSpec
+  if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
 
-      if(-not $p.HasExited){
-        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-        throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
-      }
+  $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmd + '" ' + $argsText + ' & exit /b %errorlevel%'
+  $alist = @('/d','/s','/c',$cmd)
 
-      try { $p.WaitForExit() } catch {}
-try { $p.Refresh() } catch {}
-$exit = $p.ExitCode
-if($exit -eq $null){ throw ("FAIL_" + $tag + "_EXIT=UNKNOWN") }
-if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
-    }
+  $p = Start-Process -FilePath $comspec -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+    Start-Sleep -Seconds 2
+    try { $p.Refresh() } catch {}
+  }
+
+  if(-not $p.HasExited){
+    Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+  }
+
+  try { $p.WaitForExit() } catch {}
+  try { $p.Refresh() } catch {}
+
+  $exit = $p.ExitCode
+  if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
+}
 
     # Prefer npm ci if lockfile exists (deterministic + faster)
     $lock = Join-Path $appDir 'package-lock.json'
