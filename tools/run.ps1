@@ -21,6 +21,8 @@ param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
 
 
 
+
+
 # --- G39_FA_IR_CALENDAR_LOCK_2026 ---
 if ($Gate -eq 'G39_FA_IR_CALENDAR_LOCK_2026') {
   try {
@@ -38,7 +40,6 @@ if ($Gate -eq 'G39_FA_IR_CALENDAR_LOCK_2026') {
     }
     function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
 
-    # HARD STOP: NEXT_ACTION must authorize this gate
     $naPath = Join-Path $root 'state\NEXT_ACTION.md'
     if(!(Test-Path $naPath)){ throw 'STOP_NO_NEXT_ACTION' }
     $na = Get-Content -LiteralPath $naPath -Raw
@@ -54,7 +55,6 @@ if ($Gate -eq 'G39_FA_IR_CALENDAR_LOCK_2026') {
     $appDir = Join-Path $root 'apps\dental-mina'
     if(!(Test-Path (Join-Path $appDir 'package.json'))){ throw 'MISSING_APP_PACKAGE_JSON' }
 
-    # Enforce lang/dir at DOM + index.html (idempotent)
     $indexHtml = Join-Path $appDir 'index.html'
     if(Test-Path $indexHtml){
       $h = Get-Content -LiteralPath $indexHtml -Raw -Encoding UTF8
@@ -72,22 +72,18 @@ document.documentElement.lang = 'fa-IR';
 document.documentElement.dir  = 'rtl';
 "
         $mi = [regex]::Match($t, '(?ms)^(?:\s*import[^\r\n]*\r?\n)+')
-        if($mi.Success){
-          $t = $t.Insert($mi.Index + $mi.Length, $ins)
-        } else {
-          $t = $ins + $t
-        }
+        if($mi.Success){ $t = $t.Insert($mi.Index + $mi.Length, $ins) } else { $t = $ins + $t }
         WNoBom $mainTsx $t
       }
     }
 
-    # Build with hard timeout + logs (pending=0)
-    function RunWithTimeout([string]$file,[string[]]$args,[int]$timeoutSec,[string]$tag){
+    function RunWithTimeout([string]$file,[string]$argLine,[int]$timeoutSec,[string]$tag){
+      if([string]::IsNullOrWhiteSpace($argLine)){ throw ("ARGUMENTLIST_EMPTY_" + $tag) }
       $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
       New-Item -ItemType Directory -Force -Path $logDir | Out-Null
       $o = Join-Path $logDir ("$tag_$ts.out.log.txt")
       $e = Join-Path $logDir ("$tag_$ts.err.log.txt")
-      $p = Start-Process -FilePath $file -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+      $p = Start-Process -FilePath $file -ArgumentList $argLine -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
       if(-not (Wait-Process -Id $p.Id -Timeout $timeoutSec -ErrorAction SilentlyContinue)){
         try { Stop-Process -Id $p.Id -Force } catch {}
         throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
@@ -96,10 +92,9 @@ document.documentElement.dir  = 'rtl';
     }
 
     Push-Location $appDir
-    RunWithTimeout 'npm' @('install') 600 'npm_install'
-    RunWithTimeout 'npm' @('run','build') 600 'npm_build'
+    RunWithTimeout 'npm' 'install' 600 'npm_install'
+    RunWithTimeout 'npm' 'run build' 600 'npm_build'
 
-    # Intl Persian calendar sanity (best-effort)
     $intlOk = $false
     try {
       $s = & node -e 'console.log(new Intl.DateTimeFormat("fa-IR-u-ca-persian",{dateStyle:"full",timeStyle:"short"}).format(new Date()))' 2>$null
@@ -107,7 +102,6 @@ document.documentElement.dir  = 'rtl';
     } catch { $intlOk = $false }
     Pop-Location
 
-    # HASHLOCK resync (existing protected entries)
     $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
     foreach($ent in $hl.protected){
       $p2 = Join-Path $root $ent.path
@@ -116,7 +110,6 @@ document.documentElement.dir  = 'rtl';
     $hl.ts_utc = $utc
     WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
 
-    # Evidence
     $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
     New-Item -ItemType Directory -Force -Path $evDir | Out-Null
     $qgPath = Join-Path $evDir 'QG.json'
@@ -149,7 +142,6 @@ document.documentElement.dir  = 'rtl';
     WNoBom $mfPath ($ml -join "
 ")
 
-    # STATE + HOLD + LEDGER
     $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
     if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
     if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue '' -Force }
