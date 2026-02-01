@@ -33,7 +33,7 @@
     "last_fail":  null,
     "active_issue":  null,
     "next_action_hash":  "1f4eff055a067dbc0c0e1e2680f0201f5107bc5f1ddf2e405cbd621e5ed56817",
-    "updated_utc":  "2026-02-01T09:50:36.6280369Z",
+    "updated_utc":  "2026-02-01T09:54:35.4243118Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",
@@ -57,5 +57,7 @@
                         "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
                         "G11_RUN",
                         "G20_SIGNED_CI_ARTIFACT_PROVENANCE"
-                    ]
+                    ],
+    "current_gate":  "G20_SIGNED_CI_ARTIFACT_PROVENANCE",
+    "status":  "PASS"
 }
