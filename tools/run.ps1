@@ -91,7 +91,7 @@ document.documentElement.dir  = 'rtl';
     $env:NPM_CONFIG_AUDIT = 'false'
     $env:NPM_CONFIG_FUND  = 'false'
 
-    $npmPath = (Get-Command npm -ErrorAction Stop).Source
+    $npmPath = (Get-Command npm.cmd -ErrorAction Stop).Source
     $args = $argsText.Trim() -split '\s+'
 
     $p = Start-Process -FilePath $npmPath -ArgumentList $args -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
