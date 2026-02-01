@@ -4,7 +4,7 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G38_CAPACITOR_DEVICE_SMOKE",
+                 "current":  "G39_FA_IR_CALENDAR_LOCK_2026",
                  "locked_pass":  [
                                      "G1_SINGLE_COMMAND",
                                      "G2_SANITY_HYGIENE",
@@ -47,11 +47,11 @@
                                  ],
                  "last_pass":  "G11_RUN"
              },
-    "last_pass":  "G38_CAPACITOR_DEVICE_SMOKE",
+    "last_pass":  "G39_FA_IR_CALENDAR_LOCK_2026",
     "last_fail":  null,
     "active_issue":  null,
     "next_action_hash":  "b313c6e70655706279cf0a91f0002c0eb05127d663f18dea2e51b05ac0ddd373",
-    "updated_utc":  "2026-02-01T16:34:33.3782799Z",
+    "updated_utc":  "2026-02-01T23:59:52.6580633Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",
