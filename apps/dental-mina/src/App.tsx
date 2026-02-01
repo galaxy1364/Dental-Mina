@@ -1,35 +1,59 @@
-import './App.css'
+import InstallBanner from "./pwa/InstallBanner"
+import "./App.css"
 
-function Tile(props: { title: string; subtitle: string; accent: string }) {
-  const { title, subtitle, accent } = props
-  return (
-    <div className='rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-sm p-4 active:scale-[0.99] transition'>
-      <div className={'text-sm font-semibold ' + accent}>{title}</div>
-      <div className='text-xs text-white/70 mt-1'>{subtitle}</div>
-    </div>
-  )
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import TabBar from "./components/TabBar"
+import Dashboard from "./pages/Dashboard"
+import Scheduling from "./pages/Scheduling"
+import Patients from "./pages/Patients"
+import PatientDetail from "./pages/PatientDetail"
+import Finance from "./pages/Finance"
+import Flags from "./pages/Flags"
+import { isEnabled } from "./lib/flags"
+
+function Disabled() {
+  return <div className="text-xs text-white/60">
+      <InstallBanner />
+ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â§ÃƒÅ¡Ã‹Å“Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¹Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¹ ÃƒËœÃ‚ÂºÃƒâ€ºÃ…â€™ÃƒËœÃ‚Â±Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¹ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª.</div>
 }
 
 export default function App() {
   return (
-    <div dir='rtl' className='min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white'>
-      <header className='sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-2xl'>
-        <div className='max-w-md mx-auto px-4 py-4'>
-          <div className='text-lg font-bold text-emerald-300'>Dental-Mina</div>
-          <div className='text-xs text-white/70 mt-1'>Ø¯Ù…Ø³Ø¨ÙˆØ±Ø¯ - UI Foundation (Liquid Glass)</div>
+    <div dir="rtl" className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
+      
+      <InstallBanner />
+<header className="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-2xl">
+        <div className="max-w-md mx-auto px-4 py-4">
+          
+      <InstallBanner />
+<div className="text-lg font-bold text-emerald-300">
+      <InstallBanner />
+Dental-Mina</div>
+          <div className="text-xs text-white/70 mt-1">
+      <InstallBanner />
+G32 Feature Flags Foundation</div>
         </div>
       </header>
 
-      <main className='max-w-md mx-auto px-4 py-5 space-y-4'>
-        <div className='grid grid-cols-2 gap-3'>
-          <Tile title='Ù†ÙˆØ¨ØªØ£Ø¯Ù…)áˆˆİX]OIö+¶,v)ö,vaö)È6iöav,vb6,ˆ
-È6*¶`¶b6b¶aIÈXØÙ[Iİ^Y[Y\˜[LÌ	ÈÏ‚ˆ[H]OIöav)öa7)‰ÈİX]OIöcç6,v)ö+¶*¶b´&vcÈ
-È9«,v)ö+¶b6`v+vcÉÈXØÙ[Iİ^]X[LÌ	ÈÏ‚ˆ[H]OIö*6)¶)ö,v)öa‰ÈİX]OIö/,vb6a¶+öaö)ö 
-È6+6,v+v+ÉÈXØÙ[Iİ^\ÚŞKLÌ	ÈÏ‚ˆ[H]OIöa6)ö*6,v)ö*6)öb6,IÈİX]OIö)ö,vlö)ö`Kö+ö,vc6)ö`‰ÈXØÙ[Iİ^Z[™YÛËLÌ	ÈÏ‚ˆÙ]‚‚ˆ]ˆÛ\ÜÓ˜[YOIÜ›İ[™YL›Ü™\ˆ›Ü™\‹]Ú]KÌL™Ë]Ú]KÍH˜XÚÙ›ÜX›\‹^M	Ï‚ˆ]ˆÛ\ÜÓ˜[YOIİ^\ÛH›Û\Ù[ZX›Û^]Ú]IÏ¶b6h¶.v*6*¶b6)öa6)öa³ÂöF—cà¢ÆF—b6Æ74æÖSÒwFW‡B×‡2FW‡B×v†—FRós×BÓ"síŠ}˜]Šı˜‹˜‚‹-‹MŠ}˜m˜rˆ‚‹]Š}˜=‰òŠÍŠÍ‹Š}ŠòŠı˜]‹-Šò˜Š}‹ŠòŠı˜-Š}˜-˜m˜r‹½Š­˜-˜˜­˜R˜M‹-Š}˜˜rˆ-Šı˜MŠ}˜2˜]Š}‹Šò˜mŠ­˜ŠòãÂöF—cà¢ÂöF—cà¢ÂöÖ–ãà ¢Ææb6Æ74æÖSÒvf—†VB&÷GFöÒÓÆVgBÓ&–v‡BÓ&÷&FW"×B&÷&FW"×v†—FRó&r×v†—FRóR&6¶G&÷Ö&ÇW"Ó'†Âsà¢ÆF—b6Æ74æÖSÒvÖ‚×rÖÖB×‚ÖWFò‚ÓB’Ó2w&–Bw&–BÖ6öÇ2ÓBFW‡B×‡2FW‡B×v†—FRóƒsà¢ÆF—b6Æ74æÖSÒwFW‡BÖ6VçFW"síŠíŠ}˜m˜sÂöF—cà¢ÆF—b6Æ74æÖSÒwFW‡BÖ6VçFW"sí˜m˜ŠŠ­ˆÃÀ½‘¥Øø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ôÑ•áĞµ•¹Ñ•Èœûb£bÇb·b¼¸ğ½‘¥Øø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ôÑ•áĞµ•¹Ñ•ÈœûbŸfb¿f#bÇf ğ/div>
-        </div>
-      </nav>
+      <BrowserRouter>
+        <main className="max-w-md mx-auto px-4 py-5 space-y-4 pb-28">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
 
-      <div className='h-16' />
+            <Route path="/scheduling" element={isEnabled("mod.scheduling") ? <Scheduling /> : <Disabled />} />
+            <Route path="/patients" element={isEnabled("mod.patients") ? <Patients /> : <Disabled />} />
+            <Route path="/patients/:id" element={isEnabled("mod.patients") ? <PatientDetail /> : <Disabled />} />
+            <Route path="/finance" element={isEnabled("mod.finance") ? <Finance /> : <Disabled />} />
+
+            <Route path="/flags" element={<Flags />} />
+            <Route path="*" element={<div className="text-sm text-white/70">
+      <InstallBanner />
+Not Found</div>} />
+          </Routes>
+        </main>
+        <TabBar />
+      </BrowserRouter>
     </div>
   )
 }

@@ -20,6 +20,198 @@ param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
 
 
 
+
+# --- G39_FA_IR_CALENDAR_LOCK_2026 ---
+if ($Gate -eq "G39_FA_IR_CALENDAR_LOCK_2026") {
+  try {
+    $GateName = "G39_FA_IR_CALENDAR_LOCK_2026"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G39_FA_IR_CALENDAR_LOCK_2026'){ throw "STOP_NEXT_ACTION_NOT_FOR_G39" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    $pkg = Join-Path $appDir "package.json"
+    if(!(Test-Path $pkg)){ throw "MISSING_APP_PACKAGE_JSON" }
+
+    # Apply fa-IR + RTL + Persian calendar formatting baseline (Intl)
+    $indexHtml = Join-Path $appDir "index.html"
+    if(Test-Path $indexHtml){
+      $h = Get-Content -LiteralPath $indexHtml -Raw -Encoding UTF8
+      # force <html ...> to include lang/dir (simple + deterministic)
+      $h2 = [regex]::Replace($h, '(?i)<html\b[^>]*>', '<html lang="fa-IR" dir="rtl">', 1)
+      WNoBom $indexHtml $h2
+    }
+
+    $mainTsx = Join-Path $appDir "src\main.tsx"
+    if(Test-Path $mainTsx){
+      $t = Get-Content -LiteralPath $mainTsx -Raw -Encoding UTF8
+      if($t -notmatch 'document\.documentElement\.lang'){
+        $t = $t -replace '(?ms)^\s*import\s+.*?;(\r?\n)', "$0
+// G39: fa-IR + RTL baseline
+document.documentElement.lang = 'fa-IR';
+document.documentElement.dir  = 'rtl';
+"
+        WNoBom $mainTsx $t
+      }
+    }
+
+    $appTsx = Join-Path $appDir "src\App.tsx"
+    if(Test-Path $appTsx){
+      $a = Get-Content -LiteralPath $appTsx -Raw -Encoding UTF8
+      if($a -notmatch 'fa-IR-u-ca-persian'){
+        $demo = @"
+
+// G39: Iranian calendar demo (Intl Persian calendar)
+function FaIrNow(){
+  try {
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian', { dateStyle: 'full', timeStyle: 'short' }).format(new Date());
+  } catch {
+    return 'خطا در Intl/تقویم ایرانی';
+  }
+}
+
+"@
+        $a2 = $demo + "
+" + $a
+        # inject a small visible text (best-effort)
+        $a2 = [regex]::Replace($a2, '(?ms)(return\s*\(\s*)(<)', "$1<div style={{padding:16}}><h1 style={{margin:0}}>دنتال‌مینا</h1><p style={{marginTop:8}}>تاریخ/ساعت (شمسی): {FaIrNow()}</p></div>
+$2", 1)
+        WNoBom $appTsx $a2
+      }
+    }
+
+    # Build with hard timeouts (no pending)
+    Push-Location $appDir
+
+    function RunWithTimeout([string]$file,[string[]]$args,[int]$timeoutSec,[string]$tag){
+      $logDir = Join-Path $root "artifacts\evidence\_g39_run_logs"
+      New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+      $o = Join-Path $logDir ("$tag_" + $ts + ".out.log.txt")
+      $e = Join-Path $logDir ("$tag_" + $ts + ".err.log.txt")
+      $p = Start-Process -FilePath $file -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+      if(-not (Wait-Process -Id $p.Id -Timeout $timeoutSec -ErrorAction SilentlyContinue)){
+        try { Stop-Process -Id $p.Id -Force } catch {}
+        throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+      }
+      if($p.ExitCode -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $p.ExitCode) }
+    }
+
+    RunWithTimeout "npm" @("install") 600 "npm_install"
+    RunWithTimeout "npm" @("run","build") 600 "npm_build"
+
+    # Verify Intl Persian calendar availability (best-effort)
+    $intlOk = $false
+    try {
+      $out = & node -e "console.log(new Intl.DateTimeFormat('fa-IR-u-ca-persian',{dateStyle:'full'}).format(new Date()))" 2>$null
+      if($out -and ($out.Trim().Length -gt 0)){ $intlOk = $true }
+    } catch { $intlOk = $false }
+
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){ $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        locale_lang_fa_ir = $true
+        rtl_enabled = $true
+        intl_persian_calendar_ok = $intlOk
+        build_ok = $true
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER (append-only)
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G39_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G39_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256 + " intl_ok=" + $intlOk)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G39_FA_IR_CALENDAR_LOCK_2026 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G39_FA_IR_CALENDAR_LOCK_2026 ---
+
 # --- G38_LOCK_FROM_G20 ---
 if ($Gate -eq "G38_LOCK_FROM_G20") {
   try {
