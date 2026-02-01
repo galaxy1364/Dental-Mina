@@ -130,25 +130,33 @@ document.documentElement.dir  = 'rtl';
   $argsText = ""
   if($line -match '^(?i)npm\s+(.+)$'){ $argsText = $matches[1] }
 
-  # preflight: node/npm must resolve after PATH rebuild
-  $nodeOk = $false
-  try { $null = (Get-Command node -ErrorAction Stop); $nodeOk = $true } catch {}
-  if(-not $nodeOk){ throw ("NODE_NOT_FOUND_ON_PATH_" + $tag) }
-
-  $npmOk = $false
-  try { $null = (Get-Command npm.cmd -ErrorAction Stop); $npmOk = $true } catch {}
-  if(-not $npmOk){
-    try { $null = (Get-Command npm -ErrorAction Stop); $npmOk = $true } catch {}
-  }
-  if(-not $npmOk){ throw ("NPM_NOT_FOUND_ON_PATH_" + $tag) }
+  # Resolve absolute paths (written to logs)
+  $nodePath = ""
+  $npmCmdPath = ""
+  try { $nodePath = (Get-Command node -ErrorAction Stop).Source } catch {}
+  try { $npmCmdPath = (Get-Command npm.cmd -ErrorAction Stop).Source } catch {}
 
   $cmdExe = (Join-Path $env:WINDIR 'System32\cmd.exe')
   if(-not (Test-Path $cmdExe)){ throw ("MISSING_CMD_EXE_" + $tag) }
 
-  $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & npm ' + $argsText + ' 1>"' + $o + '" 2>"' + $e + '" & exit /b %errorlevel%'
+  # Write diagnostic header
+  Set-Content -LiteralPath $o -Encoding UTF8 -Value ("G39_DIAG tag=" + $tag + "`r`nPS=" + $PSVersionTable.PSVersion + "`r`nCMD=" + $cmdExe + "`r`nNODE=" + $nodePath + "`r`nNPMCMD=" + $npmCmdPath + "`r`nARGS=" + $argsText + "`r`n---")
+  Set-Content -LiteralPath $e -Encoding UTF8 -Value ""
+
+  if([string]::IsNullOrWhiteSpace($nodePath)){ throw ("NODE_NOT_FOUND_ON_PATH_" + $tag) }
+  if([string]::IsNullOrWhiteSpace($npmCmdPath)){ throw ("NPM_CMD_NOT_FOUND_ON_PATH_" + $tag) }
+
+  # Run via cmd.exe, but call absolute npm.cmd to avoid PATH/bat shim issues
+  $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmdPath + '" ' + $argsText + ' 1>>"' + $o + '" 2>>"' + $e + '" & exit /b %errorlevel%'
   $alist = @('/v:on','/d','/s','/c',$cmd)
 
-  $p = Start-Process -FilePath $cmdExe -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru
+  try {
+    $p = Start-Process -FilePath $cmdExe -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru
+  } catch {
+    Add-Content -LiteralPath $e -Encoding UTF8 -Value ("START_PROCESS_EXCEPTION: " + $_.Exception.Message)
+    throw ("ABORT_START_PROCESS_" + $tag)
+  }
+
   $sw = [System.Diagnostics.Stopwatch]::StartNew()
   while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
     Start-Sleep -Seconds 2
