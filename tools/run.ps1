@@ -80,6 +80,39 @@ document.documentElement.dir  = 'rtl';
         WNoBom $mainTsx $t
       }
     }
+  function RunNpmWithTimeout([string]$argsText,[int]$timeoutSec,[string]$tag){
+    if([string]::IsNullOrWhiteSpace($argsText)){ throw ("ARGS_EMPTY_" + $tag) }
+
+    $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
+    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
+    $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
+
+    $env:NPM_CONFIG_AUDIT = 'false'
+    $env:NPM_CONFIG_FUND  = 'false'
+
+    $npmPath = (Get-Command npm -ErrorAction Stop).Source
+    $args = $argsText.Trim() -split '\s+'
+
+    $p = Start-Process -FilePath $npmPath -ArgumentList $args -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+      Start-Sleep -Seconds 2
+      try { $p.Refresh() } catch {}
+    }
+
+    if(-not $p.HasExited){
+      Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+      throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+    }
+
+    try { $p.WaitForExit() } catch {}
+    try { $p.Refresh() } catch {}
+
+    $exit = $p.ExitCode
+    if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
+  }
 
     function RunCmdWithTimeout([string]$cmdLine,[int]$timeoutSec,[string]$tag){
       if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
@@ -120,11 +153,11 @@ if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
     # Prefer npm ci if lockfile exists (deterministic + faster)
     $lock = Join-Path $appDir 'package-lock.json'
     if(Test-Path $lock){
-      RunCmdWithTimeout 'npm ci --prefer-offline --no-audit --fund=false' 1800 'npm_ci'
+      RunNpmWithTimeout 'ci' 1800 'npm_ci'
     } else {
-      RunCmdWithTimeout 'npm install --prefer-offline --no-audit --fund=false' 1800 'npm_install'
+      RunNpmWithTimeout 'install' 1800 'npm_install'
     }
-    RunCmdWithTimeout 'npm run build' 1800 'npm_build'
+    RunNpmWithTimeout 'run build' 1800 'npm_build'
 
     $intlOk = $false
     try {
