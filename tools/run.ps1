@@ -92,7 +92,9 @@ document.documentElement.dir  = 'rtl';
       if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
 
       # ensure deterministic + no audit/fund noise
-      $cmd = 'set "NPM_CONFIG_AUDIT=false" && set "NPM_CONFIG_FUND=false" && ' + $cmdLine
+      $cmd = 'set ""NPM_CONFIG_AUDIT=false"" && set ""NPM_CONFIG_FUND=false"" && ' + $cmdLine
+# Force cmd to emit exitcode marker reliably (requires /v:on for !errorlevel!)
+$cmd = 'setlocal EnableDelayedExpansion && ' + $cmd + ' & echo __DM_EXITCODE__=!errorlevel! & endlocal'
       $alist = @('/d','/s','/c',$cmd)
 
       $p = Start-Process -FilePath $comspec -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
