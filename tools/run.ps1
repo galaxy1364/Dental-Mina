@@ -81,38 +81,56 @@ document.documentElement.dir  = 'rtl';
       }
     }
   function RunNpmWithTimeout([string]$argsText,[int]$timeoutSec,[string]$tag){
-    if([string]::IsNullOrWhiteSpace($argsText)){ throw ("ARGS_EMPTY_" + $tag) }
+  if([string]::IsNullOrWhiteSpace($argsText)){ throw ("ARGS_EMPTY_" + $tag) }
 
-    $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
-    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-    $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
-    $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
+  # deterministic PATH for fresh shells
+  $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-    $env:NPM_CONFIG_AUDIT = 'false'
-    $env:NPM_CONFIG_FUND  = 'false'
+  $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
+  New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+  $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
+  $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
 
-    $npmPath = (Get-Command npm.cmd -ErrorAction Stop).Source
-    $args = $argsText.Trim() -split '\s+'
+  $npmCmd = ""
+  try { $npmCmd = (Get-Command npm.cmd -ErrorAction Stop).Source } catch { $npmCmd = "" }
+  if([string]::IsNullOrWhiteSpace($npmCmd)){ throw ("NPM_CMD_NOT_FOUND_ON_PATH_" + $tag) }
 
-    $p = Start-Process -FilePath $npmPath -ArgumentList $args -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+  $cmdExe = Join-Path $env:WINDIR 'System32\cmd.exe'
+  if(-not (Test-Path $cmdExe)){ throw ("MISSING_CMD_EXE_" + $tag) }
 
-    $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
-      Start-Sleep -Seconds 2
-      try { $p.Refresh() } catch {}
-    }
+  # run npm.cmd via cmd.exe, enforce explicit exit code, capture logs
+  $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmd + '" ' + $argsText + ' 1>"' + $o + '" 2>"' + $e + '" & exit /b %errorlevel%'
+  $alist = @('/v:on','/d','/s','/c',$cmd)
 
-    if(-not $p.HasExited){
-      Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-      throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
-    }
-
-    try { $p.WaitForExit() } catch {}
-    try { $p.Refresh() } catch {}
-
-    $exit = $p.ExitCode
-    if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
+  $p = $null
+  try {
+    $p = Start-Process -FilePath $cmdExe -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru
+  } catch {
+    Set-Content -LiteralPath $e -Encoding UTF8 -Value ("START_PROCESS_EXCEPTION: " + $_.Exception.Message)
+    throw ("ABORT_START_PROCESS_" + $tag)
   }
+
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+    Start-Sleep -Seconds 2
+    try { $p.Refresh() } catch {}
+  }
+
+  if(-not $p.HasExited){
+    Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+  }
+
+  try { $p.WaitForExit() } catch {}
+  try { $p.Refresh() } catch {}
+
+  $exit = -999
+  try { $exit = [int]$p.ExitCode } catch { $exit = -998 }
+
+  if($exit -ne 0){
+    throw ("FAIL_" + $tag + "_EXIT=" + $exit)
+  }
+}
 
     function RunCmdWithTimeout([string]$cmdLine,[int]$timeoutSec,[string]$tag){
   if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
