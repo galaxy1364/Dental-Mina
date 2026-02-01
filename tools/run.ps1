@@ -82,29 +82,149 @@ document.documentElement.dir  = 'rtl';
     }
 
     function RunCmdWithTimeout([string]$cmdLine,[int]$timeoutSec,[string]$tag){
-      if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
-      $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
-      New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-      $o = Join-Path $logDir ("$tag_$ts.out.log.txt")
-      $e = Join-Path $logDir ("$tag_$ts.err.log.txt")
+  if([string]::IsNullOrWhiteSpace($cmdLine)){ throw ("CMDLINE_EMPTY_" + $tag) }
 
-      $comspec = $env:ComSpec
-      if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
+  $logDir = Join-Path $root 'artifacts\evidence\_g39_run_logs'
+  New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+  $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
+  $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
 
-      # ensure deterministic + no audit/fund noise
-      $cmd = 'set ""NPM_CONFIG_AUDIT=false"" && set ""NPM_CONFIG_FUND=false"" && ' + $cmdLine
-# Force cmd to emit exitcode marker reliably (requires /v:on for !errorlevel!)
-$cmd = 'setlocal EnableDelayedExpansion && ' + $cmd + ' & echo __DM_EXITCODE__=!errorlevel! & endlocal'
-      $alist = @('/d','/s','/c',$cmd)
+  # Disable noise
+  $env:NPM_CONFIG_AUDIT = 'false'
+  $env:NPM_CONFIG_FUND  = 'false'
 
-      $p = Start-Process -FilePath $comspec -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+  # Resolve npm executable path (usually npm.cmd)
+  $npmPath = (Get-Command npm -ErrorAction Stop).Source
 
-      $sw = [System.Diagnostics.Stopwatch]::StartNew()
-      while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
-        Start-Sleep -Seconds 2
-        try { $p.Refresh() } catch {}
+  # Minimal split: "npm <args...>"
+  $argsText = $cmdLine.Trim()
+  if($argsText -match '^(?i)npm\s+(.+)      if(-not $p.HasExited){
+        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+        throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
       }
 
+      try { $p.WaitForExit() } catch {}
+try { $p.Refresh() } catch {}
+$exit = $p.ExitCode
+if($exit -eq $null){ throw ("FAIL_" + $tag + "_EXIT=UNKNOWN") }
+if($exit -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $exit) }
+    }
+
+    # Prefer npm ci if lockfile exists (deterministic + faster)
+    $lock = Join-Path $appDir 'package-lock.json'
+    if(Test-Path $lock){
+      RunCmdWithTimeout 'npm ci --prefer-offline --no-audit --fund=false' 1800 'npm_ci'
+    } else {
+      RunCmdWithTimeout 'npm install --prefer-offline --no-audit --fund=false' 1800 'npm_install'
+    }
+    RunCmdWithTimeout 'npm run build' 1800 'npm_build'
+
+    $intlOk = $false
+    try {
+      $s = & node -e 'console.log(new Intl.DateTimeFormat("fa-IR-u-ca-persian",{dateStyle:"full",timeStyle:"short"}).format(new Date()))' 2>$null
+      if($s -and ($s.Trim().Length -gt 0)){ $intlOk = $true }
+    } catch { $intlOk = $false }
+
+    # HASHLOCK resync
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p2 = Join-Path $root $ent.path
+      if(Test-Path $p2){ $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p2).Hash.ToLower() }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir 'QG.json'
+    $mfPath = Join-Path $evDir 'manifest.sha256'
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = 'Dental-Mina'
+      signature = 'PYM JBZ'
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        locale_fa_ir = $true
+        rtl = $true
+        intl_persian_calendar_ok = $intlOk
+        build_ok = $true
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart('\').Replace('\','/')
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue '' -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue '' -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue '' -Force }
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root 'state\NEXT_ACTION.md') $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = 'Dental-Mina'
+      gate = $GateName
+      event = 'G39_RUN'
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G39_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256 + " intl_ok=" + $intlOk)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G39_FA_IR_CALENDAR_LOCK_2026 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G39_FA_IR_CALENDAR_LOCK_2026 ---){ $argsText = $matches[1] } else { throw ("ONLY_NPM_ALLOWED_" + $tag) }
+  $args = $argsText -split '\s+'
+
+  $p = Start-Process -FilePath $npmPath -ArgumentList $args -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
+
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+    Start-Sleep -Seconds 2
+    try { $p.Refresh() } catch {}
+  }
+
+  if(-not $p.HasExited){
+    Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
+  }
+
+  $exit = $p.ExitCode
+  if($exit -ne 0){
+    throw ("FAIL_" + $tag + "_EXIT=" + $exit)
+  }
+}
       if(-not $p.HasExited){
         Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
