@@ -122,7 +122,6 @@ document.documentElement.dir  = 'rtl';
   $o = Join-Path $logDir ("$tag" + "_" + $ts + ".out.log.txt")
   $e = Join-Path $logDir ("$tag" + "_" + $ts + ".err.log.txt")
 
-  # G39 only: enforce npm commands, but run via cmd.exe so redirects are safe
   $line = $cmdLine.Trim()
   if($line -notmatch '^(?i)npm(\s+.+)?$'){ throw ("ONLY_NPM_ALLOWED_" + $tag) }
   $argsText = ""
@@ -135,8 +134,8 @@ document.documentElement.dir  = 'rtl';
   }
   if(-not $npmCmd){ throw ("NPM_NOT_FOUND_" + $tag) }
 
-  $comspec = $env:ComSpec
-  if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
+  $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe')
+  if(-not (Test-Path $comspec)){ throw ("MISSING_CMD_EXE_" + $tag) }
 
   $cmd = 'set "NPM_CONFIG_AUDIT=false" & set "NPM_CONFIG_FUND=false" & call "' + $npmCmd + '" ' + $argsText + ' & exit /b %errorlevel%'
   $alist = @('/d','/s','/c',$cmd)
