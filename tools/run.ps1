@@ -25,6 +25,8 @@ param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
 
 
 
+
+
 # --- G39_FA_IR_CALENDAR_LOCK_2026 ---
 if ($Gate -eq 'G39_FA_IR_CALENDAR_LOCK_2026') {
   try {
@@ -85,19 +87,38 @@ document.documentElement.dir  = 'rtl';
       New-Item -ItemType Directory -Force -Path $logDir | Out-Null
       $o = Join-Path $logDir ("$tag_$ts.out.log.txt")
       $e = Join-Path $logDir ("$tag_$ts.err.log.txt")
+
       $comspec = $env:ComSpec
       if([string]::IsNullOrWhiteSpace($comspec)){ $comspec = (Join-Path $env:WINDIR 'System32\cmd.exe') }
-      $alist = @('/d','/s','/c',$cmdLine)
+
+      # ensure deterministic + no audit/fund noise
+      $cmd = 'set "NPM_CONFIG_AUDIT=false" && set "NPM_CONFIG_FUND=false" && ' + $cmdLine
+      $alist = @('/d','/s','/c',$cmd)
+
       $p = Start-Process -FilePath $comspec -ArgumentList $alist -WorkingDirectory $appDir -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e
-      if(-not (Wait-Process -Id $p.Id -Timeout $timeoutSec -ErrorAction SilentlyContinue)){
-        try { Stop-Process -Id $p.Id -Force } catch {}
+
+      $sw = [System.Diagnostics.Stopwatch]::StartNew()
+      while(-not $p.HasExited -and $sw.Elapsed.TotalSeconds -lt $timeoutSec){
+        Start-Sleep -Seconds 2
+        try { $p.Refresh() } catch {}
+      }
+
+      if(-not $p.HasExited){
+        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         throw ("TIMEOUT_" + $tag + "_" + $timeoutSec + "s")
       }
+
       if($p.ExitCode -ne 0){ throw ("FAIL_" + $tag + "_EXIT=" + $p.ExitCode) }
     }
 
-    RunCmdWithTimeout 'npm install' 600 'npm_install'
-    RunCmdWithTimeout 'npm run build' 600 'npm_build'
+    # Prefer npm ci if lockfile exists (deterministic + faster)
+    $lock = Join-Path $appDir 'package-lock.json'
+    if(Test-Path $lock){
+      RunCmdWithTimeout 'npm ci --prefer-offline --no-audit --fund=false' 1800 'npm_ci'
+    } else {
+      RunCmdWithTimeout 'npm install --prefer-offline --no-audit --fund=false' 1800 'npm_install'
+    }
+    RunCmdWithTimeout 'npm run build' 1800 'npm_build'
 
     $intlOk = $false
     try {
@@ -105,6 +126,7 @@ document.documentElement.dir  = 'rtl';
       if($s -and ($s.Trim().Length -gt 0)){ $intlOk = $true }
     } catch { $intlOk = $false }
 
+    # HASHLOCK resync
     $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
     foreach($ent in $hl.protected){
       $p2 = Join-Path $root $ent.path
@@ -113,6 +135,7 @@ document.documentElement.dir  = 'rtl';
     $hl.ts_utc = $utc
     WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
 
+    # Evidence
     $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
     New-Item -ItemType Directory -Force -Path $evDir | Out-Null
     $qgPath = Join-Path $evDir 'QG.json'
@@ -145,12 +168,12 @@ document.documentElement.dir  = 'rtl';
     WNoBom $mfPath ($ml -join "
 ")
 
+    # STATE + HOLD + LEDGER
     $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
     if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
     if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue '' -Force }
     if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue '' -Force }
     if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue '' -Force }
-
     $st.gate.current = $GateName
     $st.last_pass = $GateName
     $st.updated_utc = $utc
