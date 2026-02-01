@@ -1,0 +1,20 @@
+{
+    "gate":  "G26_PATIENTS_STORE_INDEX_SCALE",
+    "ts_utc":  "2026-02-01T13:36:54.7140818Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "build_ok":  true,
+                   "patients_db":  true,
+                   "patients_norm":  true,
+                   "node":  "v25.5.0",
+                   "npm":  "11.8.0"
+               }
+}

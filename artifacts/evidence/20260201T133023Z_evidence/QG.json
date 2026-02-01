@@ -1,0 +1,24 @@
+{
+    "gate":  "G25_UI_NAV_SHELL",
+    "ts_utc":  "2026-02-01T13:30:23.5854569Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "build_ok":  true,
+                   "routes":  [
+                                  "/dashboard",
+                                  "/scheduling",
+                                  "/patients",
+                                  "/finance"
+                              ],
+                   "node":  "v25.5.0",
+                   "npm":  "11.8.0"
+               }
+}

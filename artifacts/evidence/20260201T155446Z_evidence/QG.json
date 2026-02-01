@@ -1,0 +1,18 @@
+{
+    "gate":  "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
+    "ts_utc":  "2026-02-01T15:54:46.5370817Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "pwa_mobile_doc":  true,
+                   "requirements_marker":  true,
+                   "checklist_present":  true
+               }
+}

@@ -1,0 +1,20 @@
+{
+    "gate":  "G32_FEATURE_FLAGS_FOUNDATION",
+    "ts_utc":  "2026-02-01T15:04:27.1746107Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "build_ok":  true,
+                   "flags_code":  true,
+                   "module_registry_code":  true,
+                   "flags_ui":  true,
+                   "locked_marker":  true
+               }
+}

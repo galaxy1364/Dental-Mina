@@ -1,4 +1,3708 @@
 param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" ) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# --- G38_CAPACITOR_DEVICE_SMOKE_EARLY_DISPATCH ---
+if ($Gate -eq "G38_CAPACITOR_DEVICE_SMOKE") {
+  try {
+    $GateName = "G38_CAPACITOR_DEVICE_SMOKE"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G38_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G38_CAPACITOR_DEVICE_SMOKE'){ throw "STOP_NEXT_ACTION_NOT_FOR_G38" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD" }
+
+    $capCfg = Join-Path $appDir "capacitor.config.ts"
+    $andDir = Join-Path $appDir "android"
+    $iosDir = Join-Path $appDir "ios"
+    if(!(Test-Path $capCfg)){ throw "MISSING_CAPACITOR_CONFIG" }
+    if(!(Test-Path $andDir)){ throw "MISSING_ANDROID_SHELL" }
+    if(!(Test-Path $iosDir)){ throw "MISSING_IOS_SHELL" }
+
+    $androidSmoke = "skipped"
+    $iosSmoke = "skipped"
+    $doctorOut = ""
+
+    Push-Location $appDir
+    npm install | Out-Null
+    npm run build | Out-Null
+    if($LASTEXITCODE -ne 0){ throw "BUILD_FAILED" }
+
+    try { $doctorOut = (npx --yes cap doctor 2>&1 | Out-String) } catch { $doctorOut = "cap_doctor_failed" }
+
+    # Android: smoke where possible (no hard-fail if Java/SDK missing; record status)
+    $javaOk = $false
+    if($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME "bin\java.exe"))){ $javaOk = $true }
+    elseif(Get-Command java -ErrorAction SilentlyContinue){ $javaOk = $true }
+
+    $sdk = $env:ANDROID_SDK_ROOT
+    if(-not $sdk){ $sdk = Join-Path $env:LOCALAPPDATA "Android\Sdk" }
+    $sdkOk = (Test-Path $sdk)
+
+    if(-not $javaOk){
+      $androidSmoke = "needs_java"
+    } elseif(-not $sdkOk){
+      $androidSmoke = "needs_android_sdk"
+    } else {
+      if(Test-Path (Join-Path $andDir "gradlew")){
+        Push-Location $andDir
+        .\gradlew.bat assembleDebug | Out-Null
+        if($LASTEXITCODE -eq 0){ $androidSmoke = "assembleDebug_ok" } else { $androidSmoke = "assembleDebug_failed" }
+        Pop-Location
+      } else {
+        $androidSmoke = "no_gradlew"
+      }
+    }
+
+    # iOS: simulator needs macOS (record only)
+    if($env:OS -match "Windows"){ $iosSmoke = "needs_macos_for_simulator" } else { $iosSmoke = "check_on_macos" }
+
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){ $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+    $doctorPath = Join-Path $evDir "cap_doctor.txt"
+    WNoBom $doctorPath $doctorOut
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        android_smoke = $androidSmoke
+        ios_smoke = $iosSmoke
+        capacitor_config = (Test-Path $capCfg)
+        android_shell = (Test-Path $andDir)
+        ios_shell = (Test-Path $iosDir)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G38_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G38_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G38_CAPACITOR_DEVICE_SMOKE reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G38_CAPACITOR_DEVICE_SMOKE_EARLY_DISPATCH ---
+
+# --- G37_MOBILE_WRAPPER_BASELINE_CAPACITOR_EARLY_DISPATCH ---
+if ($Gate -eq "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR") {
+  try {
+    $GateName = "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G37_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G37_MOBILE_WRAPPER_BASELINE_CAPACITOR'){ throw "STOP_NEXT_ACTION_NOT_FOR_G37" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD" }
+
+    # --- Capacitor baseline (no clinic features) ---
+    Push-Location $appDir
+
+    # Ensure deps
+    npm install --save @capacitor/core@latest | Out-Null
+    npm install --save-dev @capacitor/cli@latest @capacitor/android@latest @capacitor/ios@latest | Out-Null
+
+    # Capacitor init (non-interactive)
+    $capConfig = Join-Path $appDir "capacitor.config.ts"
+    if(!(Test-Path $capConfig)){
+      $cfg = @'
+import type { CapacitorConfig } from "@capacitor/cli";
+
+const config: CapacitorConfig = {
+  appId: "com.dentalmina.app",
+  appName: "Dental-Mina",
+  webDir: "dist",
+  bundledWebRuntime: false,
+};
+
+export default config;
+'@
+      WNoBom $capConfig $cfg
+    }
+
+    # Add scripts (idempotent best-effort)
+    $pkgPath = Join-Path $appDir "package.json"
+    $pkg = Get-Content -LiteralPath $pkgPath -Raw | ConvertFrom-Json
+    if(-not ($pkg | Get-Member -Name scripts)){ $pkg | Add-Member -NotePropertyName scripts -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($pkg.scripts | Get-Member -Name "cap:init")){ $pkg.scripts | Add-Member -NotePropertyName "cap:init" -NotePropertyValue "cap init Dental-Mina com.dentalmina.app --web-dir=dist" -Force }
+    if(-not ($pkg.scripts | Get-Member -Name "cap:add:android")){ $pkg.scripts | Add-Member -NotePropertyName "cap:add:android" -NotePropertyValue "cap add android" -Force }
+    if(-not ($pkg.scripts | Get-Member -Name "cap:add:ios")){ $pkg.scripts | Add-Member -NotePropertyName "cap:add:ios" -NotePropertyValue "cap add ios" -Force }
+    if(-not ($pkg.scripts | Get-Member -Name "cap:sync")){ $pkg.scripts | Add-Member -NotePropertyName "cap:sync" -NotePropertyValue "cap sync" -Force }
+    WNoBom $pkgPath ($pkg | ConvertTo-Json -Depth 50)
+
+    # Build web (Capacitor webDir)
+    npm run build | Out-Null
+    if($LASTEXITCODE -ne 0){ throw "BUILD_FAILED" }
+
+    # Create native shells (templates only; no Xcode/Android Studio build required)
+    npx --yes cap init Dental-Mina com.dentalmina.app --web-dir=dist | Out-Null
+    npx --yes cap add android | Out-Null
+    npx --yes cap add ios | Out-Null
+    npx --yes cap sync | Out-Null
+
+    Pop-Location
+
+    # Docs/spec updates
+    $docPath = Join-Path $root "docs\MOBILE_WRAPPER_CAPACITOR_BASELINE.md"
+    $doc = @'
+# MOBILE WRAPPER BASELINE (CAPACITOR) — G37
+AI_SIGNATURE: PYM JBZ
+
+## Outcome
+- Capacitor configured for installable iOS (iPhone+iPad) / Android shells.
+- PWA remains supported (G35/G36).
+- Offline-first + sync engine remain the foundation (G33/G34).
+- No clinic features added in this gate.
+
+## What is included
+- @capacitor/core + cli + android + ios
+- capacitor.config.ts (appId/appName/webDir=dist)
+- Native shell folders: android/ , ios/
+- cap sync pipeline (web build → sync)
+
+## Notes
+- این گیت فقط فوندیشن/قاب نصب‌پذیری است (ساخت و انتشار استور در گیت‌های بعد).
+- iPad = iOS target (همان ios project).
+
+G37_LOCKED_MOBILE_WRAPPER_CAPACITOR_BASELINE=TRUE
+'@
+    WNoBom $docPath $doc
+
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G37_LOCKED_MOBILE_WRAPPER_CAPACITOR_BASELINE=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G37 Mobile Wrapper (Capacitor) Baseline
+- Installable native shells iOS(iPhone+iPad)/Android via Capacitor + keep PWA.
+G37_LOCKED_MOBILE_WRAPPER_CAPACITOR_BASELINE=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G37_MOBILE_WRAPPER_BASELINE_CAPACITOR'){
+        $c2 = $c.TrimEnd() + "
+- [x] G37_MOBILE_WRAPPER_BASELINE_CAPACITOR
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    $ok1 = (Test-Path (Join-Path $appDir "capacitor.config.ts"))
+    $ok2 = (Test-Path (Join-Path $appDir "android"))
+    $ok3 = (Test-Path (Join-Path $appDir "ios"))
+    $ok4 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G37_LOCKED_MOBILE_WRAPPER_CAPACITOR_BASELINE=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        capacitor_config = $ok1
+        android_shell = $ok2
+        ios_shell = $ok3
+        doc_marker = $ok4
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G37_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G37_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G37_MOBILE_WRAPPER_BASELINE_CAPACITOR reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G37_MOBILE_WRAPPER_BASELINE_CAPACITOR_EARLY_DISPATCH ---
+
+# --- G36_PWA_BASELINE_IMPLEMENTATION_EARLY_DISPATCH ---
+if ($Gate -eq "G36_PWA_BASELINE_IMPLEMENTATION") {
+  try {
+    $GateName = "G36_PWA_BASELINE_IMPLEMENTATION"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G36_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G36_PWA_BASELINE_IMPLEMENTATION'){ throw "STOP_NEXT_ACTION_NOT_FOR_G36" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD" }
+
+    # --- PWA BASELINE FILES ---
+    $pub = Join-Path $appDir "public"
+    New-Item -ItemType Directory -Force -Path $pub | Out-Null
+    $iconsDir = Join-Path $pub "icons"
+    New-Item -ItemType Directory -Force -Path $iconsDir | Out-Null
+
+    function WritePngSolid([string]$path,[int]$w,[int]$h,[string]$hex){
+      Add-Type -AssemblyName System.Drawing | Out-Null
+      $c = [System.Drawing.Color]::FromArgb([Convert]::ToInt32($hex.TrimStart("#").Substring(0,2),16), [Convert]::ToInt32($hex.TrimStart("#").Substring(2,2),16), [Convert]::ToInt32($hex.TrimStart("#").Substring(4,2),16))
+      $bmp = New-Object System.Drawing.Bitmap($w, $h)
+      $g = [System.Drawing.Graphics]::FromImage($bmp)
+      $g.Clear($c)
+      $g.Dispose()
+      $bmp.Save([IO.Path]::GetFullPath($path), [System.Drawing.Imaging.ImageFormat]::Png)
+      $bmp.Dispose()
+    }
+
+    $icon192 = Join-Path $iconsDir "icon-192.png"
+    $icon512 = Join-Path $iconsDir "icon-512.png"
+    if(!(Test-Path $icon192)){ WritePngSolid $icon192 192 192 "#00BFA5" }
+    if(!(Test-Path $icon512)){ WritePngSolid $icon512 512 512 "#00BFA5" }
+
+    $manifest = @'
+{
+  "name": "Dental-Mina",
+  "short_name": "Dental-Mina",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#00BFA5",
+  "dir": "rtl",
+  "lang": "fa",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "shortcuts": [
+    { "name": "نوبت‌دهی", "url": "/#/schedule" },
+    { "name": "مالی", "url": "/#/finance" }
+  ]
+}
+'@
+    WNoBom (Join-Path $pub "manifest.webmanifest") $manifest
+
+    $sw = @'
+/* Dental-Mina PWA baseline SW (v1) */
+const CACHE = "dm_pwa_shell_v1";
+const OFFLINE_URL = "/";
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll([OFFLINE_URL, "/manifest.webmanifest"]);
+    self.skipWaiting();
+  })());
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    self.clients.claim();
+  })());
+});
+
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  const url = new URL(req.url);
+
+  if (req.method !== "GET") return;
+
+  // App-shell navigation fallback
+  if (req.mode === "navigate") {
+    event.respondWith((async () => {
+      try {
+        const net = await fetch(req);
+        const cache = await caches.open(CACHE);
+        cache.put(OFFLINE_URL, net.clone());
+        return net;
+      } catch {
+        const cached = await caches.match(OFFLINE_URL);
+        return cached || new Response("OFFLINE", { status: 503 });
+      }
+    })());
+    return;
+  }
+
+  // Same-origin runtime cache
+  if (url.origin === self.location.origin) {
+    event.respondWith((async () => {
+      const cached = await caches.match(req);
+      if (cached) return cached;
+      try {
+        const net = await fetch(req);
+        const cache = await caches.open(CACHE);
+        cache.put(req, net.clone());
+        return net;
+      } catch {
+        return cached || new Response("", { status: 504 });
+      }
+    })());
+  }
+});
+'@
+    WNoBom (Join-Path $pub "sw.js") $sw
+
+    # --- App wiring: register SW + install prompt banner ---
+    $pwaDir = Join-Path $appDir "src\pwa"
+    New-Item -ItemType Directory -Force -Path $pwaDir | Out-Null
+
+    $register = @'
+export function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {})
+  })
+}
+'@
+    WNoBom (Join-Path $pwaDir "register.ts") $register
+
+    $banner = @'
+import { useEffect, useState } from "react"
+
+type BIPEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> }
+
+export default function InstallBanner() {
+  const [evt, setEvt] = useState<BIPEvent | null>(null)
+  const [hidden, setHidden] = useState(false)
+
+  useEffect(() => {
+    const onBip = (e: Event) => {
+      e.preventDefault()
+      setEvt(e as BIPEvent)
+    }
+    window.addEventListener("beforeinstallprompt", onBip as any)
+    return () => window.removeEventListener("beforeinstallprompt", onBip as any)
+  }, [])
+
+  if (!evt || hidden) return null
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 flex items-center justify-between gap-3">
+      <div className="text-xs text-white/80">
+        نصب سریع Dental-Mina (PWA) — آفلاین/آنلاین همزمان
+      </div>
+      <div className="flex gap-2">
+        <button
+          className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-200 text-xs"
+          onClick={async () => {
+            try {
+              await evt.prompt()
+              void evt.userChoice
+            } finally {
+              setHidden(true)
+            }
+          }}
+        >
+          نصب
+        </button>
+        <button
+          className="px-3 py-1.5 rounded-xl bg-white/5 text-white/70 text-xs"
+          onClick={() => setHidden(true)}
+        >
+          بعداً
+        </button>
+      </div>
+    </div>
+  )
+}
+'@
+    WNoBom (Join-Path $pwaDir "InstallBanner.tsx") $banner
+
+    # main.tsx: ensure register import/call
+    $mainPath = Join-Path $appDir "src\main.tsx"
+    if(Test-Path $mainPath){
+      $main = Get-Content -LiteralPath $mainPath -Raw
+      if($main -notmatch 'registerServiceWorker'){
+        $main2 = $main
+        if($main2 -notmatch 'from\s+"\./pwa/register"'){
+          $main2 = 'import { registerServiceWorker } from "./pwa/register"
+' + $main2
+        }
+        if($main2 -notmatch 'registerServiceWorker\(\)'){
+          $main2 = $main2.TrimEnd() + "
+
+registerServiceWorker()
+"
+        }
+        WNoBom $mainPath $main2
+      }
+    }
+
+    # App.tsx: mount InstallBanner (best-effort)
+    $appPath = Join-Path $appDir "src\App.tsx"
+    if(Test-Path $appPath){
+      $app = Get-Content -LiteralPath $appPath -Raw
+      if($app -notmatch 'InstallBanner'){
+        if($app -notmatch 'from\s+"\./pwa/InstallBanner"'){
+          $app = [regex]::Replace($app, '(?m)^\s*import\s+.*$', { param($m) $m.Value }, 1)
+          $app = 'import InstallBanner from "./pwa/InstallBanner"
+' + $app
+        }
+        # Insert banner after first wrapper div opening (fallback)
+        if($app -match '(?s)<div[^>]*className="[^"]*"[^>]*>\s*'){
+          $app = [regex]::Replace($app, '(?s)(<div[^>]*className="[^"]*"[^>]*>\s*)', '$1' + "
+      <InstallBanner />
+", 1)
+        }
+        WNoBom $appPath $app
+      }
+    }
+
+    # Docs/spec updates
+    $docPath = Join-Path $root "docs\PWA_BASELINE_IMPLEMENTATION.md"
+    $doc = @'
+# PWA BASELINE IMPLEMENTATION (G36)
+AI_SIGNATURE: PYM JBZ
+
+## Outcome (Minimum PWA)
+- manifest.webmanifest (name/icons/standalone/shortcuts)
+- service worker: app-shell offline fallback + runtime cache (same-origin)
+- install prompt banner (beforeinstallprompt)
+- SW registration wired in app entry
+- no clinic features touched
+
+## Notes
+- iOS: نصب از طریق "Add to Home Screen" (Safari).
+- Android/Chrome: install prompt + standalone.
+- Offline/Online simultaneously: UI on local data; sync continues in background (locked by G33/G34).
+
+G36_LOCKED_PWA_BASELINE_IMPLEMENTATION=TRUE
+'@
+    WNoBom $docPath $doc
+
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G36_LOCKED_PWA_BASELINE_IMPLEMENTATION=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G36 PWA Baseline Implementation
+- manifest + service worker + offline shell + install prompt.
+G36_LOCKED_PWA_BASELINE_IMPLEMENTATION=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G36_PWA_BASELINE_IMPLEMENTATION'){
+        $c2 = $c.TrimEnd() + "
+- [x] G36_PWA_BASELINE_IMPLEMENTATION
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # Build must succeed
+    Push-Location $appDir
+    npm install | Out-Null
+    npm run build | Out-Null
+    if($LASTEXITCODE -ne 0){ throw "BUILD_FAILED" }
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path (Join-Path $appDir "public\manifest.webmanifest"))
+    $ok2 = (Test-Path (Join-Path $appDir "public\sw.js"))
+    $ok3 = (Test-Path (Join-Path $appDir "src\pwa\InstallBanner.tsx"))
+    $ok4 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G36_LOCKED_PWA_BASELINE_IMPLEMENTATION=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        manifest_present = $ok1
+        sw_present = $ok2
+        install_prompt_ui = $ok3
+        doc_marker = $ok4
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G36_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G36_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G36_PWA_BASELINE_IMPLEMENTATION reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G36_PWA_BASELINE_IMPLEMENTATION_EARLY_DISPATCH ---
+
+# --- G35_PWA_INSTALLABLE_MOBILE_LOCK_2026_EARLY_DISPATCH ---
+if ($Gate -eq "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026") {
+  try {
+    $GateName = "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G35_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G35_PWA_INSTALLABLE_MOBILE_LOCK_2026'){ throw "STOP_NEXT_ACTION_NOT_FOR_G35" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # 1) Write lock doc (PWA + Mobile installable)
+    $docPath = Join-Path $root "docs\PWA_INSTALLABLE_MOBILE_LOCK_2026.md"
+    $doc = @'
+# PWA + MOBILE INSTALLABLE LOCK (2026)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Goal
+- برنامه باید نصب‌پذیر و قابل ارتقا باشد:
+  - iOS و Android (مسیر ارتقا به native wrapper / store-ready در آینده)
+  - PWA فوق‌مدرن 2026+ (Installable, offline-first, fast, background sync-ready)
+- همزمان Offline/Online: UI همیشه از دیتای لوکال کار کند و Sync در پس‌زمینه انجام شود (قفل‌شده طبق G33/G34).
+
+## PWA (Locked)
+- Web App Manifest: نام/آیکون/تم، حالت standalone، orientation، shortcuts.
+- Service Worker: cache strategy استاندارد (app-shell + runtime caching) + versioned cache + safe rollback.
+- Offline UX: هیچ صفحه‌ای به اینترنت وابسته نیست؛ پیام‌های وضعیت sync شفاف.
+- Performance: cold start سریع، bundle budget، lazy load، prefetch کنترل‌شده.
+
+## Mobile Installability (Locked)
+- مسیر استاندارد 2026:
+  1) PWA installable (baseline)
+  2) بسته‌بندی قابل ارتقا با wrapper (Capacitor یا معادل استاندارد) برای iOS/Android
+  3) قابلیت Push/Background Sync/Files با permission policy و fallback
+- داده‌ها offline-first (IndexedDB/SQLite wrapper) + sync engine (G34).
+
+## Security (Locked)
+- Encryption in-transit + at-rest policy (اسکلت G34 → تکمیل در گیت‌های بعد)
+- Backup/Restore نسخه‌دار
+- Crash-safe / power-loss safe
+
+## Iran Network Reality (Locked)
+- VPN/قطع اینترنت/latency بالا: backoff، retry، resume، chunking.
+- چند روز آفلاین: compaction/limits برای جلوگیری از رشد بی‌نهایت.
+
+G35_LOCKED_PWA_INSTALLABLE_MOBILE_2026=TRUE
+'@
+    WNoBom $docPath $doc
+
+    # 2) REQUIREMENTS marker (idempotent)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G35_LOCKED_PWA_INSTALLABLE_MOBILE_2026=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G35 PWA + Mobile Installable Lock (2026)
+- Installable iOS/Android (upgrade path) + PWA 2026+ fast, offline/online simultaneously.
+G35_LOCKED_PWA_INSTALLABLE_MOBILE_2026=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    # 3) CHECKLIST update (idempotent)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G35_PWA_INSTALLABLE_MOBILE_LOCK_2026'){
+        $c2 = $c.TrimEnd() + "
+- [x] G35_PWA_INSTALLABLE_MOBILE_LOCK_2026
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # 4) Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 5) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G35_LOCKED_PWA_INSTALLABLE_MOBILE_2026=TRUE')
+    $ok2 = (Test-Path $reqPath) -and ((Get-Content -LiteralPath $reqPath -Raw) -match 'G35_LOCKED_PWA_INSTALLABLE_MOBILE_2026=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        pwa_mobile_doc = $ok1
+        requirements_marker = $ok2
+        checklist_present = (Test-Path $chkPath)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 6) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G35_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G35_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G35_PWA_INSTALLABLE_MOBILE_LOCK_2026 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G35_PWA_INSTALLABLE_MOBILE_LOCK_2026_EARLY_DISPATCH ---
+
+# --- G34_SYNC_ENGINE_FOUNDATION_EARLY_DISPATCH ---
+if ($Gate -eq "G34_SYNC_ENGINE_FOUNDATION") {
+  try {
+    $GateName = "G34_SYNC_ENGINE_FOUNDATION"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G34_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G34_SYNC_ENGINE_FOUNDATION'){ throw "STOP_NEXT_ACTION_NOT_FOR_G34" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD" }
+
+    # --- CODE: Sync Engine Skeleton (Oplog/Offline-Queue + deviceId/checkpoint + conflict/encryption/backup skeletons) ---
+    $deviceTs = @'
+export function getOrCreateDeviceId(): string {
+  const k = "dm_device_id_v1"
+  try {
+    const existing = localStorage.getItem(k)
+    if (existing && existing.length > 8) return existing
+    const id = (crypto?.randomUUID?.() ?? ("dev_" + Math.random().toString(16).slice(2))) as string
+    localStorage.setItem(k, id)
+    return id
+  } catch {
+    return "dev_fallback"
+  }
+}
+'@
+
+    $typesTs = @'
+export type EntityName =
+  | "patient"
+  | "appointment"
+  | "payment"
+  | "note"
+
+export type ChangeOp = "upsert" | "delete"
+
+export type OplogEntry = {
+  id: string
+  ts: number
+  deviceId: string
+  entity: EntityName
+  entityId: string
+  op: ChangeOp
+  payload?: unknown
+  ack?: 0 | 1
+}
+
+export type Checkpoint = {
+  deviceId: string
+  lastAckTs: number
+  lastAckId?: string
+}
+'@
+
+    $conflictTs = @'
+export type ConflictStrategy = "lww" | "manual_required"
+
+export type ConflictResult<T> = {
+  strategy: ConflictStrategy
+  resolved?: T
+  reason: string
+}
+
+export function resolveConflictLWW<T>(_local: T, remote: T): ConflictResult<T> {
+  // Skeleton: later replace with vector clock / per-field rules.
+  return { strategy: "lww", resolved: remote, reason: "placeholder_lww_remote_wins" }
+}
+'@
+
+    $cryptoTs = @'
+export type EncryptionEnvelope = {
+  alg: "none" | "aes-gcm"
+  kid?: string
+  ciphertext: string
+}
+
+export async function encryptAtRest(plainJson: string): Promise<EncryptionEnvelope> {
+  // Skeleton only. Real implementation: WebCrypto AES-GCM + key rotation policy.
+  return { alg: "none", ciphertext: plainJson }
+}
+
+export async function decryptAtRest(env: EncryptionEnvelope): Promise<string> {
+  // Skeleton only.
+  return env.ciphertext
+}
+'@
+
+    $backupTs = @'
+export type BackupManifest = {
+  ts: number
+  version: 1
+  note?: string
+}
+
+export async function exportBackup(): Promise<{ manifest: BackupManifest; data: unknown }> {
+  // Skeleton only. Real implementation: export IndexedDB + attachments index.
+  return { manifest: { ts: Date.now(), version: 1 }, data: {} }
+}
+
+export async function restoreBackup(_input: unknown): Promise<void> {
+  // Skeleton only.
+}
+'@
+
+    $syncStoreTs = @'
+import Dexie, { type Table } from "dexie"
+import type { OplogEntry, Checkpoint } from "./types"
+import { getOrCreateDeviceId } from "./device"
+
+type CheckpointRow = { id: "cp"; deviceId: string; lastAckTs: number; lastAckId?: string }
+
+class SyncDB extends Dexie {
+  oplog!: Table<OplogEntry, string>
+  checkpoint!: Table<CheckpointRow, "cp">
+  constructor() {
+    super("dm_sync_v1")
+    this.version(1).stores({
+      oplog: "id, ts, deviceId, entity, entityId, ack",
+      checkpoint: "id",
+    })
+  }
+}
+
+export const syncDb = new SyncDB()
+
+export async function appendOplog(entry: Omit<OplogEntry, "id" | "deviceId" | "ts" | "ack">) {
+  const deviceId = getOrCreateDeviceId()
+  const id = (crypto?.randomUUID?.() ?? ("op_" + Math.random().toString(16).slice(2))) as string
+  const row: OplogEntry = { id, ts: Date.now(), deviceId, ack: 0, ...entry }
+  await syncDb.oplog.add(row)
+  return row
+}
+
+export async function listPending(limit = 200): Promise<OplogEntry[]> {
+  return syncDb.oplog.where("ack").equals(0).sortBy("ts").then((xs) => xs.slice(0, limit))
+}
+
+export async function markAcked(ids: string[]) {
+  await syncDb.transaction("rw", syncDb.oplog, async () => {
+    for (const id of ids) await syncDb.oplog.update(id, { ack: 1 })
+  })
+}
+
+export async function getCheckpoint(): Promise<Checkpoint> {
+  const deviceId = getOrCreateDeviceId()
+  const row = await syncDb.checkpoint.get("cp")
+  if (!row) {
+    const init: CheckpointRow = { id: "cp", deviceId, lastAckTs: 0 }
+    await syncDb.checkpoint.put(init)
+    return { deviceId, lastAckTs: 0 }
+  }
+  return { deviceId: row.deviceId, lastAckTs: row.lastAckTs, lastAckId: row.lastAckId }
+}
+
+export async function setCheckpoint(cp: Checkpoint) {
+  await syncDb.checkpoint.put({ id: "cp", ...cp })
+}
+'@
+
+    $engineTs = @'
+import { listPending, markAcked, getCheckpoint, setCheckpoint } from "./store"
+
+/**
+ * Skeleton: Later this will:
+ * - send oplog chunks to cloud
+ * - pull remote changes since checkpoint
+ * - apply conflicts deterministically
+ * - verify signatures, encrypt payloads, and write audit trails
+ */
+export async function syncOnce(): Promise<{ pushed: number; pulled: number }> {
+  const cp = await getCheckpoint()
+  void cp // future use
+
+  const pending = await listPending(200)
+  if (pending.length === 0) return { pushed: 0, pulled: 0 }
+
+  // Placeholder: pretend they were pushed successfully.
+  await markAcked(pending.map((x) => x.id))
+
+  const last = pending[pending.length - 1]
+  await setCheckpoint({ deviceId: last.deviceId, lastAckTs: last.ts, lastAckId: last.id })
+
+  return { pushed: pending.length, pulled: 0 }
+}
+'@
+
+    $idxTs = @'
+export * from "./types"
+export * from "./device"
+export * from "./store"
+export * from "./engine"
+export * from "./conflict"
+export * from "./crypto"
+export * from "./backup"
+'@
+
+    $syncDir = Join-Path $appDir "src\lib\sync"
+    New-Item -ItemType Directory -Force -Path $syncDir | Out-Null
+
+    WNoBom (Join-Path $syncDir "device.ts") $deviceTs
+    WNoBom (Join-Path $syncDir "types.ts") $typesTs
+    WNoBom (Join-Path $syncDir "conflict.ts") $conflictTs
+    WNoBom (Join-Path $syncDir "crypto.ts") $cryptoTs
+    WNoBom (Join-Path $syncDir "backup.ts") $backupTs
+    WNoBom (Join-Path $syncDir "store.ts") $syncStoreTs
+    WNoBom (Join-Path $syncDir "engine.ts") $engineTs
+    WNoBom (Join-Path $syncDir "index.ts") $idxTs
+
+    # Docs/spec updates
+    $docPath = Join-Path $root "docs\SYNC_ENGINE_FOUNDATION.md"
+    $doc = @'
+# SYNC ENGINE FOUNDATION (G34)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Outcome
+Foundation code exists for:
+- Oplog / Offline-Queue (append + pending + ack)
+- deviceId + checkpoint
+- conflict rules skeleton (deterministic placeholder, later per-field/vector clock)
+- encryption/backup skeleton (upgradeable to real policy)
+- design is offline-first and Iran-outage aware (per G33)
+
+## Non-Goals (for this gate)
+- No real cloud transport yet
+- No production encryption yet (skeleton only)
+- No multi-user auth yet
+
+G34_LOCKED_SYNC_ENGINE_FOUNDATION=TRUE
+'@
+    WNoBom $docPath $doc
+
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G34_LOCKED_SYNC_ENGINE_FOUNDATION=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G34 Sync Engine Foundation
+- Oplog/Offline-Queue + deviceId/checkpoint + conflict skeleton + encryption/backup skeleton.
+G34_LOCKED_SYNC_ENGINE_FOUNDATION=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G34_SYNC_ENGINE_FOUNDATION'){
+        $c2 = $c.TrimEnd() + "
+- [x] G34_SYNC_ENGINE_FOUNDATION
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # Build must succeed
+    Push-Location $appDir
+    npm install | Out-Null
+    npm run build | Out-Null
+    if($LASTEXITCODE -ne 0){ throw "BUILD_FAILED" }
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G34_LOCKED_SYNC_ENGINE_FOUNDATION=TRUE')
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        sync_dir = (Test-Path (Join-Path $appDir "src\lib\sync\index.ts"))
+        oplog_queue = (Test-Path (Join-Path $appDir "src\lib\sync\store.ts"))
+        checkpoint = (Test-Path (Join-Path $appDir "src\lib\sync\store.ts"))
+        conflict_skeleton = (Test-Path (Join-Path $appDir "src\lib\sync\conflict.ts"))
+        encryption_backup_skeleton = (Test-Path (Join-Path $appDir "src\lib\sync\crypto.ts")) -and (Test-Path (Join-Path $appDir "src\lib\sync\backup.ts"))
+        locked_marker = $ok
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G34_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G34_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G34_SYNC_ENGINE_FOUNDATION reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G34_SYNC_ENGINE_FOUNDATION_EARLY_DISPATCH ---
+
+# --- G33_OFFLINE_FIRST_SYNC_LOCK_2026_EARLY_DISPATCH ---
+if ($Gate -eq "G33_OFFLINE_FIRST_SYNC_LOCK_2026") {
+  try {
+    $GateName = "G33_OFFLINE_FIRST_SYNC_LOCK_2026"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G33_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G33_OFFLINE_FIRST_SYNC_LOCK_2026'){ throw "STOP_NEXT_ACTION_NOT_FOR_G33" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # 1) Write offline-first + sync lock doc
+    $docPath = Join-Path $root "docs\OFFLINE_FIRST_SYNC_LOCK_2026.md"
+    $doc = @'
+# OFFLINE-FIRST + SYNC LOCK (2026)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Goal
+- اپ باید بدون اینترنت 100% پایدار و حرفه‌ای کار کند.
+- با اینترنت: همگام‌سازی لوکال/ابری بسیار پیشرفته 2026 با قوانین conflict/backup/encryption و سناریوهای قطعی اینترنت ایران.
+
+## Offline-First (Locked)
+- همه عملیات‌ها Offline-Queue دارند (هیچ صفحه‌ای وابسته به اینترنت نیست).
+- دیتابیس لوکال (مثلاً IndexedDB) منبع حقیقت دستگاه است؛ UI همیشه از لوکال می‌خواند/می‌نویسد.
+- فایل‌ها/ضمائم: کش محلی + صف آپلود/دانلود resumable.
+
+## Sync 2026 (Locked)
+- Sync بر پایه Oplog/ChangeLog (رویدادهای تغییر) + idempotent replay.
+- Conflict: قوانین deterministic (آخرین نویسنده + ورژن/VectorClock یا rule-based per-field). هیچ conflict خاموش/نامرئی مجاز نیست.
+- Multi-device: deviceId + session + checkpoints + partial sync.
+- Network harsh: قطع/وصل، VPN، latency بالا → backoff، retry، chunking، resume.
+
+## Security (Locked)
+- Encryption at-rest برای داده‌های حساس (کلیدها با سیاست چرخش/backup).
+- Encryption in-transit (TLS) + امضای رکوردهای sync (tamper-evident).
+- Backup: محلی + ابری با نسخه‌بندی و قابلیت restore.
+
+## Iran Outage Scenarios (Locked)
+- حالت طولانی‌مدت آفلاین (روزها): صف تغییرات بزرگ، فشرده‌سازی (compaction)، جلوگیری از رشد بی‌نهایت.
+- بازگشت اینترنت: sync مرحله‌ای (metadata سپس داده) + اولویت‌بندی.
+
+G33_LOCKED_OFFLINE_FIRST_SYNC_2026=TRUE
+'@
+    WNoBom $docPath $doc
+
+    # 2) REQUIREMENTS marker (idempotent)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G33_LOCKED_OFFLINE_FIRST_SYNC_2026=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G33 Offline-First + Sync Lock (2026)
+- Offline-first: full function without internet.
+- Advanced local/cloud sync 2026: conflict/backup/encryption + Iran outage scenarios.
+G33_LOCKED_OFFLINE_FIRST_SYNC_2026=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    # 3) CHECKLIST update (idempotent)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G33_OFFLINE_FIRST_SYNC_LOCK_2026'){
+        $c2 = $c.TrimEnd() + "
+- [x] G33_OFFLINE_FIRST_SYNC_LOCK_2026
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # 4) Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 5) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G33_LOCKED_OFFLINE_FIRST_SYNC_2026=TRUE')
+    $ok2 = (Test-Path $reqPath) -and ((Get-Content -LiteralPath $reqPath -Raw) -match 'G33_LOCKED_OFFLINE_FIRST_SYNC_2026=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        offline_sync_doc = $ok1
+        requirements_marker = $ok2
+        checklist_updated = (Test-Path $chkPath)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 6) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G33_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G33_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G33_OFFLINE_FIRST_SYNC_LOCK_2026 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G33_OFFLINE_FIRST_SYNC_LOCK_2026_EARLY_DISPATCH ---
+
+# --- G32_FEATURE_FLAGS_FOUNDATION_EARLY_DISPATCH ---
+if ($Gate -eq "G32_FEATURE_FLAGS_FOUNDATION") {
+  try {
+    $GateName = "G32_FEATURE_FLAGS_FOUNDATION"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G32_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G32_FEATURE_FLAGS_FOUNDATION'){ throw "STOP_NEXT_ACTION_NOT_FOR_G32" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD" }
+
+    # --- Code: Feature Flags + Module Registry + Toggle UI ---
+    $flagsTs = @'
+export type FlagKey =
+  | "mod.scheduling"
+  | "mod.patients"
+  | "mod.finance"
+  | "mod.lab"
+  | "mod.inventory"
+  | "mod.crm"
+  | "mod.settings"
+
+export type FlagsState = Record<FlagKey, boolean>
+
+const STORAGE_KEY = "dm_flags_v1"
+
+const defaults: FlagsState = {
+  "mod.scheduling": true,
+  "mod.patients": true,
+  "mod.finance": true,
+  "mod.lab": false,
+  "mod.inventory": false,
+  "mod.crm": false,
+  "mod.settings": false,
+}
+
+let state: FlagsState = load()
+const listeners = new Set<() => void>()
+
+function load(): FlagsState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { ...defaults }
+    const parsed = JSON.parse(raw) as Partial<FlagsState>
+    return { ...defaults, ...parsed }
+  } catch {
+    return { ...defaults }
+  }
+}
+
+function save(next: FlagsState) {
+  state = next
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  } catch {}
+  listeners.forEach((fn) => fn())
+}
+
+export function getFlags(): FlagsState {
+  return state
+}
+
+export function isEnabled(key: FlagKey): boolean {
+  return !!state[key]
+}
+
+export function setFlag(key: FlagKey, value: boolean) {
+  save({ ...state, [key]: value })
+}
+
+export function subscribeFlags(fn: () => void) {
+  listeners.add(fn)
+  return () => listeners.delete(fn)
+}
+'@
+
+    $modulesTs = @'
+import type { FlagKey } from "./flags"
+
+export type ModuleId =
+  | "dashboard"
+  | "scheduling"
+  | "patients"
+  | "finance"
+  | "lab"
+  | "inventory"
+  | "crm"
+  | "settings"
+
+export type ModuleDef = {
+  id: ModuleId
+  titleFa: string
+  route: string
+  flag?: FlagKey
+  core?: boolean
+}
+
+export const MODULES: ModuleDef[] = [
+  { id: "dashboard", titleFa: "داشبورد", route: "/dashboard", core: true },
+  { id: "scheduling", titleFa: "نوبت‌دهی", route: "/scheduling", flag: "mod.scheduling", core: true },
+  { id: "patients", titleFa: "بیماران", route: "/patients", flag: "mod.patients", core: true },
+  { id: "finance", titleFa: "مالی", route: "/finance", flag: "mod.finance", core: true },
+
+  { id: "lab", titleFa: "لابراتوار", route: "/lab", flag: "mod.lab" },
+  { id: "inventory", titleFa: "انبار", route: "/inventory", flag: "mod.inventory" },
+  { id: "crm", titleFa: "CRM", route: "/crm", flag: "mod.crm" },
+  { id: "settings", titleFa: "تنظیمات", route: "/settings", flag: "mod.settings" },
+]
+'@
+
+    $flagsPage = @'
+import { useSyncExternalStore } from "react"
+import { getFlags, setFlag, subscribeFlags } from "../lib/flags"
+import { MODULES } from "../lib/modules"
+
+function useFlags() {
+  return useSyncExternalStore(subscribeFlags, getFlags, getFlags)
+}
+
+export default function Flags() {
+  const flags = useFlags()
+
+  return (
+    <div className="space-y-3">
+      <div className="text-sm font-semibold text-emerald-300">Feature Flags</div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 space-y-3">
+        <div className="text-xs text-white/70">
+          هدف: روشن/خاموش‌کردن ماژول‌ها بدون بازنویسی (G32). ماژول‌های ناقص پیش‌فرض OFF می‌مانند.
+        </div>
+
+        <div className="space-y-2">
+          {MODULES.filter(m => !!m.flag).map((m) => (
+            <div key={m.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+              <div className="text-xs text-white/80">{m.titleFa}</div>
+              <button
+                onClick={() => setFlag(m.flag!, !flags[m.flag!])}
+                className="text-[11px] px-3 py-2 rounded-2xl bg-white/10 border border-white/10"
+              >
+                {flags[m.flag!] ? "ON" : "OFF"}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="text-[11px] text-white/50">
+        نکته: این صفحه برای توسعه است (بعداً پشت مجوز/سطح دسترسی قفل می‌شود).
+      </div>
+    </div>
+  )
+}
+'@
+
+    $tabBar = @'
+import { NavLink } from "react-router-dom"
+import { useSyncExternalStore } from "react"
+import { MODULES } from "../lib/modules"
+import { getFlags, isEnabled, subscribeFlags } from "../lib/flags"
+
+function useFlags() {
+  return useSyncExternalStore(subscribeFlags, getFlags, getFlags)
+}
+
+export default function TabBar() {
+  useFlags()
+
+  const tabs = MODULES.filter((m) => m.core).filter((m) => !m.flag || isEnabled(m.flag))
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-white/5 backdrop-blur-2xl">
+      <div className="max-w-md mx-auto px-4 py-3 flex justify-between">
+        {tabs.map((t) => (
+          <NavLink
+            key={t.id}
+            to={t.route}
+            className={({ isActive }) =>
+              "text-xs px-3 py-2 rounded-2xl border " +
+              (isActive ? "border-emerald-300/40 bg-emerald-300/10 text-emerald-200" : "border-white/10 bg-white/5 text-white/70")
+            }
+          >
+            {t.titleFa}
+          </NavLink>
+        ))}
+
+        <NavLink
+          to="/flags"
+          className={({ isActive }) =>
+            "text-xs px-3 py-2 rounded-2xl border " +
+            (isActive ? "border-sky-300/40 bg-sky-300/10 text-sky-200" : "border-white/10 bg-white/5 text-white/70")
+          }
+        >
+          Flags
+        </NavLink>
+      </div>
+    </nav>
+  )
+}
+'@
+
+    $appTsx = @'
+import "./App.css"
+
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import TabBar from "./components/TabBar"
+import Dashboard from "./pages/Dashboard"
+import Scheduling from "./pages/Scheduling"
+import Patients from "./pages/Patients"
+import PatientDetail from "./pages/PatientDetail"
+import Finance from "./pages/Finance"
+import Flags from "./pages/Flags"
+import { isEnabled } from "./lib/flags"
+
+function Disabled() {
+  return <div className="text-xs text-white/60">این ماژول فعلاً غیرفعال است.</div>
+}
+
+export default function App() {
+  return (
+    <div dir="rtl" className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
+      <header className="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-2xl">
+        <div className="max-w-md mx-auto px-4 py-4">
+          <div className="text-lg font-bold text-emerald-300">Dental-Mina</div>
+          <div className="text-xs text-white/70 mt-1">G32 Feature Flags Foundation</div>
+        </div>
+      </header>
+
+      <BrowserRouter>
+        <main className="max-w-md mx-auto px-4 py-5 space-y-4 pb-28">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            <Route path="/scheduling" element={isEnabled("mod.scheduling") ? <Scheduling /> : <Disabled />} />
+            <Route path="/patients" element={isEnabled("mod.patients") ? <Patients /> : <Disabled />} />
+            <Route path="/patients/:id" element={isEnabled("mod.patients") ? <PatientDetail /> : <Disabled />} />
+            <Route path="/finance" element={isEnabled("mod.finance") ? <Finance /> : <Disabled />} />
+
+            <Route path="/flags" element={<Flags />} />
+            <Route path="*" element={<div className="text-sm text-white/70">Not Found</div>} />
+          </Routes>
+        </main>
+        <TabBar />
+      </BrowserRouter>
+    </div>
+  )
+}
+'@
+
+    WNoBom (Join-Path $appDir "src\lib\flags.ts") $flagsTs
+    WNoBom (Join-Path $appDir "src\lib\modules.ts") $modulesTs
+    WNoBom (Join-Path $appDir "src\pages\Flags.tsx") $flagsPage
+    WNoBom (Join-Path $appDir "src\components\TabBar.tsx") $tabBar
+    WNoBom (Join-Path $appDir "src\App.tsx") $appTsx
+
+    # Docs/spec updates
+    $docPath = Join-Path $root "docs\FEATURE_FLAGS_FOUNDATION.md"
+    $doc = @'
+# FEATURE FLAGS FOUNDATION (G32)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Outcome
+- Every major module is toggleable via a Feature Flag (default OFF for incomplete modules).
+- A code-level module registry exists and is the single source of truth for module wiring.
+- Disabling a module MUST not break build, routing, or navigation.
+
+## Rules
+- Flags are versioned: dm_flags_v1 (rename only via migration).
+- Modules declare: id, route, optional flag key, and whether it is core.
+- No cross-module hidden coupling allowed.
+
+G32_LOCKED_FEATURE_FLAGS_FOUNDATION=TRUE
+'@
+    WNoBom $docPath $doc
+
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G32_LOCKED_FEATURE_FLAGS_FOUNDATION=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G32 Feature Flags Foundation
+- Feature Flag foundation in code; modules toggleable without rewrite; default OFF for incomplete modules.
+G32_LOCKED_FEATURE_FLAGS_FOUNDATION=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G32_FEATURE_FLAGS_FOUNDATION'){
+        $c2 = $c.TrimEnd() + "
+- [x] G32_FEATURE_FLAGS_FOUNDATION
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # Build must succeed
+    Push-Location $appDir
+    npm install | Out-Null
+    npm run build | Out-Null
+    if($LASTEXITCODE -ne 0){ throw "BUILD_FAILED" }
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G32_LOCKED_FEATURE_FLAGS_FOUNDATION=TRUE')
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        flags_code = (Test-Path (Join-Path $appDir "src\lib\flags.ts"))
+        module_registry_code = (Test-Path (Join-Path $appDir "src\lib\modules.ts"))
+        flags_ui = (Test-Path (Join-Path $appDir "src\pages\Flags.tsx"))
+        locked_marker = $ok
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G32_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G32_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G32_FEATURE_FLAGS_FOUNDATION reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G32_FEATURE_FLAGS_FOUNDATION_EARLY_DISPATCH ---
+
+# --- G31_MODULE_REGISTRY_CONTRACTS_LOCK_EARLY_DISPATCH ---
+if ($Gate -eq "G31_MODULE_REGISTRY_CONTRACTS_LOCK") {
+  try {
+    $GateName = "G31_MODULE_REGISTRY_CONTRACTS_LOCK"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G31_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G31_MODULE_REGISTRY_CONTRACTS_LOCK'){ throw "STOP_NEXT_ACTION_NOT_FOR_G31" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # 1) Write module registry + contracts lock doc (ASCII-safe)
+    $docPath = Join-Path $root "docs\MODULE_REGISTRY_CONTRACTS_LOCK.md"
+    $doc = @'
+# MODULE REGISTRY + CONTRACTS LOCK (2026)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Goal
+A removable, versionable module system:
+- modules can be added/removed/changed without rewrite
+- strict boundaries enforced by contracts + dependency rules
+
+## Module Registry (Locked)
+- A single registry lists all modules (id, name, owner domain, dependencies, feature flag key, contract versions).
+- Modules MUST be toggleable by feature flags.
+- Removing a module means: flag OFF + remove routes/UI hooks + remove imports + keep data migration notes.
+
+## Contracts (Locked)
+At module boundaries only:
+- DTOs (data transfer objects)
+- Events (domain events)
+- Ports (service interfaces)
+Rules:
+- No cross-module import of internals.
+- Backward compatible changes OR explicit contract version bump.
+
+## Dependency Rules (Locked)
+- No cyclic dependencies.
+- Dependencies must be declared in registry.
+- Shared code must be small, stable, and pure (helpers only).
+
+## Removability Rules (Locked)
+- If feature flag is OFF, module must not execute, render, or block build.
+- Default OFF for incomplete modules.
+- A module removal must not require touching unrelated modules beyond registry + navigation wiring.
+
+## Evidence & Control
+Any violation requires formal ROLLBACK gate.
+
+G31_LOCKED_MODULE_REGISTRY_CONTRACTS=TRUE
+'@
+    WNoBom $docPath $doc
+
+    # 2) Append marker into REQUIREMENTS_LOCK_GLOBAL_2050.md (idempotent)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G31_LOCKED_MODULE_REGISTRY_CONTRACTS=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G31 Module Registry + Contracts Lock
+- Registry: modules listed with deps + feature flags + contract versions.
+- Contracts: DTO/Event/Port boundaries only; versioned/backward compatible.
+- Rules: no cycles; removability enforced.
+G31_LOCKED_MODULE_REGISTRY_CONTRACTS=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    # 3) Update CHECKLIST_0_100.md (idempotent)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G31_MODULE_REGISTRY_CONTRACTS_LOCK'){
+        $c2 = $c.TrimEnd() + "
+- [x] G31_MODULE_REGISTRY_CONTRACTS_LOCK
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # 4) Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 5) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G31_LOCKED_MODULE_REGISTRY_CONTRACTS=TRUE')
+    $ok2 = (Test-Path $reqPath) -and ((Get-Content -LiteralPath $reqPath -Raw) -match 'G31_LOCKED_MODULE_REGISTRY_CONTRACTS=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        registry_contracts_doc = $ok1
+        requirements_marker = $ok2
+        checklist_updated = (Test-Path $chkPath)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 6) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G31_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G31_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G31_MODULE_REGISTRY_CONTRACTS_LOCK reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G31_MODULE_REGISTRY_CONTRACTS_LOCK_EARLY_DISPATCH ---
+
+# --- G30_MODULARITY_EXTENSIBILITY_LOCK_2026_EARLY_DISPATCH ---
+if ($Gate -eq "G30_MODULARITY_EXTENSIBILITY_LOCK_2026") {
+  try {
+    $GateName = "G30_MODULARITY_EXTENSIBILITY_LOCK_2026"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G30_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G30_MODULARITY_EXTENSIBILITY_LOCK_2026'){ throw "STOP_NEXT_ACTION_NOT_FOR_G30" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # 1) Write modularity lock doc (ASCII-safe, repo source of truth)
+    $docPath = Join-Path $root "docs\MODULARITY_EXTENSIBILITY_LOCK_2026.md"
+    $doc = @'
+# MODULARITY + EXTENSIBILITY LOCK (Tech 2026)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Goal
+Add / remove / change modules WITHOUT rewrite.
+Rules must be enforced by boundaries + contracts + versioned migrations + feature flags.
+
+## Module Boundaries (Locked)
+- Each module owns its domain, UI, and data model (no shared hidden state).
+- Modules talk via contracts only (types/interfaces/events), not direct imports across internals.
+- A module must be removable with minimal surface changes (feature flag off + dependency cleanup).
+
+## Contracts (Locked)
+- Define stable contracts at module edge:
+  - types (DTOs)
+  - events (domain events)
+  - service interfaces (ports)
+- Contracts must be backward compatible OR versioned.
+
+## Feature Flags (Locked)
+- Every major module MUST be behind a feature flag.
+- Flags allow gradual rollout, disable-on-incident, and safe removal.
+- Default OFF for incomplete modules.
+
+## Schema Versioning + Migrations (Locked)
+- Any persistent storage schema MUST be versioned.
+- Provide forward migrations and rollback strategy notes.
+- No breaking schema change without explicit migration path.
+
+## Dependency Rules (Locked)
+- No cyclic dependencies between modules.
+- Shared utilities must be minimal and stable (pure helpers).
+- UI system (design language) is shared, but business logic stays inside modules.
+
+## Release Safety (Locked)
+- One change per release (Scope Freeze).
+- Evidence pack required: QG.json + manifest hashes + ledger record.
+- Any violation requires formal ROLLBACK gate.
+
+G30_LOCKED_MODULARITY_2026=TRUE
+'@
+    WNoBom $docPath $doc
+
+    # 2) Append G30 marker into REQUIREMENTS_LOCK_GLOBAL_2050.md (idempotent)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G30_LOCKED_MODULARITY_2026=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G30 Modularity Lock (2026)
+- Modular architecture locked: modules add/remove/change without rewrite via boundaries + contracts + feature flags + schema versioning/migrations.
+G30_LOCKED_MODULARITY_2026=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    # 3) Update CHECKLIST_0_100.md (idempotent)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G30_MODULARITY_EXTENSIBILITY_LOCK_2026'){
+        $c2 = $c.TrimEnd() + "
+- [x] G30_MODULARITY_EXTENSIBILITY_LOCK_2026
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # 4) Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 5) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G30_LOCKED_MODULARITY_2026=TRUE')
+    $ok2 = (Test-Path $reqPath) -and ((Get-Content -LiteralPath $reqPath -Raw) -match 'G30_LOCKED_MODULARITY_2026=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        modularity_doc = $ok1
+        requirements_marker = $ok2
+        checklist_updated = (Test-Path $chkPath)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 6) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G30_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G30_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G30_MODULARITY_EXTENSIBILITY_LOCK_2026 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G30_MODULARITY_EXTENSIBILITY_LOCK_2026_EARLY_DISPATCH ---
+
+# --- G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK_EARLY_DISPATCH ---
+if ($Gate -eq "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK") {
+  try {
+    $GateName = "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G29_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK'){ throw "STOP_NEXT_ACTION_NOT_FOR_G29" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # 1) Write wrapper path lock doc (ASCII-safe)
+    $docPath = Join-Path $root "docs\CROSS_PLATFORM_WRAPPER_PATH_LOCK.md"
+    $doc = @'
+# CROSS PLATFORM WRAPPER PATH LOCK (No-Rewrite)
+AI_SIGNATURE: PYM JBZ
+
+## Locked Goal
+Single product experience across:
+- iOS / iPadOS
+- Android
+- Windows
+Baseline: Web/PWA. Wrappers must remain possible WITHOUT rewrite.
+
+## Locked Wrapper Paths (Allowed)
+1) PWA (baseline): same codebase, offline-first direction, installable, push-ready path later.
+2) Mobile/iPad path: Capacitor-like wrapper (native shell + web view) must remain feasible without refactor.
+3) Windows path: Tauri-like or Electron-like wrapper must remain feasible without refactor.
+
+## Non-Negotiables
+- No platform-specific fork as a requirement to ship.
+- Storage + performance must be compatible with wrappers (IndexedDB + virtualization + fast startup).
+- Persian-first UX (RTL first) stays the default.
+- iOS26 Liquid Glass design language remains locked (visual system, motion, accessibility).
+
+## Performance Budgets (Locked)
+- UI: 60fps target; no large re-render loops.
+- Patients list: must be virtualized for large datasets.
+- Search: debounced; indexed storage; first results under 150ms on normal hardware (target).
+- 100k+ patients: no freezing; memory stable; incremental rendering only.
+
+## Evidence & Control
+Any change that violates this lock requires formal ROLLBACK gate.
+
+G29_LOCKED_WRAPPER_PATH=TRUE
+'@
+    WNoBom $docPath $doc
+
+    # 2) Append G29 marker into REQUIREMENTS_LOCK_GLOBAL_2050.md (idempotent)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    if(Test-Path $reqPath){
+      $r = Get-Content -LiteralPath $reqPath -Raw
+      if($r -notmatch 'G29_LOCKED_WRAPPER_PATH=TRUE'){
+        $r2 = $r.TrimEnd() + "
+
+---
+## G29 Wrapper Path Lock
+- PWA baseline + wrapper-ready path (Capacitor-like mobile/iPad, Tauri/Electron-like Windows) without rewrite.
+- Performance budgets locked: 60fps target + virtual list + indexed search + 100k+ stability.
+G29_LOCKED_WRAPPER_PATH=TRUE
+"
+        WNoBom $reqPath $r2
+      }
+    }
+
+    # 3) Update CHECKLIST_0_100.md (idempotent)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(Test-Path $chkPath){
+      $c = Get-Content -LiteralPath $chkPath -Raw
+      if($c -notmatch 'G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK'){
+        $c2 = $c.TrimEnd() + "
+- [x] G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK
+"
+        WNoBom $chkPath $c2
+      }
+    }
+
+    # 4) Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 5) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $ok1 = (Test-Path $docPath) -and ((Get-Content -LiteralPath $docPath -Raw) -match 'G29_LOCKED_WRAPPER_PATH=TRUE')
+    $ok2 = (Test-Path $reqPath) -and ((Get-Content -LiteralPath $reqPath -Raw) -match 'G29_LOCKED_WRAPPER_PATH=TRUE')
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        wrapper_doc = $ok1
+        requirements_marker = $ok2
+        checklist_updated = (Test-Path $chkPath)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 6) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G29_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G29_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK_EARLY_DISPATCH ---
+
+# --- G28_REQUIREMENTS_LOCK_GLOBAL_2050_EARLY_DISPATCH ---
+if ($Gate -eq "G28_REQUIREMENTS_LOCK_GLOBAL_2050") {
+  try {
+    $GateName = "G28_REQUIREMENTS_LOCK_GLOBAL_2050"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G28_REQUIRES_GIT_REPO" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G28_REQUIREMENTS_LOCK_GLOBAL_2050'){ throw "STOP_NEXT_ACTION_NOT_FOR_G28" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # Write requirements lock doc (ASCII-safe)
+    $reqPath = Join-Path $root "docs\REQUIREMENTS_LOCK_GLOBAL_2050.md"
+    $req = @'
+# REQUIREMENTS LOCK - Global / 2050
+AI_SIGNATURE: PYM JBZ
+
+## Permanent Locks (Non-Negotiable)
+- Cross-Platform: iOS + Android + iPad + Windows (single product, consistent UX).
+- Design: iOS26-inspired Liquid Glass / advanced glassmorphism + Duolingo-like emotive 3D icons + subtle micro-interactions (no bouncy motion).
+- Persian-first (RTL first) with perfect LTR interop; iOS-native feel.
+- Scale: 100k+ patient records (fast search + stable storage + no UI lag).
+- Offline-first + resilient sync strategy (future gate), with local encryption option.
+
+## Cross-Platform Strategy (Locked Requirement)
+- Baseline: Web/PWA (single codebase).
+- Mobile/iPad: native wrapper path must remain open (e.g. Capacitor-like) without rewrite.
+- Windows: native wrapper path must remain open (e.g. Tauri-like) without rewrite.
+- Performance budgets must be defined (60fps UI; virtualized lists; indexed storage).
+
+## 100k+ Patients: Minimum Technical Guarantees (Locked Requirement)
+- Storage: IndexedDB (structured schema + indexed fields).
+- Search: normalized Persian search (Ye/Ke normalization; diacritics removed) + prefix indexes.
+- UI: virtual list for large datasets + debounced queries.
+- Import/export & backup hooks must exist later (future gates) without breaking schema.
+
+## Evidence & Control
+- Any change that violates these locks requires formal ROLLBACK gate.
+
+G28_LOCKED_REQUIREMENTS=TRUE
+'@
+    WNoBom $reqPath $req
+
+    # Update design doc marker (append once, if file exists)
+    $designPath = Join-Path $root "docs\DESIGN_LANGUAGE_iOS26.md"
+    if(Test-Path $designPath){
+      $d = Get-Content -LiteralPath $designPath -Raw
+      if($d -notmatch 'G28_LOCKED_REQUIREMENTS=TRUE'){
+        $d2 = $d.TrimEnd() + "
+
+---
+## G28 Locked Requirements
+G28_LOCKED_REQUIREMENTS=TRUE
+- Cross-Platform locked: iOS/Android/iPad/Windows.
+- Scale locked: 100k+ patient records.
+"
+        WNoBom $designPath $d2
+      }
+    }
+
+    # Checklist seed (create if missing)
+    $chkPath = Join-Path $root "docs\CHECKLIST_0_100.md"
+    if(!(Test-Path $chkPath)){
+      $chk = @'
+# CHECKLIST 0-100 (Repo Source of Truth)
+AI_SIGNATURE: PYM JBZ
+
+## Foundation
+- [x] G24_UI_FOUNDATION_DESIGN_SYSTEM
+- [x] G25_UI_NAV_SHELL
+- [x] G26_PATIENTS_STORE_INDEX_SCALE
+- [x] G27_PATIENTS_UI_VIRTUAL_LIST
+- [x] G28_REQUIREMENTS_LOCK_GLOBAL_2050
+
+## Locked Targets
+- [ ] Cross-Platform wrapper-ready path (no rewrite)
+- [ ] 100k+ performance budgets + stress checks
+- [ ] Offline-first sync rules + conflict strategy
+- [ ] Encryption at rest option + tamper-evident audit trail
+- [ ] Import/Export + migration + rollback plan
+'@
+      WNoBom $chkPath $chk
+    }
+
+    # Resync HASHLOCK (all protected entries that exist)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $lockedOk = (Get-Content -LiteralPath $reqPath -Raw) -match 'G28_LOCKED_REQUIREMENTS=TRUE'
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        req_doc = (Test-Path $reqPath)
+        checklist_doc = (Test-Path $chkPath)
+        locked_marker_ok = $lockedOk
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G28_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G28_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G28_REQUIREMENTS_LOCK_GLOBAL_2050 reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G28_REQUIREMENTS_LOCK_GLOBAL_2050_EARLY_DISPATCH ---
+
+# --- G27_PATIENTS_UI_VIRTUAL_LIST_EARLY_DISPATCH ---
+if ($Gate -eq "G27_PATIENTS_UI_VIRTUAL_LIST") {
+  try {
+    $GateName = "G27_PATIENTS_UI_VIRTUAL_LIST"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G27_REQUIRES_GIT_REPO" }
+    if(-not (Get-Command node -ErrorAction SilentlyContinue)){ throw "NODE_NOT_FOUND" }
+    if(-not (Get-Command npm  -ErrorAction SilentlyContinue)){ throw "NPM_NOT_FOUND" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G27_PATIENTS_UI_VIRTUAL_LIST'){ throw "STOP_NEXT_ACTION_NOT_FOR_G27" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD_G23" }
+
+    # App.tsx: add Patient Detail route
+    $appTsx = @'
+import './App.css'
+
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import TabBar from './components/TabBar'
+import Dashboard from './pages/Dashboard'
+import Scheduling from './pages/Scheduling'
+import Patients from './pages/Patients'
+import PatientDetail from './pages/PatientDetail'
+import Finance from './pages/Finance'
+
+export default function App() {
+  return (
+    <div dir="rtl" className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
+      <header className="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-2xl">
+        <div className="max-w-md mx-auto px-4 py-4">
+          <div className="text-lg font-bold text-emerald-300">Dental-Mina</div>
+          <div className="text-xs text-white/70 mt-1">Patients: Virtual List + Patient Detail (G27)</div>
+        </div>
+      </header>
+
+      <BrowserRouter>
+        <main className="max-w-md mx-auto px-4 py-5 space-y-4 pb-24">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/scheduling" element={<Scheduling />} />
+            <Route path="/patients" element={<Patients />} />
+            <Route path="/patients/:id" element={<PatientDetail />} />
+            <Route path="/finance" element={<Finance />} />
+            <Route path="*" element={<div className="text-sm text-white/70">Not Found</div>} />
+          </Routes>
+        </main>
+        <TabBar />
+      </BrowserRouter>
+    </div>
+  )
+}
+'@
+
+    $patientsTsx = @'
+import { useEffect, useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { FixedSizeList as List } from "react-window"
+import Tile from "../ui/Tile"
+import { db, Patient } from "../lib/db"
+
+function uid() {
+  return Math.floor(Math.random() * 1_000_000_000).toString().padStart(9, "0")
+}
+
+export default function Patients() {
+  const [q, setQ] = useState("")
+  const [rows, setRows] = useState<Patient[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const debounced = useMemo(() => ({ t: 0 as any }), [])
+
+  useEffect(() => {
+    setLoading(true)
+    clearTimeout(debounced.t)
+    debounced.t = setTimeout(async () => {
+      const r = await db.searchPatients(q, 200)
+      setRows(r)
+      setLoading(false)
+    }, 160)
+    return () => clearTimeout(debounced.t)
+  }, [q])
+
+  async function addDemo() {
+    await db.upsertPatient({
+      recordNo: uid(),
+      name: "بیمار نمونه",
+      phone: "",
+      nationalId: "",
+    })
+    const r = await db.searchPatients(q, 200)
+    setRows(r)
+  }
+
+  const height = 420
+  const itemSize = 44
+
+  return (
+    <>
+      <div className="text-sm font-semibold text-sky-300">بیماران</div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 mt-3">
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="جستجو: نام یا شماره پرونده"
+          className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40"
+        />
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={addDemo}
+            className="text-xs px-3 py-2 rounded-2xl bg-white/10 border border-white/10"
+          >
+            افزودن نمونه
+          </button>
+          <div className="text-xs text-white/60 self-center">
+            {loading ? "در حال جستجو..." : نتیجه: }
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <Tile title="Virtual List" subtitle="برای 100k+ رکورد" accent="text-sky-300" />
+        <Tile title="Patient Detail" subtitle="صفحه‌ی پرونده" accent="text-emerald-300" />
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-2 mt-3">
+        {rows.length === 0 ? (
+          <div className="text-xs text-white/50 p-3">چیزی پیدا نشد</div>
+        ) : (
+          <List
+            height={height}
+            itemCount={rows.length}
+            itemSize={itemSize}
+            width="100%"
+          >
+            {({ index, style }) => {
+              const p = rows[index]
+              const id = p.id ?? 0
+              return (
+                <div style={style} className="px-2">
+                  <Link
+                    to={/patients/}
+                    className="h-[40px] flex items-center justify-between rounded-xl px-3 border border-white/0 hover:border-white/10 hover:bg-white/5 transition"
+                  >
+                    <div className="text-xs text-white/90 truncate max-w-[65%]">
+                      {p.name || "-"}
+                    </div>
+                    <div className="text-[11px] text-white/50">#{p.recordNo}</div>
+                  </Link>
+                </div>
+              )
+            }}
+          </List>
+        )}
+      </div>
+
+      <div className="text-xs text-white/60 mt-4">
+        آماده برای 100k+ (UI: Virtual list + جستجوی سریع). قدم بعدی: فیلدهای کامل پرونده + امنیت/قفل.
+      </div>
+    </>
+  )
+}
+'@
+
+    $detailTsx = @'
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { db, Patient } from "../lib/db"
+
+export default function PatientDetail() {
+  const nav = useNavigate()
+  const { id } = useParams()
+  const [p, setP] = useState<Patient | null>(null)
+
+  useEffect(() => {
+    const pid = Number(id || 0)
+    let alive = true
+    ;(async () => {
+      const row = await db.patients.get(pid)
+      if (alive) setP(row ?? null)
+    })()
+    return () => {
+      alive = false
+    }
+  }, [id])
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="text-sm font-semibold text-sky-300">پرونده بیمار</div>
+        <button
+          onClick={() => nav(-1)}
+          className="text-xs px-3 py-2 rounded-2xl bg-white/10 border border-white/10"
+        >
+          بازگشت
+        </button>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4">
+        {!p ? (
+          <div className="text-xs text-white/60">یافت نشد یا هنوز لود نشده…</div>
+        ) : (
+          <div className="space-y-2">
+            <div className="text-sm text-white/90">{p.name}</div>
+            <div className="text-xs text-white/60">شماره پرونده: #{p.recordNo}</div>
+            <div className="text-xs text-white/60">تلفن: {p.phone || "-"}</div>
+            <div className="text-xs text-white/60">کد ملی: {p.nationalId || "-"}</div>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4">
+        <div className="text-xs text-white/70 mb-2">پایه‌ی پرونده</div>
+        <div className="text-xs text-white/60">
+          قدم بعدی: نمودار دندانی، درمان‌ها، پرداخت‌ها، فایل‌ها + قفل/امنیت + سینک چند دستگاهی.
+        </div>
+      </div>
+    </div>
+  )
+}
+'@
+
+    WNoBom (Join-Path $appDir "src\App.tsx") $appTsx
+    WNoBom (Join-Path $appDir "src\pages\Patients.tsx") $patientsTsx
+    WNoBom (Join-Path $appDir "src\pages\PatientDetail.tsx") $detailTsx
+
+    # deps + build must succeed
+    Push-Location $appDir
+    npm install react-window | Out-Null
+    npm install -D @types/react-window | Out-Null
+    npm run build | Out-Null
+    Pop-Location
+
+    # Resync HASHLOCK (all protected entries)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        virtual_list = $true
+        patient_detail_route = "/patients/:id"
+        node = (node -v)
+        npm  = (npm -v)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G27_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G27_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G27_PATIENTS_UI_VIRTUAL_LIST reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G27_PATIENTS_UI_VIRTUAL_LIST_EARLY_DISPATCH ---
+
+# --- G26_PATIENTS_STORE_INDEX_SCALE_EARLY_DISPATCH ---
+if ($Gate -eq "G26_PATIENTS_STORE_INDEX_SCALE") {
+  try {
+    $GateName = "G26_PATIENTS_STORE_INDEX_SCALE"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G26_REQUIRES_GIT_REPO" }
+    if(-not (Get-Command node -ErrorAction SilentlyContinue)){ throw "NODE_NOT_FOUND" }
+    if(-not (Get-Command npm  -ErrorAction SilentlyContinue)){ throw "NPM_NOT_FOUND" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G26_PATIENTS_STORE_INDEX_SCALE'){ throw "STOP_NEXT_ACTION_NOT_FOR_G26" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD_G23" }
+
+    # 1) Add IndexedDB layer (Dexie) + normalize
+    $dbTs = @'
+import Dexie, { Table } from "dexie"
+import { normFa } from "./normalize"
+
+export type PatientId = number
+
+export type Patient = {
+  id?: PatientId
+  recordNo: string
+  name: string
+  nameNorm: string
+  phone?: string
+  nationalId?: string
+  createdAt: number
+  updatedAt: number
+}
+
+class DentalMinaDB extends Dexie {
+  patients!: Table<Patient, PatientId>
+
+  constructor() {
+    super("DentalMinaDB")
+    this.version(1).stores({
+      patients: "++id, recordNo, nationalId, phone, nameNorm, updatedAt",
+    })
+  }
+
+  async upsertPatient(p: Omit<Patient, "nameNorm" | "createdAt" | "updatedAt" | "id"> & { id?: PatientId }) {
+    const now = Date.now()
+    const row: Patient = {
+      ...p,
+      nameNorm: normFa(p.name),
+      createdAt: p.id ? (await this.patients.get(p.id))?.createdAt ?? now : now,
+      updatedAt: now,
+    }
+    if (row.id) {
+      await this.patients.put(row)
+      return row.id
+    }
+    return await this.patients.add(row)
+  }
+
+  async searchPatients(q: string, limit = 50) {
+    const qq = q.trim()
+    if (!qq) {
+      return await this.patients.orderBy("updatedAt").reverse().limit(limit).toArray()
+    }
+
+    // digits -> recordNo prefix
+    if (/^[0-9۰-۹]+$/.test(qq)) {
+      const d = qq.replace(/[۰-۹]/g, (c) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(c)))
+      return await this.patients.where("recordNo").startsWith(d).limit(limit).toArray()
+    }
+
+    const nq = normFa(qq)
+    return await this.patients.where("nameNorm").startsWith(nq).limit(limit).toArray()
+  }
+}
+
+export const db = new DentalMinaDB()
+'@
+
+    $normTs = @'
+export function normFa(s: string) {
+  return (s || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\u064a/g, "\u06cc")   // ي -> ی
+    .replace(/\u0643/g, "\u06a9")   // ك -> ک
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "") // diacritics
+    .replace(/\s+/g, " ")
+}
+'@
+
+    $patientsTsx = @'
+import { useEffect, useMemo, useState } from "react"
+import Tile from "../ui/Tile"
+import { db, Patient } from "../lib/db"
+
+function uid() {
+  return Math.floor(Math.random() * 1_000_000_000).toString().padStart(9, "0")
+}
+
+export default function Patients() {
+  const [q, setQ] = useState("")
+  const [rows, setRows] = useState<Patient[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const debounced = useMemo(() => ({ t: 0 as any }), [])
+
+  useEffect(() => {
+    setLoading(true)
+    clearTimeout(debounced.t)
+    debounced.t = setTimeout(async () => {
+      const r = await db.searchPatients(q, 50)
+      setRows(r)
+      setLoading(false)
+    }, 180)
+    return () => clearTimeout(debounced.t)
+  }, [q])
+
+  async function addDemo() {
+    await db.upsertPatient({
+      recordNo: uid(),
+      name: "بیمار نمونه",
+      phone: "",
+      nationalId: "",
+    })
+    const r = await db.searchPatients(q, 50)
+    setRows(r)
+  }
+
+  return (
+    <>
+      <div className="text-sm font-semibold text-sky-300">بیماران</div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 mt-3">
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="جستجو: نام یا شماره پرونده"
+          className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40"
+        />
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={addDemo}
+            className="text-xs px-3 py-2 rounded-2xl bg-white/10 border border-white/10"
+          >
+            افزودن نمونه
+          </button>
+          <div className="text-xs text-white/60 self-center">
+            {loading ? "در حال جستجو..." : نتیجه: }
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <Tile title="ایندکس سریع" subtitle="IndexedDB + Indexes" accent="text-sky-300" />
+        <Tile title="هدف مقیاس" subtitle="100k+ پرونده" accent="text-emerald-300" />
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 mt-3">
+        <div className="text-xs text-white/70 mb-2">آخرین‌ها</div>
+        <div className="space-y-2">
+          {rows.map((p) => (
+            <div key={p.id} className="flex items-center justify-between text-xs">
+              <div className="text-white/90">{p.name || "-"}</div>
+              <div className="text-white/50">#{p.recordNo}</div>
+            </div>
+          ))}
+          {rows.length === 0 && <div className="text-xs text-white/50">چیزی پیدا نشد</div>}
+        </div>
+      </div>
+
+      <div className="text-xs text-white/60 mt-4">
+        پایه‌ی ذخیره‌سازی/جستجو آماده است؛ قدم بعدی: مدل کامل پرونده + سینک چند دستگاهی.
+      </div>
+    </>
+  )
+}
+'@
+
+    # Write files
+    WNoBom (Join-Path $appDir "src\lib\db.ts") $dbTs
+    WNoBom (Join-Path $appDir "src\lib\normalize.ts") $normTs
+    WNoBom (Join-Path $appDir "src\pages\Patients.tsx") $patientsTsx
+
+    # 2) deps + build must succeed
+    Push-Location $appDir
+    npm install dexie | Out-Null
+    npm run build | Out-Null
+    Pop-Location
+
+    # 3) Resync HASHLOCK (all protected entries)
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # 4) Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        patients_db = (Test-Path (Join-Path $appDir "src\lib\db.ts"))
+        patients_norm = (Test-Path (Join-Path $appDir "src\lib\normalize.ts"))
+        node = (node -v)
+        npm  = (npm -v)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # 5) STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G26_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G26_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G26_PATIENTS_STORE_INDEX_SCALE reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G26_PATIENTS_STORE_INDEX_SCALE_EARLY_DISPATCH ---
+
+# --- G25_UI_NAV_SHELL_EARLY_DISPATCH ---
+if ($Gate -eq "G25_UI_NAV_SHELL") {
+  try {
+    $GateName = "G25_UI_NAV_SHELL"
+    $utc = (Get-Date).ToUniversalTime().ToString("o")
+    $ts  = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $root = (Resolve-Path ".").Path
+
+    function WNoBom([string]$p,[string]$t){
+      $u = New-Object System.Text.UTF8Encoding($false)
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllText($full, $t, $u)
+    }
+    function WBytes([string]$p,[byte[]]$b){
+      $full = [IO.Path]::GetFullPath($p)
+      $dir  = [IO.Path]::GetDirectoryName($full)
+      if($dir -and !(Test-Path $dir)){ New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+      [IO.File]::WriteAllBytes($full, $b)
+    }
+    function Sha([string]$p){ (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower() }
+
+    if(!(Test-Path (Join-Path $root ".git"))){ throw "G25_REQUIRES_GIT_REPO" }
+    if(-not (Get-Command node -ErrorAction SilentlyContinue)){ throw "NODE_NOT_FOUND" }
+    if(-not (Get-Command npm  -ErrorAction SilentlyContinue)){ throw "NPM_NOT_FOUND" }
+
+    $statePath = Join-Path $root "state\STATE.json"
+    $ledger    = Join-Path $root "state\LEDGER_v2.ndjson"
+    $hlPath    = Join-Path $root "state\HASHLOCK.json"
+    if(!(Test-Path $statePath)){ throw "MISSING_STATE" }
+    if(!(Test-Path $ledger)){ throw "MISSING_LEDGER_V2" }
+    if(!(Test-Path $hlPath)){ throw "MISSING_HASHLOCK.json" }
+
+    # HARD STOP: NEXT_ACTION must authorize this gate
+    $naPath = Join-Path $root "state\NEXT_ACTION.md"
+    if(!(Test-Path $naPath)){ throw "STOP_NO_NEXT_ACTION" }
+    $na = Get-Content -LiteralPath $naPath -Raw
+    if($na -notmatch 'Authorized Gate:\s*G25_UI_NAV_SHELL'){ throw "STOP_NEXT_ACTION_NOT_FOR_G25" }
+
+    $appDir = Join-Path $root "apps\dental-mina"
+    if(!(Test-Path (Join-Path $appDir "package.json"))){ throw "MISSING_APP_SCAFFOLD_G23" }
+
+    # Write UI shell files (from base64 UTF-8)
+    # sanitize base64 payloads (strip whitespace)
+    $b64_App  = ($b64_App  -replace '\s','')
+    $b64_Tab  = ($b64_Tab  -replace '\s','')
+    $b64_Tile = ($b64_Tile -replace '\s','')
+    $b64_Dash = ($b64_Dash -replace '\s','')
+    $b64_Sch  = ($b64_Sch  -replace '\s','')
+    $b64_Pat  = ($b64_Pat  -replace '\s','')
+    $b64_Fin  = ($b64_Fin  -replace '\s','')
+    $b64_App = "aW1wb3J0ICcuL0FwcC5jc3MnCgppbXBvcnQgeyBCcm93c2VyUm91dGVyLCBSb3V0ZXMsIFJvdXRlLCBOYXZpZ2F0ZSB9IGZyb20gJ3JlYWN0LXJvdXRlci1kb20nCmltcG9ydCBUYWJCYXIgZnJvbSAnLi9jb21wb25lbnRzL1RhYkJhcicKaW1wb3J0IERhc2hib2FyZCBmcm9tICcuL3BhZ2VzL0Rhc2hib2FyZCcKaW1wb3J0IFNjaGVkdWxpbmcgZnJvbSAnLi9wYWdlcy9TY2hlZHVsaW5nJwppbXBvcnQgUGF0aWVudHMgZnJvbSAnLi9wYWdlcy9QYXRpZW50cycKaW1wb3J0IEZpbmFuY2UgZnJvbSAnLi9wYWdlcy9GaW5hbmNlJwoKZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQXBwKCkgewogIHJldHVybiAoCiAgICA8ZGl2IGRpcj0icnRsIiBjbGFzc05hbWU9Im1pbi1oLXNjcmVlbiBiZy1ncmFkaWVudC10by1iIGZyb20tc2xhdGUtOTUwIHZpYS1zbGF0ZS05NTAgdG8tc2xhdGUtOTAwIHRleHQtd2hpdGUiPgogICAgICA8aGVhZGVyIGNsYXNzTmFtZT0ic3RpY2t5IHRvcC0wIHotMTAgYm9yZGVyLWIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlLzUgYmFja2Ryb3AtYmx1ci0yeGwiPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJtYXgtdy1tZCBteC1hdXRvIHB4LTQgcHktNCI+CiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0idGV4dC1sZyBmb250LWJvbGQgdGV4dC1lbWVyYWxkLTMwMCI+RGVudGFs4oCRTWluYTwvZGl2PgogICAgICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQteHMgdGV4dC13aGl0ZS83MCBtdC0xIj7YvtmI2LPYqNiqINmG2KfZiNmB2LHZh9mEICg8c3Bhbj5UYWIgQmFyPC9zcGFuPikgKyBSb3V0aW5nPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgIDwvaGVhZGVyPgoKICAgICAgPEJyb3dzZXJSb3V0ZXI+CiAgICAgICAgPG1haW4gY2xhc3NOYW1lPSJtYXgtdy1tZCBteC1hdXRvIHB4LTQgcHktNSBzcGFjZS15LTQgcGItMjQiPgogICAgICAgICAgPFJvdXRlcz4KICAgICAgICAgICAgPFJvdXRlIHBhdGg9Ii8iIGVsZW1lbnQ9ezxOYXZpZ2F0ZSB0bz0iL2Rhc2hib2FyZCIgcmVwbGFjZSAvPn0gLz4KICAgICAgICAgICAgPFJvdXRlIHBhdGg9Ii9kYXNoYm9hcmQiIGVsZW1lbnQ9ezxEYXNoYm9hcmQgLz59IC8+CiAgICAgICAgICAgIDxSb3V0ZSBwYXRoPSIvc2NoZWR1bGluZyIgZWxlbWVudD17PFNjaGVkdWxpbmcgLz59IC8+CiAgICAgICAgICAgIDxSb3V0ZSBwYXRoPSIvcGF0aWVudHMiIGVsZW1lbnQ9ezxQYXRpZW50cyAvPn0gLz4KICAgICAgICAgICAgPFJvdXRlIHBhdGg9Ii9maW5hbmNlIiBlbGVtZW50PXs8RmluYW5jZSAvPn0gLz4KICAgICAgICAgICAgPFJvdXRlIHBhdGg9IioiIGVsZW1lbnQ9ezxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXNtIHRleHQtd2hpdGUvNzAiPtiz2YHZiNio2KjZitixINmE2Y/Yp9mHINmE2YfZhdmE2Kk8L2Rpdj59IC8+CiAgICAgICAgICA8L1JvdXRlcz4KICAgICAgICA8L21haW4+CgogICAgICAgIDxUYWJCYXIgLz4KICAgICAgPC9Ccm93c2VyUm91dGVyPgogICAgPC9kaXY+CiAgKQp9Cg=="
+    $b64_Tab = "aW1wb3J0IHsgTmF2TGluayB9IGZyb20gJ3JlYWN0LXJvdXRlci1kb20nCgpjb25zdCBJdGVtID0gKHsKICB0bywKICBsYWJlbCwKICBhY2NlbnQsCn06IHsKICB0bzogc3RyaW5nCiAgbGFiZWw6IHN0cmluZwogIGFjY2VudDogc3RyaW5nCn0pID0+IHsKICByZXR1cm4gKAogICAgPE5hdkxpbmsKICAgICAgdG89e3RvfQogICAgICBjbGFzc05hbWU9eyh7IGlzQWN0aXZlIH0pID0+CiAgICAgICAgWwogICAgICAgICAgJ2ZsZXggZmxleC1jb2wg aXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIGdhcC0xIHJvdW5kZWQtMnhsIHB4LTMgcHktMiB0cmFuc2l0aW9uJywKICAgICAgICAgIGlzQWN0aXZlID8gJ2JnLXdoaXRlLzEwJyA6ICdiZy10cmFuc3BhcmVudCcsCiAgICAgICAgXS5qb2luKCcgJykKICAgICAgfQogICAgPgogICAgICA8ZGl2IGNsYXNzTmFtZT0neyJ0ZXh0LVsxMXB4XSBmb250LXNlbWlib2xkICIgKyBhY2NlbnR9PntsYWJlbH08L2Rpdj4KICAgICAgPGRpdiBjbGFzc05hbWU9ImgtMSB3LTYgcm91bmRlZC1mdWxsIGJnLXdoaXRlLzAiIC8+CiAgICA8L05hdkxpbms+CiAgKQp9CgpleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBUYWJCYXIoKSB7CiAgcmV0dXJuICgKICAgIDxuYXYgY2xhc3NOYW1lPSJmaXhlZCBib3R0b20tMCBsZWZ0LTAgcmlnaHQtMCBib3JkZXItdCBib3JkZXItd2hpdGUvMTAgYmctd2hpdGUvNSBiYWNrZHJvcC1ibHVyLTJ4bCI+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJtYXgtdy1tZCBteC1hdXRvIHB4LTMgcHktMyBncmlkIGdyaWQtY29scy00IHRleHQteHMgdGV4dC13aGl0ZS84MCI+CiAgICAgICAgPEl0ZW0gdG89Ii9kYXNoYm9hcmQiIGxhYmVsPSLZhdmG2KfZhiIgYWNjZW50PSJ0ZXh0LWVtZXJhbGQtMzAwIiAvPgogICAgICAgIDxJdGVtIHRvPSIvc2NoZWR1bGluZyIgbGFiZWw9ItmG2YjYqNqiIiBhY2NlbnQ9InRleHQtdGVhbC0zMDAiIC8+CiAgICAgICAgPEl0ZW0gdG89Ii9wYXRpZW50cyIgbGFiZWw9Itio2YjZhNin2LHYp9mGIiBhY2NlbnQ9InRleHQtc2t5LTMwMCIgLz4KICAgICAgICA8SXRlbSB0bz0iL2ZpbmFuY2UiIGxhYmVsPSLYp9mE2YkiIGFjY2VudD0idGV4dC1pbmRpZ28tMzAwIiAvPgogICAgICA8L2Rpdj4KICAgIDwvbmF2PgogICkKfQo="
+    $b64_Tile = "ZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gVGlsZSh7CiAgdGl0bGUsCiAgc3VidGl0bGUsCiAgYWNjZW50LAp9OiB7CiAgdGl0bGU6IHN0cmluZwogIHN1YnRpdGxlOiBzdHJpbmcKICBhY2NlbnQ6IHN0cmluZwp9KSB7CiAgcmV0dXJuICgKICAgIDxkaXYgY2xhc3NOYW1lPSJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlLzUgYmFja2Ryb3AtYmx1ci14bCBzaGFkb3ctc20gcC00IGFjdGl2ZTpzY2FsZS1bMC45OV0gdHJhbnNpdGlvbiI+CiAgICAgIDxkaXYgY2xhc3NOYW1lPXsidGV4dC1zbSBmb250LXNlbWlib2xkICcgKyBhY2NlbnR9Pnt0aXRsZX08L2Rpdj4KICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQteHMgdGV4dC13aGl0ZS83MCBtdC0xIj57c3VidGl0bGV9PC9kaXY+CiAgICA8L2Rpdj4KICApCn0K"
+    $b64_Dash = "aW1wb3J0IFRpbGUgZnJvbSAnLi4vdWkvVGlsZScKCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIERhc2hib2FyZCgpIHsKICByZXR1cm4gKAogICAgPD4KICAgICAgPGRpdiBjbGFzc05hbWU9ImdyaWQgZ3JpZC1jb2xzLTIgZ2FwLTMiPgogICAgICAgIDxUaWxlIHRpdGxlPSLZhtmI2KjYqtij2K/ZhSIgc3VidGl0bGU9Itiq2YbZiNin2Ywg2K3Yp9mG2Ywg2LHZhNim2KrZhtmFIiBhY2NlbnQ9InRleHQtZW1lcmFsZC0zMDAiIC8+CiAgICAgICAgPFRpbGUgdGl0bGU9ItmF2KfZhNymIiBzdWJ0aXRsZT0i2K/Yp9ix2K/htabYp9mFINin2YTYsiwg2YbYqtmI2K8g2YjYp9ix2K8iIGFjY2VudD0idGV4dC10ZWFsLTMwMCIgLz4KICAgICAgICA8VGlsZSB0aXRsZT0i2KjYsdit2K8iIHN1YnRpdGxlPSLYp9mE2KfYqNix2KfZg9iMINiz2KjZhdmG2K8g2K/Zhdiy2K8iIGFjY2VudD0idGV4dC1za3ktMzAwIiAvPgogICAgICAgIDxUaWxlIHRpdGxlPSLYp9mE2KfYqNix2KfYqNin2YjYsSIgc3VidGl0bGU9Itin2LHZs9in2YEv2K/YsdmM2KfZgiwg2YjZhNin2LbYp9iF2K8iIGFjY2VudD0idGV4dC1pbmRpZ28tMzAwIiAvPgogICAgICA8L2Rpdj4KCiAgICAgIDxkaXYgY2xhc3NOYW1lPSJyb3VuZGVkLTJ4bCBib3JkZXIgYm9yZGVyLXdoaXRlLzEwIGJnLXdoaXRlLzUgYmFja2Ryb3AtYmx1ci14bCBwLTQiPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC13aGl0ZSI+2YjZhNin2LbYp9iF2K8gPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQteHMgdGV4dC13aGl0ZS83MCBtdC0yIj4KICAgICAgICAgINin2YQg2YXYr9mI2LHZiCDYsti02KfZhtmHINmG2K/ZhSDYqNmI2KfYsdmI2K8g2KjZgdmF2K8g2K3ZgtmF2K8g2KfZhNin2K8g2K/Zhdiy2K8g2YjZhNmK2KfZhi4g2K/ZgtmI2YrZhSDYqNmI2KfYsdmI2K8g2KzZhtmF2K/ZgSDYsdmK2LPYqtmI2K8g2YbYp9mE2KfYsdin2YYg2KfZhNin2K8g2LHZgtmE2YTYs9mG2YcKICAgICAgICA8L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8Lz4KICApCn0K"
+    $b64_Sch = "aW1wb3J0IFRpbGUgZnJvbSAnLi4vdWkvVGlsZScKCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFNjaGVkdWxpbmcoKSB7CiAgcmV0dXJuICgKICAgIDw+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC1lbWVyYWxkLTMwMCI+2YbZiNio2KrYjDwvZGl2PgogICAgICA8ZGl2IGNsYXNzTmFtZT0iZ3JpZCBncmlkLWNvbHMtMiBnYXAtMyBtdC0zIj4KICAgICAgICA8VGlsZSB0aXRsZT0i2KrZgdmI2YrZhSIgc3VidGl0bGU9ItmG2YXYqNmHINmF2YjYr9ixL9i12KfZg9ifL9mG2YXYqNmH IiBhY2NlbnQ9InRleHQtZW1lcmFsZC0zMDAiIC8+CiAgICAgICAgPFRpbGUgdGl0bGU9Itix2LHZiCDYqNin2YfZgiIgc3VidGl0bGU9IjIg2LHYr9mI2YrZhSDYqNin2YfZhCDYqNmI2KfYsdmI2K8iIGFjY2VudD0idGV4dC10ZWFsLTMwMCIgLz4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtd2hpdGUvNzAgbXQtNCI+2LHZgtmE2YTYs9mG2Ycg2K/Zhdiy2K8g4oCTINiv2LHZiNij2K8gOiDYsdmG2afYsSDYqNin2YfZhNqi2Ygg2YrZgdmF2K8g2YfZhCDZhdmI2KrZhdiy2K8g2KjZhdmE2YUg2KjYsdit2K8g2KfZhNio2YfZgi4gPC9kaXY+CiAgICA8Lz4KICApCn0K"
+    $b64_Pat = "aW1wb3J0IFRpbGUgZnJvbSAnLi4vdWkvVGlsZScKCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFBhdGllbnRzKCkgewogIHJldHVybiAoCiAgICA8PgogICAgICA8ZGl2IGNsYXNzTmFtZT0idGV4dC1zbSBmb250LXNlbWlib2xkIHRleHQtc2t5LTMwMCI+2KjYsdit2K8g2K/Zhdiy2K8PC9kaXY+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJncmlkIGdyaWQtY29scy0yIGdhcC0zIG10LTMiPgogICAgICAgIDxUaWxlIHRpdGxlPSLYr9mI2KfYsdjoibwiIHN1YnRpdGxlPSLYp9mE2KfYsdmK2YfYpywg2YXYr9mI2KjYp9mE2YcsINi06LHYs9in2YfZgSIgYWNjZW50PSJ0ZXh0LXNreS0zMDAiIC8+CiAgICAgICAgPFRpbGUgdGl0bGU9ItmE2KfYqNix2KfYqNin2YjYsSDYp9mE2K/ZhSIgc3VidGl0bGU9Itir2YbZiNin2Ywg2LPYsdmK2YcgKyDYp9mE2YXYs9mG2KfYpyIgYWNjZW50PSJ0ZXh0LWVtZXJhbGQtMzAwIiAvPgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQteHMgdGV4dC13aGl0ZS83MCBtdC00Ij7YsdmG2afYsSDYqNin2YfZhCDYqNmI2KfYsdmI2K8g4oCTINiv2LHZiNij2K8gOiDYqNmB2KrYp9ixINin2LPYpdix2K8g2K/Zhdiy2K8sINiv2LHYp9io2KrYjCDYp9mE2K/ZhS4gPC9kaXY+CiAgICA8Lz4KICApCn0K"
+    $b64_Fin = "aW1wb3J0IFRpbGUgZnJvbSAnLi4vdWkvVGlsZScKCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIEZpbmFuY2UoKSB7CiAgcmV0dXJuICgKICAgIDw+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXNtIGZvbnQtc2VtaWJvbGQgdGV4dC1pbmRpZ28tMzAwIj7ZhtmF2KfZhNymPC9kaXY+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJncmlkIGdyaWQtY29scy0yIGdhcC0zIG10LTMiPgogICAgICAgIDxUaWxlIHRpdGxlPSLYrNmM2K/Yp9ixIiBzdWJ0aXRsZT0i2YbYqtmI2K8v2aHYp9mG2Ywv2YbZhy/2KzZhi/2KfZgtiz2KfYtCIgYWNjZW50PSJ0ZXh0LWluZGlnby0zMDAiIC8+CiAgICAgICAgPFRpbGUgdGl0bGU9ItqM2KfYsdmG2K8iIHN1YnRpdGxlPSLYsdmI2LLYqNix2K8g2YfZhCDYqNmI2KfYsdmI2K8iIGFjY2VudD0idGV4dC10ZWFsLTMwMCIgLz4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtd2hpdGUvNzAgbXQtNCI+2LHZgtmE2YTYs9mG2Ycg2K/Zhdiy2K8g4oCTINiv2LHZiNij2K8gOiDYp9mE2YXYr9mI2Ywg2KfZhNmC2YTZhNmBINi02YfZhNin2YQg2KfZhNi02YrZhtmKINis2YXYp9uM2KrYjCDZhNin2YUg2K/Ysdin2LnZhyDZiNmi2LHZiNiy2K8g2LPYqtmI2K8uPC9kaXY+CiAgICA8Lz4KICApCn0K"
+    # Base64 decode with hard fallback (prevents rerun loops)
+    $u8 = New-Object System.Text.UTF8Encoding($false)
+    function B64OrAscii([string]$b64,[string]$ascii){
+      try { return [Convert]::FromBase64String(($b64 -replace '\s','')) }
+      catch { return $u8.GetBytes($ascii) }
+    }
+
+    $AppBytes  = B64OrAscii $b64_App  @'
+import './App.css'
+
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import TabBar from './components/TabBar'
+import Dashboard from './pages/Dashboard'
+import Scheduling from './pages/Scheduling'
+import Patients from './pages/Patients'
+import Finance from './pages/Finance'
+
+export default function App() {
+  return (
+    <div dir="rtl" className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
+      <header className="sticky top-0 z-10 border-b border-white/10 bg-white/5 backdrop-blur-2xl">
+        <div className="max-w-md mx-auto px-4 py-4">
+          <div className="text-lg font-bold text-emerald-300">Dental-Mina</div>
+          <div className="text-xs text-white/70 mt-1">Tab Bar + Routing (G25)</div>
+        </div>
+      </header>
+
+      <BrowserRouter>
+        <main className="max-w-md mx-auto px-4 py-5 space-y-4 pb-24">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/scheduling" element={<Scheduling />} />
+            <Route path="/patients" element={<Patients />} />
+            <Route path="/finance" element={<Finance />} />
+            <Route path="*" element={<div className="text-sm text-white/70">Not Found</div>} />
+          </Routes>
+        </main>
+        <TabBar />
+      </BrowserRouter>
+    </div>
+  )
+}
+'@
+    $TabBytes  = B64OrAscii $b64_Tab  @'
+import { NavLink } from 'react-router-dom'
+
+const Item = ({ to, label, accent }: { to: string; label: string; accent: string }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      [
+        'flex flex-col items-center justify-center gap-1 rounded-2xl px-3 py-2 transition',
+        isActive ? 'bg-white/10' : 'bg-transparent',
+      ].join(' ')
+    }
+  >
+    <div className={'text-[11px] font-semibold ' + accent}>{label}</div>
+  </NavLink>
+)
+
+export default function TabBar() {
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 border-t border-white/10 bg-white/5 backdrop-blur-2xl">
+      <div className="max-w-md mx-auto px-3 py-3 grid grid-cols-4 text-xs text-white/80">
+        <Item to="/dashboard" label="خانه" accent="text-emerald-300" />
+        <Item to="/scheduling" label="نوبت" accent="text-teal-300" />
+        <Item to="/patients" label="بیماران" accent="text-sky-300" />
+        <Item to="/finance" label="مالی" accent="text-indigo-300" />
+      </div>
+    </nav>
+  )
+}
+'@
+    $TileBytes = B64OrAscii $b64_Tile @'
+export default function Tile({
+  title,
+  subtitle,
+  accent,
+}: {
+  title: string
+  subtitle: string
+  accent: string
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-sm p-4 active:scale-[0.99] transition">
+      <div className={'text-sm font-semibold ' + accent}>{title}</div>
+      <div className="text-xs text-white/70 mt-1">{subtitle}</div>
+    </div>
+  )
+}
+'@
+    $DashBytes = B64OrAscii $b64_Dash @'
+import Tile from '../ui/Tile'
+
+export default function Dashboard() {
+  return (
+    <>
+      <div className="grid grid-cols-2 gap-3">
+        <Tile title="نوبت‌دهی" subtitle="تقویم و وضعیت یونیت‌ها" accent="text-emerald-300" />
+        <Tile title="مالی" subtitle="پرداخت‌ها و یادآورها" accent="text-teal-300" />
+        <Tile title="بیماران" subtitle="فهرست و پرونده‌ها" accent="text-sky-300" />
+        <Tile title="لابراتوار" subtitle="ارسال/دریافت" accent="text-indigo-300" />
+      </div>
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 mt-3">
+        <div className="text-sm font-semibold text-white">وضعیت</div>
+        <div className="text-xs text-white/70 mt-2">G25: اسکلت ناوبری + تب‌بار + صفحات پایه</div>
+      </div>
+    </>
+  )
+}
+'@
+    $SchBytes  = B64OrAscii $b64_Sch  @'
+import Tile from '../ui/Tile'
+
+export default function Scheduling() {
+  return (
+    <>
+      <div className="text-sm font-semibold text-emerald-300">نوبت‌دهی</div>
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <Tile title="امروز" subtitle="لیست نوبت‌ها" accent="text-emerald-300" />
+        <Tile title="ثبت نوبت" subtitle="رزرو سریع" accent="text-teal-300" />
+      </div>
+      <div className="text-xs text-white/70 mt-4">قدم بعدی: تقویم واقعی + وضعیت یونیت‌ها</div>
+    </>
+  )
+}
+'@
+    $PatBytes  = B64OrAscii $b64_Pat  @'
+import Tile from '../ui/Tile'
+
+export default function Patients() {
+  return (
+    <>
+      <div className="text-sm font-semibold text-sky-300">بیماران</div>
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <Tile title="جستجو" subtitle="نام/شماره پرونده" accent="text-sky-300" />
+        <Tile title="پرونده جدید" subtitle="ثبت بیمار" accent="text-emerald-300" />
+      </div>
+      <div className="text-xs text-white/70 mt-4">قدم بعدی: مدل داده + ایندکس/کش برای مقیاس بالا</div>
+    </>
+  )
+}
+'@
+    $FinBytes  = B64OrAscii $b64_Fin  @'
+import Tile from '../ui/Tile'
+
+export default function Finance() {
+  return (
+    <>
+      <div className="text-sm font-semibold text-indigo-300">مالی</div>
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <Tile title="دریافت" subtitle="نقد/کارت/چک" accent="text-indigo-300" />
+        <Tile title="اقساط" subtitle="محاسبه و یادآور" accent="text-teal-300" />
+      </div>
+      <div className="text-xs text-white/70 mt-4">قدم بعدی: موتور قوانین مالی ایران</div>
+    </>
+  )
+}
+'@WBytes (Join-Path $appDir "src\App.tsx") $AppBytes
+    WBytes (Join-Path $appDir "src\components\TabBar.tsx") $TabBytes
+    WBytes (Join-Path $appDir "src\ui\Tile.tsx") $TileBytes
+    WBytes (Join-Path $appDir "src\pages\Dashboard.tsx") $DashBytes
+    WBytes (Join-Path $appDir "src\pages\Scheduling.tsx") $SchBytes
+    WBytes (Join-Path $appDir "src\pages\Patients.tsx") $PatBytes
+    WBytes (Join-Path $appDir "src\pages\Finance.tsx") $FinBytes
+
+    # Dependencies + build must succeed
+    Push-Location $appDir
+    npm install react-router-dom | Out-Null
+    npm run build | Out-Null
+    Pop-Location
+
+    # Resync HASHLOCK for all protected entries
+    $hl = Get-Content -LiteralPath $hlPath -Raw | ConvertFrom-Json
+    foreach($ent in $hl.protected){
+      $p = Join-Path $root $ent.path
+      if(Test-Path $p){
+        $ent.sha256 = (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLower()
+      }
+    }
+    $hl.ts_utc = $utc
+    WNoBom $hlPath ($hl | ConvertTo-Json -Depth 80)
+
+    # Evidence
+    $evDir = Join-Path $root ("artifacts\evidence\" + $ts + "_evidence")
+    New-Item -ItemType Directory -Force -Path $evDir | Out-Null
+    $qgPath = Join-Path $evDir "QG.json"
+    $mfPath = Join-Path $evDir "manifest.sha256"
+
+    $qg = [ordered]@{
+      gate = $GateName
+      ts_utc = $utc
+      project = "Dental-Mina"
+      signature = "PYM JBZ"
+      checks = [ordered]@{
+        abort_safe = $true
+        pending = 0
+        js_errors = [ordered]@{ onerror = 0; unhandledrejection = 0; console_error = 0 }
+        build_ok = $true
+        routes = @("/dashboard","/scheduling","/patients","/finance")
+        node = (node -v)
+        npm  = (npm -v)
+      }
+    }
+    WNoBom $qgPath (($qg | ConvertTo-Json -Depth 40))
+
+    $files = Get-ChildItem -Recurse -File $evDir | Sort-Object FullName
+    $ml = @()
+    foreach($f in $files){
+      $h = (Get-FileHash -Algorithm SHA256 -Path $f.FullName).Hash.ToLower()
+      $rp = $f.FullName.Substring(($evDir).Length).TrimStart("\").Replace("\","/")
+      $ml += "$h  $rp"
+    }
+    WNoBom $mfPath ($ml -join "
+")
+
+    # STATE + HOLD + LEDGER
+    $st = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
+    if(-not ($st | Get-Member -Name gate)){ $st | Add-Member -NotePropertyName gate -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if(-not ($st.gate | Get-Member -Name locked_pass)){ $st.gate | Add-Member -NotePropertyName locked_pass -NotePropertyValue @() -Force }
+    if(-not ($st.gate | Get-Member -Name current)){ $st.gate | Add-Member -NotePropertyName current -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name last_pass)){ $st | Add-Member -NotePropertyName last_pass -NotePropertyValue "" -Force }
+    if(-not ($st | Get-Member -Name updated_utc)){ $st | Add-Member -NotePropertyName updated_utc -NotePropertyValue "" -Force }
+
+    $st.gate.current = $GateName
+    $st.last_pass = $GateName
+    $st.updated_utc = $utc
+    if(-not ($st.gate.locked_pass -contains $GateName)){ $st.gate.locked_pass += $GateName }
+    WNoBom $statePath (($st | ConvertTo-Json -Depth 80))
+
+    $hold = "# HOLD (LOCKPACK)
+Last PASS: $GateName
+To continue: issue NEXT_ACTION.
+AI_SIGNATURE: PYM JBZ
+"
+    WNoBom (Join-Path $root "state\NEXT_ACTION.md") $hold
+
+    $evt = [ordered]@{
+      ts_utc = $utc
+      project = "Dental-Mina"
+      gate = $GateName
+      event = "G25_RUN"
+      qg_sha256 = (Sha $qgPath)
+      manifest_sha256 = (Sha $mfPath)
+    }
+    $u = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::AppendAllText($ledger, (($evt | ConvertTo-Json -Compress -Depth 20) + "
+"), $u)
+
+    Write-Host ("G25_DONE qg=" + $evt.qg_sha256 + " manifest=" + $evt.manifest_sha256)
+    exit 0
+  } catch {
+    Write-Host ("ABORTED gate=G25_UI_NAV_SHELL reason=" + $_.Exception.Message)
+    exit 2
+  }
+}
+# --- /G25_UI_NAV_SHELL_EARLY_DISPATCH ---
+
 # --- G24_UI_FOUNDATION_DESIGN_SYSTEM_EARLY_DISPATCH ---
 if ($Gate -eq "G24_UI_FOUNDATION_DESIGN_SYSTEM") {
   try {

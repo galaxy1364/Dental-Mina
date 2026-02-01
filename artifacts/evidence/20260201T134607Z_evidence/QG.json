@@ -1,0 +1,18 @@
+{
+    "gate":  "G28_REQUIREMENTS_LOCK_GLOBAL_2050",
+    "ts_utc":  "2026-02-01T13:46:07.4715822Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "req_doc":  true,
+                   "checklist_doc":  true,
+                   "locked_marker_ok":  true
+               }
+}

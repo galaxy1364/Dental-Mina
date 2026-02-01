@@ -4,7 +4,7 @@
                     "signature":  "PYM JBZ"
                 },
     "gate":  {
-                 "current":  "G24_UI_FOUNDATION_DESIGN_SYSTEM",
+                 "current":  "G38_CAPACITOR_DEVICE_SMOKE",
                  "locked_pass":  [
                                      "G1_SINGLE_COMMAND",
                                      "G2_SANITY_HYGIENE",
@@ -29,15 +29,29 @@
                                      "G21",
                                      "G22",
                                      "G23_APP_SCAFFOLD_MVP",
-                                     "G24_UI_FOUNDATION_DESIGN_SYSTEM"
+                                     "G24_UI_FOUNDATION_DESIGN_SYSTEM",
+                                     "G25_UI_NAV_SHELL",
+                                     "G26_PATIENTS_STORE_INDEX_SCALE",
+                                     "G27_PATIENTS_UI_VIRTUAL_LIST",
+                                     "G28_REQUIREMENTS_LOCK_GLOBAL_2050",
+                                     "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
+                                     "G30_MODULARITY_EXTENSIBILITY_LOCK_2026",
+                                     "G31_MODULE_REGISTRY_CONTRACTS_LOCK",
+                                     "G32_FEATURE_FLAGS_FOUNDATION",
+                                     "G33_OFFLINE_FIRST_SYNC_LOCK_2026",
+                                     "G34_SYNC_ENGINE_FOUNDATION",
+                                     "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
+                                     "G36_PWA_BASELINE_IMPLEMENTATION",
+                                     "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR",
+                                     "G38_CAPACITOR_DEVICE_SMOKE"
                                  ],
                  "last_pass":  "G11_RUN"
              },
-    "last_pass":  "G24_UI_FOUNDATION_DESIGN_SYSTEM",
+    "last_pass":  "G38_CAPACITOR_DEVICE_SMOKE",
     "last_fail":  null,
     "active_issue":  null,
     "next_action_hash":  "b313c6e70655706279cf0a91f0002c0eb05127d663f18dea2e51b05ac0ddd373",
-    "updated_utc":  "2026-02-01T13:16:03.8584160Z",
+    "updated_utc":  "2026-02-01T16:26:12.7682555Z",
     "locked_pass":  [
                         "G1_SINGLE_COMMAND",
                         "G2_SANITY_HYGIENE",

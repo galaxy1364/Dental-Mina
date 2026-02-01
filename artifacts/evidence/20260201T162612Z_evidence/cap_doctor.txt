@@ -1,0 +1,18 @@
+   Capacitor Doctor   
+
+Latest Dependencies:
+
+  @capacitor/cli: 8.0.2
+  @capacitor/core: 8.0.2
+  @capacitor/android: 8.0.2
+  @capacitor/ios: 8.0.2
+
+Installed Dependencies:
+
+  @capacitor/android: 8.0.2
+  @capacitor/cli: 8.0.2
+  @capacitor/ios: 8.0.2
+  @capacitor/core: 8.0.2
+
+[success] Android looking great! ≡ƒæî
+[error] Xcode is not installed

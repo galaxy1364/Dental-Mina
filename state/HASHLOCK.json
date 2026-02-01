@@ -1,14 +1,14 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-01T13:16:03.1770191Z",
+    "ts_utc":  "2026-02-01T16:26:12.7682555Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "ded5de62535b266f487d6bdfb55ec86eabfeb63605348127539e1473facba638"
+                          "sha256":  "065482d25fbe8438734ed41f95357b4ef8b590c06cac6ae4ac7da264bf86d9b6"
                       },
                       {
                           "path":  "docs/resume.md",
-                          "sha256":  "f42d7bec9b05c72346812c97e0b7fb656e525abd1d1f2b9201abe2f8a807b3b3"
+                          "sha256":  "e8a7bd0898e47f3db5f8765d4355c820ead91ad818d94543fe1ac2701ba8d03f"
                       },
                       {
                           "path":  "docs/lockpack_rules.md",
@@ -16,19 +16,19 @@
                       },
                       {
                           "path":  "handoff/handoff_pack.txt",
-                          "sha256":  "a74bf0abd237a6eb8cf0fa4596bda0405174417089b31d5d3390fd5b86f0de9b"
+                          "sha256":  "1238eaddb16d68e192b85f7fd22e391197b25a9ef2302dfdf10f833ba8c2effb"
                       },
                       {
                           "path":  ".github/codeowners",
-                          "sha256":  "6924efe51301e766c8f1f0ec0a3b1b5c62e9630102b6519fadf74afced4b8961"
+                          "sha256":  "8064bbfe0fceb559877870167dfaa5380fe9b8bdffa7b2dffc0f10f55286c878"
                       },
                       {
                           "path":  ".github/workflows/lockpack_required.yml",
-                          "sha256":  "07073a06471b2e938fb83502444b23f7872dfc25cf3f7f81617e6e20f0e71f91"
+                          "sha256":  "1f090618d05a5bf02b11aa23640493eb4f758b55c0ee11e76cd1c458edfcac09"
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "1ae1536cdfecc1f37a3234e5011c065ec031526f8021c75244d6a93adc6ed2aa"
+                          "sha256":  "28974b3826e386a22a6802b61cc9714ea9cdaa219116f1d7edfaa38a5a5d2924"
                       }
                   ]
 }
