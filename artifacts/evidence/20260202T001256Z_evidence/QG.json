@@ -1,0 +1,22 @@
+{
+    "project":  "Dental-Mina",
+    "ai_signature":  "PYM JBZ",
+    "gate":  "RUNNER_FAILFAST_NO_GATE",
+    "ts_utc":  "2026-02-02T00:12:58.4526906Z",
+    "pass":  true,
+    "checks":  {
+                   "no_gate_exitcode_nonzero":  true,
+                   "marker_present":  true,
+                   "parse_ok":  true,
+                   "hashlock_resynced":  true
+               },
+    "artifacts":  {
+                      "runner_no_gate_log":  "artifacts/evidence/20260202T001256Z_evidence/runner_no_gate.out.log.txt"
+                  },
+    "hashes":  {
+                   "tools_run_ps1_sha256_before":  "9e5ed1b7dbc4b7f9d5a1dc4f869ec4ffd3e193b9098cf8301c1e88ff522ce699",
+                   "tools_run_ps1_sha256_after":  "970387acde4c588b34671970efb3313226960bdae39be40654f227526598cd67",
+                   "state_sha256_after":  "357c840f621a27943e2da0cf575743b8dc9d37a8255dbaa966064ddcd8ef9bb7",
+                   "hashlock_sha256_after":  "44a95bf64c7ef44cdfa80e68f39c5485ec2ff3ccb9ea8de78019f9f16b039542"
+               }
+}
