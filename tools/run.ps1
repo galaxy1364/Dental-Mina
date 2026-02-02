@@ -1,13 +1,4 @@
-param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
-
-# LOCKPACK_FAILFAST_NO_GATE
-if([string]::IsNullOrWhiteSpace(\)){
-  Write-Output "ABORTED gate=NONE reason=GATE_REQUIRED usage=powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate <Gxx>"
-  exit 2
-}
-# /LOCKPACK_FAILFAST_NO_GATE
-
- 
+param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" ) 
 
 
 
