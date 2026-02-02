@@ -1,7 +1,7 @@
 param(   [string]$Gate = "G4_EVIDENCE_PACK_OK" )
 
-# LOCKPACK_FAILFAST_NO_GATE_TOP
-if((-not $PSBoundParameters.ContainsKey('Gate')) -or ($null -eq $Gate) -or ($Gate -eq '')){
+# LOCKPACK_FAILFAST_NO_GATE
+if((-not $PSBoundParameters.ContainsKey('Gate')) -or ($null -eq $Gate) -or ($Gate -eq '') -or ($Gate -match '^\s+$')){
   Write-Output "ABORTED gate=NONE reason=GATE_REQUIRED usage=powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate <Gxx>"
   exit 2
 }
@@ -10,7 +10,7 @@ if((-not $PSBoundParameters.ContainsKey('Gate')) -or ($null -eq $Gate) -or ($Gat
 
 
 # LOCKPACK_FAILFAST_NO_GATE
-if([string]::IsNullOrWhiteSpace()){
+if((-not $PSBoundParameters.ContainsKey('Gate')) -or ($null -eq $Gate) -or ($Gate -eq '') -or ($Gate -match '^\s+$')){
   Write-Output "ABORTED gate=NONE reason=GATE_REQUIRED usage=powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\run.ps1 -Gate <Gxx>"
   exit 2
 }
