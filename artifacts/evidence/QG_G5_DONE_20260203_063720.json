@@ -1,0 +1,15 @@
+{
+    "gate":  "G5_DONE",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T06:37:20.8902547Z",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G5_DONE_20260203_063720.txt",
+                     "log":  "RUN_G5_DONE_20260203_063720.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "7552bbecb94ce57e3eb0b8107cf939c41506f12938a5c758b84192e72e3ff35e",
+                     "hashlock_sha256":  "5a339d4bab13780e1260afdab19273a1f181860e38101853c3c23e623551a03f",
+                     "next_action_sha256":  "ea395636a5e4ac18760f7cdbeb333a72a20e1171335f68d87bea066207856c61",
+                     "head":  "b5acf102b07152b7255c83c629449daff8a593e2"
+                 }
+}

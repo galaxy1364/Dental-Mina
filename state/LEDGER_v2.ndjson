@@ -41,3 +41,4 @@
 {"utc":"2026-02-03T06:06:37.0340822Z","gate":"G20_SIGNED_CI_ARTIFACT_PROVENANCE","result":"PASS","ai_signature":"PYM JBZ","head":"089089eb7ef85915248ec863df7a3d077c90f6ae","evidence":{"qg":"QG_G20_PS5FIX_20260203_060447.json","note":"QG regenerated with PS5-safe syntax; CI verify artifact used; local Sigstore may fail."}}
 {"utc":"2026-02-03T06:22:13.6237562Z","gate":"G3_ENCODING_HYGIENE","result":"PASS","ai_signature":"PYM JBZ","head":"095b6414b2bc476976d17de421f2a10bfb0ab703","evidence":{"qg":"QG_G3_20260203_062212.json"}}
 {"utc":"2026-02-03T06:33:27.5299414Z","gate":"G4_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"bc7c32bc128e667fcb2d346e8f9c14255f9d951b","evidence":{"qg":"QG_G4_DONE_20260203_063326.json"}}
+{"utc":"2026-02-03T06:37:20.9922148Z","gate":"G5_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"b5acf102b07152b7255c83c629449daff8a593e2","evidence":{"qg":"QG_G5_DONE_20260203_063720.json"}}
