@@ -1,10 +1,10 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T05:26:25.0546100Z",
+    "ts_utc":  "2026-02-03T05:30:25.9284648Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "499bd5f7fef0e36eafa067f2e080c8ee3f9eca19673d1edfa3aaea728ea457dc"
+                          "sha256":  "96e9b0a8b43cea4cd298ef867259394536060cf5e7d1801c5d61750d1e5ea5ca"
                       },
                       {
                           "path":  "docs/RESUME.md",
@@ -24,7 +24,7 @@
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
-                          "sha256":  "b42d009f85b58bb9275f9668b167640b15eeea741f77d4ffc29aefe2a9122ce6"
+                          "sha256":  "44270a3f18e80cf00fbe289b75e416e045030b4fd2cf3836bbe528e1dde7ce6a"
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",

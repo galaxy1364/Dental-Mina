@@ -4353,9 +4353,9 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   }
   if (-not $cand -or ($cand | Measure-Object).Count -eq 0) {
     # --- FORCE download expected artifacts (runner-side), then scan recursively ---
-    $dl1 = (& gh run download $runId --repo $repo --name "attest-verify"  --dir $tmp 2>&1)
+    $dl1 = (& cmd /c "gh run download $runId --repo $repo --dir ""$tmp"" 2>&1")
     $ec1 = $LASTEXITCODE
-    $dl2 = (& gh run download $runId --repo $repo --name "attest-subject" --dir $tmp 2>&1)
+    $dl2 = (& cmd /c "gh run download $runId --repo $repo --dir ""$tmp"" 2>&1")
     $ec2 = $LASTEXITCODE
 
     $cand = Get-ChildItem -LiteralPath $tmp -Recurse -File -ErrorAction SilentlyContinue
