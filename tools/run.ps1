@@ -4353,9 +4353,17 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   }
   if (-not $cand -or ($cand | Measure-Object).Count -eq 0) {
     # --- FORCE download expected artifacts (runner-side), then scan recursively ---
-    $dl1 = (& gh run download $runId --repo $repo --name "attest-verify"  --dir $tmp 2>&1)
+    $repoArg = $repo
+    if (-not $repoArg) {
+        try { $repoArg = (& gh repo view --json nameWithOwner -q .nameWithOwner 2>$null) } catch {}
+    }
+    if (-not $repoArg) {
+        try {
+            $u = (& git remote get-url origin 2>$null)
+            if ($u -match 'github\.com[:/](.+?)(?:\.git)?
+    $dl1 = (& gh run download $runId --repo $repoArg --name "attest-verify"  --dir $tmp 2>&1)
     $ec1 = $LASTEXITCODE
-    $dl2 = (& gh run download $runId --repo $repo --name "attest-subject" --dir $tmp 2>&1)
+    $dl2 = (& gh run download $runId --repo $repoArg --name "attest-subject" --dir $tmp 2>&1)
     $ec2 = $LASTEXITCODE
 
     $cand = Get-ChildItem -LiteralPath $tmp -Recurse -File -ErrorAction SilentlyContinue
@@ -4377,7 +4385,49 @@ $($tmp)")
 
   $ok = 0
   foreach($f in $cand){
-    $out = (& gh attestation verify "$($f.FullName)" --repo $repo 2>&1 | Out-String).Trim()
+    $out = (& gh attestation verify "$($f.FullName)" --repo $repoArg 2>&1 | Out-String).Trim()
+    if($LASTEXITCODE -ne 0){
+      if(-not $out){ $out = 'no output from gh attestation verify' }
+      throw ("G20_ATTEST_FAILED: " + $f.FullName + "
+" + $out)
+    }
+    $ok++
+  }
+
+  Write-Host ("G20_OK: workflow_completed databaseId=" + $id + " attest_ok=" + $ok)
+}
+
+if ($Gate -eq 'G20_SIGNED_CI_ARTIFACT_PROVENANCE') { Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE; return }
+# --- /LOCKPACK_G20_HANDLER_BOOTSTRAP_V8_PUSH_FALLBACK ---
+) { $repoArg = $Matches[1] }
+        } catch {}
+    }
+    if (-not $repoArg) { throw "G20_BLOCKED: repo not resolved for gh run download" }
+    $dl1 = (& gh run download $runId --repo $repoArg --name "attest-verify"  --dir $tmp 2>&1)
+    $ec1 = $LASTEXITCODE
+    $dl2 = (& gh run download $runId --repo $repoArg --name "attest-subject" --dir $tmp 2>&1)
+    $ec2 = $LASTEXITCODE
+
+    $cand = Get-ChildItem -LiteralPath $tmp -Recurse -File -ErrorAction SilentlyContinue
+
+    if (-not $cand -or ($cand | Measure-Object).Count -eq 0) {
+        $more = "DL_attest-verify_EXIT=$ec1
+$dl1
+DL_attest-subject_EXIT=$ec2
+$dl2
+TMP=$tmp
+"
+        throw ($more + "G20_BLOCKED: no artifacts found to attest-verify under
+$($tmp)")
+    }
+}
+
+  $repo = (& gh repo view --json nameWithOwner -q .nameWithOwner).Trim()
+  if(-not $repo){ throw 'G20_BLOCKED: cannot determine repo nameWithOwner for attestation verify' }
+
+  $ok = 0
+  foreach($f in $cand){
+    $out = (& gh attestation verify "$($f.FullName)" --repo $repoArg 2>&1 | Out-String).Trim()
     if($LASTEXITCODE -ne 0){
       if(-not $out){ $out = 'no output from gh attestation verify' }
       throw ("G20_ATTEST_FAILED: " + $f.FullName + "
