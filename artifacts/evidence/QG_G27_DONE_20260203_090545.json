@@ -1,0 +1,15 @@
+{
+    "gate":  "G27_DONE",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T09:05:45.8994483Z",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G27_DONE_20260203_090545.txt",
+                     "log":  "RUN_G27_DONE_20260203_090545.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "a97f45873a8402ee3202bf4ad2907772d508fb0a1d7f3bada67d8c6a650f42d7",
+                     "hashlock_sha256":  "3357d3055f8ffdca3b1180b78d2d7d7aa6521224b29125385cff23db7dec1521",
+                     "next_action_sha256":  "8c6a0a27a5e3d47565a57752f39fc13bf49f2f5ce708d20b459c4019d13f71e5",
+                     "head":  "cd5f257aa5053c251725fdf92a1b8d9ca01a8d21"
+                 }
+}
