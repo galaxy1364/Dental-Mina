@@ -1,0 +1,16 @@
+{
+    "gate":  "G3_ENCODING_HYGIENE",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T06:22:13.4538596Z",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G3_ENCODING_HYGIENE_20260203_062212.txt",
+                     "log":  "RUN_G3_ENCODING_HYGIENE_20260203_062212.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "700ebd0f5d64f0304bd78e16d587d5b4a5ae6b9991a1753036759dc1aa1702dc",
+                     "hashlock_sha256":  "bee6f5ba6b0e3767978b8b8cd4cb7778b7081cea1378e4a3ca5ad7041a1d398f",
+                     "next_action_sha256":  "d2e776d4d0b3d8ae0588cb635f98c456fba739ee425f1b2aaf4369bf79818efa",
+                     "git_head_before":  "095b6414b2bc476976d17de421f2a10bfb0ab703",
+                     "git_head_after":  "095b6414b2bc476976d17de421f2a10bfb0ab703"
+                 }
+}
