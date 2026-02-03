@@ -34,7 +34,7 @@
     "last_fail":  null,
     "active_issue":  null,
     "next_action_hash":  "febb6573294b3e46c4826c9165ecb4aac738c65840daff42a53ba5f5de32bae5",
-    "updated_utc":  "2026-02-03T08:54:16.6434414Z",
+    "updated_utc":  "2026-02-03T08:59:50.5838923Z",
     "locked_pass":  [
                         "G10_DESIGN_REVIEW_PACK",
                         "G20_SIGNED_CI_ARTIFACT_PROVENANCE",
@@ -56,6 +56,7 @@
                         "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
                         "G20_ATTEST_FAILED",
                         "G24_DONE",
-                        "G25_DONE"
+                        "G25_DONE",
+                        "G26_DONE"
                     ]
 }
