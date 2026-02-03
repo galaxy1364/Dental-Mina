@@ -48,3 +48,4 @@
 {"utc":"2026-02-03T07:04:27.2386242Z","gate":"G9_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"97c9081e65528e6eee2ed992620094a16c522518","evidence":{"qg":"QG_G9_DONE_20260203_070426.json"}}
 {"utc":"2026-02-03T07:11:18.9709543Z","gate":"G10_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"e19458f5a99f869399a05af5ed6622ceadc48438","evidence":{"qg":"QG_G10_DONE_20260203_071118.json"}}
 {"utc":"2026-02-03T07:15:10.7846166Z","gate":"G11_DESIGN_FEEDBACK_PENDING","result":"PASS","ai_signature":"PYM JBZ","head":"e103866bbf7745d48f3d0b3a66ad37a4b4d7df16","evidence":{"qg":"QG_G11_DESIGN_FEEDBACK_PENDING_20260203_071510.json"}}
+{"utc":"2026-02-03T07:19:13.5399204Z","gate":"G12_DESIGN_FEEDBACK_PENDING","result":"PASS","ai_signature":"PYM JBZ","head":"be692ce608b1dea0c660d976ad96ffd4327b29a5","evidence":{"qg":"QG_G12_DESIGN_FEEDBACK_PENDING_20260203_071913.json"}}
