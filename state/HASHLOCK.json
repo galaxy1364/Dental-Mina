@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T08:27:03.1685208Z",
+    "ts_utc":  "2026-02-03T08:30:47.9197270Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -28,7 +28,7 @@
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",
-                          "sha256":  "f1e56537add5529379f24553cb639c89dd93950dae189fbabfc87319c712792b"
+                          "sha256":  "fa97c8c28f9b8efc0343b184c9a898b05248f64fc0653ac1940411ab7c7b90c7"
                       },
                       {
                           "path":  "state/ISSUES_v2.ndjson",

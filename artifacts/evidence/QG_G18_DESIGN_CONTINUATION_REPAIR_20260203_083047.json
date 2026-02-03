@@ -1,0 +1,16 @@
+{
+    "gate":  "G18_DESIGN_CONTINUATION",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T08:30:47.7437552Z",
+    "note":  "evidence_repair_transcript_log_regenerated",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G18_DESIGN_CONTINUATION_20260203_083047.txt",
+                     "log":  "RUN_G18_DESIGN_CONTINUATION_20260203_083047.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "34226b8e89e1fbab3618a1caaaf7d3a850721a31bb11110c6fbf2a0675deb3c9",
+                     "hashlock_sha256":  "ae0e22502f9427f6ea8f168c81b5a4c5c7124dca4b49264ff60c03d95b50067c",
+                     "next_action_sha256":  "b749cc1b04941ffb1b94162619d9c8d61cc6c94a0a85cda1be392568f90ede27",
+                     "head":  "80ff67131f40cb09c588d5e6cf7be1a3bcf8290a"
+                 }
+}
