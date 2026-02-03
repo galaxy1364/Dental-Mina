@@ -42,3 +42,4 @@
 {"utc":"2026-02-03T06:22:13.6237562Z","gate":"G3_ENCODING_HYGIENE","result":"PASS","ai_signature":"PYM JBZ","head":"095b6414b2bc476976d17de421f2a10bfb0ab703","evidence":{"qg":"QG_G3_20260203_062212.json"}}
 {"utc":"2026-02-03T06:33:27.5299414Z","gate":"G4_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"bc7c32bc128e667fcb2d346e8f9c14255f9d951b","evidence":{"qg":"QG_G4_DONE_20260203_063326.json"}}
 {"utc":"2026-02-03T06:37:20.9922148Z","gate":"G5_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"b5acf102b07152b7255c83c629449daff8a593e2","evidence":{"qg":"QG_G5_DONE_20260203_063720.json"}}
+{"utc":"2026-02-03T06:41:03.4430842Z","gate":"G6_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"5d4dff7066afe8337917fae1a5777d29cb9faeb9","evidence":{"qg":"QG_G6_DONE_20260203_064102.json"}}
