@@ -3,6 +3,6 @@ Action: FIX-to-PASS
 Authorized Gate: G20_SIGNED_CI_ARTIFACT_PROVENANCE
 Method: Run tools/run.ps1 -Gate G20_SIGNED_CI_ARTIFACT_PROVENANCE
 Scope: ONLY G20_SIGNED_CI_ARTIFACT_PROVENANCE
-Fix: Restore tools/run.ps1 to last syntactically valid version from git history (commit=86e06f426312e426692d3971b78d700535e2ad43) then rerun G20_SIGNED_CI_ARTIFACT_PROVENANCE.
+Fix: Restore tools/run.ps1 to last parseable version from git history (commit=86e06f426312e426692d3971b78d700535e2ad43) then rerun G20_SIGNED_CI_ARTIFACT_PROVENANCE.
 AI_SIGNATURE: PYM JBZ
-Generated_utc: 2026-02-03T05:12:26.3987650Z
+Generated_utc: 2026-02-03T05:15:06.3266782Z
