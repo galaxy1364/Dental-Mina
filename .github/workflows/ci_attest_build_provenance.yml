@@ -45,6 +45,7 @@ jobs:
           gh attestation verify artifacts/g20_subject.txt --repo "${GH_REPO}" | tee artifacts/g20_verify.txt
 
       - name: Upload verify output
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: attest-verify
