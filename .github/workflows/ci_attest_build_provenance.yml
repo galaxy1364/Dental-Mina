@@ -1,0 +1,52 @@
+name: ci-attest-build-provenance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+  attestations: write
+
+jobs:
+  g20:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make subject file
+        run: |
+          mkdir -p artifacts
+          echo "Dental-Mina G20 subject - ${GITHUB_SHA}" > artifacts/g20_subject.txt
+          ls -la artifacts
+
+      - name: Upload subject artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: g20-subject
+          path: artifacts/g20_subject.txt
+          overwrite: true
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: artifacts/g20_subject.txt
+
+      - name: Verify attestation (in CI)
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh --version
+          gh attestation verify artifacts/g20_subject.txt --repo "${GH_REPO}" | tee artifacts/g20_verify.txt
+
+      - name: Upload verify output
+        uses: actions/upload-artifact@v4
+        with:
+          name: g20-verify
+          path: artifacts/g20_verify.txt
+          overwrite: true
