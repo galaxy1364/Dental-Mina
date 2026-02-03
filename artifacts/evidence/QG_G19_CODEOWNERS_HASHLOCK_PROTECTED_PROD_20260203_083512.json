@@ -1,0 +1,15 @@
+{
+    "gate":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T08:35:13.2989967Z",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD_20260203_083512.txt",
+                     "log":  "RUN_G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD_20260203_083512.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "34226b8e89e1fbab3618a1caaaf7d3a850721a31bb11110c6fbf2a0675deb3c9",
+                     "hashlock_sha256":  "eeeddd49e74caabf1483e4d4c476c90f161251f80bed019ff694a6d9fa8ef33e",
+                     "next_action_sha256":  "d2aa92b161a6af80190ceb2440a2b4d6ac4b255f237f7a1b3e540afccf8a0ccd",
+                     "head":  "d360fc844090f39321d0034946d63b7f9624343b"
+                 }
+}
