@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T09:09:04.3074285Z",
+    "ts_utc":  "2026-02-03T09:12:07.5754352Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -20,7 +20,7 @@
                       },
                       {
                           "path":  "state/STATE.json",
-                          "sha256":  "62b0d013f6736708c03a524da917dc825aebe23ea0453d97df432abece80ce2b"
+                          "sha256":  "400b3b0e5ad345bd3fdae3cda0e3df44e6f70c1510b3d9c0a043ed2d25e26711"
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
@@ -28,7 +28,7 @@
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",
-                          "sha256":  "40ad7aaac9ea1e5738029a58e52b3a8c86c684dece3bef754ecffbf2d6202e50"
+                          "sha256":  "8333b7dbfce450b7d406263d75590865876da33208e7b819e08a3fd393002b3e"
                       },
                       {
                           "path":  "state/ISSUES_v2.ndjson",
