@@ -1,6 +1,6 @@
 # NEXT_ACTION
 Action: PROCEED
-Authorized Gate: G13_DONE
+Authorized Gate: G13_LOCKPACK_CANON_DOCS_FIX
 Method: Run tools/run.ps1 -Gate G3_ENCODING_HYGIENE
 Scope: ONLY G3_ENCODING_HYGIENE
 Precondition: G20 is LOCKED_PASS in STATE.json
