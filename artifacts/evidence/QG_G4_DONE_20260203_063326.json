@@ -1,0 +1,15 @@
+{
+    "gate":  "G4_DONE",
+    "result":  "PASS",
+    "ai_signature":  "PYM JBZ",
+    "utc":  "2026-02-03T06:33:27.4272499Z",
+    "evidence":  {
+                     "transcript":  "TRANSCRIPT_G4_DONE_20260203_063326.txt",
+                     "log":  "RUN_G4_DONE_20260203_063326.log",
+                     "tools_run_ps1_sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4",
+                     "state_sha256":  "74f17dbb8a323c890d18bcf3ab36580a1d8c3b0e416ce2c4dbe9f88ea7963e79",
+                     "hashlock_sha256":  "e61ac8242f2e2902a4395ef72bc3a5cd0690d7fb77876fedcea9c481eb0f414a",
+                     "next_action_sha256":  "03aac6838cd4fa1a524de8a4df358c0a99c6ba94fdac5bf0cb807e7d76d85898",
+                     "head":  "bc7c32bc128e667fcb2d346e8f9c14255f9d951b"
+                 }
+}
