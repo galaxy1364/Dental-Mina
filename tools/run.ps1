@@ -4348,7 +4348,7 @@ function Do-G20_SIGNED_CI_ARTIFACT_PROVENANCE {
   $cand = Get-ChildItem -Path $tmp -Recurse -File -ErrorAction SilentlyContinue |
            Where-Object { $_.Name -match '\.zip$' -and $_.Name -match '^Dental-Mina_repo_' }
   if(-not $cand){
-    $cand = Get-ChildItem -Path $tmp -Recurse -Recurse -File -ErrorAction SilentlyContinue |
+    $cand = Get-ChildItem -Path $tmp -Recurse -File -ErrorAction SilentlyContinue |
              Where-Object { $_.Name -match '\.(zip|tgz|tar\.gz|msix|apk|aab|ipa)$' }
   }
   if(-not $cand){ throw ("G20_BLOCKED: no artifacts found to attest-verify under " + $tmp) }
