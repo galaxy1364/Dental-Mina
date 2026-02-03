@@ -27,7 +27,7 @@ jobs:
       - name: Upload subject artifact
         uses: actions/upload-artifact@v4
         with:
-          name: g20-subject
+          name: attest-subject
           path: artifacts/g20_subject.txt
           overwrite: true
 
@@ -47,6 +47,6 @@ jobs:
       - name: Upload verify output
         uses: actions/upload-artifact@v4
         with:
-          name: g20-verify
+          name: attest-verify
           path: artifacts/g20_verify.txt
           overwrite: true

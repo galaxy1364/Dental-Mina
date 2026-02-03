@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T00:49:08.1659074Z",
+    "ts_utc":  "2026-02-03T00:53:05.5464182Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -16,7 +16,7 @@
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "598649489e2588e6fc8a48dbfaf76fe34c8ce490203e85167b85ba5c2c3d293a"
+                          "sha256":  "058732aecbdc84744f5ebb2beef5c33c073d2f344542583ee549c7b7df233f7a"
                       },
                       {
                           "path":  "state/STATE.json",
@@ -24,7 +24,7 @@
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
-                          "sha256":  "d4d6fe3b9325d05a4505684bc5fc818fa21b71db3b46ef8fb94882cef5f44956"
+                          "sha256":  "778a292f70edf60408067aaa3c993a15fffa6393a4aa1c2cd5d2beeff59effb9"
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",
