@@ -1,8 +1,8 @@
 # NEXT_ACTION
 Action: PROCEED
-Authorized Gate: G20_SIGNED_CI_ARTIFACT_PROVENANCE
-Method: Run tools/run.ps1 -Gate G20_SIGNED_CI_ARTIFACT_PROVENANCE
-Scope: ONLY G20_SIGNED_CI_ARTIFACT_PROVENANCE
-Result: PASS (G20_OK; local Sigstore failure tolerated, CI verify used)
+Authorized Gate: G3_ENCODING_HYGIENE
+Method: Run tools/run.ps1 -Gate G3_ENCODING_HYGIENE
+Scope: ONLY G3_ENCODING_HYGIENE
+Precondition: G20 is LOCKED_PASS in STATE.json
 AI_SIGNATURE: PYM JBZ
-Generated_utc: 2026-02-03T05:51:40.5031984Z
+Generated_utc: 2026-02-03T06:08:53.6045448Z
