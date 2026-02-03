@@ -1,0 +1,18 @@
+{
+    "gate":  "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
+    "ts_utc":  "2026-02-03T09:31:12.5425868Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "wrapper_doc":  true,
+                   "requirements_marker":  false,
+                   "checklist_updated":  true
+               }
+}

@@ -62,3 +62,5 @@
 {"utc":"2026-02-03T08:59:50.5415666Z","gate":"G26_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"7a3519d9c8084b2d21076c5a478f7e594600d8ec","evidence":{"qg":"QG_G26_DONE_20260203_085950.json"}}
 {"utc":"2026-02-03T09:05:45.9983079Z","gate":"G27_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"cd5f257aa5053c251725fdf92a1b8d9ca01a8d21","evidence":{"qg":"QG_G27_DONE_20260203_090545.json"}}
 {"utc":"2026-02-03T09:12:07.4733724Z","gate":"G28_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"ed29d9f0596182a4b441c2956441387f10ce26e1","evidence":{"qg":"QG_G28_DONE_20260203_091206.json"}}
+{"ts_utc":"2026-02-03T09:31:12.5425868Z","project":"Dental-Mina","gate":"G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK","event":"G29_RUN","qg_sha256":"df4d2931899318558fd15a339fecae0bf0583a30f4b80230f57cc85adf5272db","manifest_sha256":"0437316d0765fe47328c439f90c510d68742335cebc1d2e2a00ebafcc0ea23dd"}
+{"utc":"2026-02-03T09:37:44.2391375Z","gate":"G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK","result":"PASS","ai_signature":"PYM JBZ","head":"9aca96d5fc64759457f233af1b3916ab2f542a6c","evidence":{"qg":"QG_G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK_20260203_093744.json"}}

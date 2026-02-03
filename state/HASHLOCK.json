@@ -1,6 +1,6 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T09:29:37.1654412Z",
+    "ts_utc":  "2026-02-03T09:37:44.4357187Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
@@ -8,11 +8,11 @@
                       },
                       {
                           "path":  "docs/RESUME.md",
-                          "sha256":  "f42d7bec9b05c72346812c97e0b7fb656e525abd1d1f2b9201abe2f8a807b3b3"
+                          "sha256":  "e8a7bd0898e47f3db5f8765d4355c820ead91ad818d94543fe1ac2701ba8d03f"
                       },
                       {
                           "path":  "handoff/HANDOFF_PACK.txt",
-                          "sha256":  "a74bf0abd237a6eb8cf0fa4596bda0405174417089b31d5d3390fd5b86f0de9b"
+                          "sha256":  "1238eaddb16d68e192b85f7fd22e391197b25a9ef2302dfdf10f833ba8c2effb"
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
@@ -20,19 +20,19 @@
                       },
                       {
                           "path":  "state/STATE.json",
-                          "sha256":  "400b3b0e5ad345bd3fdae3cda0e3df44e6f70c1510b3d9c0a043ed2d25e26711"
+                          "sha256":  "0092cff70ff5c04dce711b25269395c8179cec2d1b8d634e33f9da020c72934d"
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
-                          "sha256":  "8a9f4867bc0a3c628cfe76aa5f785175c9e6a7eaf1c181a83e62df419471c940"
+                          "sha256":  "dc651055e53fd0da45728547d6612e1faf7b42b8edc7cb7b8fcf94505c1425c5"
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",
-                          "sha256":  "8333b7dbfce450b7d406263d75590865876da33208e7b819e08a3fd393002b3e"
+                          "sha256":  "af17a438c2717d543d8adb6851c31fdd559128b47d3155b9abebab4de0929f0b"
                       },
                       {
                           "path":  "state/ISSUES_v2.ndjson",
-                          "sha256":  "c89342dede06de5c4a77da387543f7c161fa5c371454a394a730caf75e863725"
+                          "sha256":  "2c15587fc773a4ccf808410f5e78422148af6194768264e508fa2888f52fbec3"
                       }
                   ]
 }

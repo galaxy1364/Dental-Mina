@@ -105,3 +105,4 @@
 - [ ] 098 Ops TBD
 - [ ] 099 Ops TBD
 - [ ] 100 Ops TBD
+- [x] G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK
