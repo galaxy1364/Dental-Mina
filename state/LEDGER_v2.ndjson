@@ -52,3 +52,4 @@
 {"utc":"2026-02-03T07:39:15.1112915Z","gate":"G14_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"ed3585250ddea6839fc1283023e978df5faa927a","evidence":{"qg":"QG_G14_DONE_20260203_073914.json"}}
 {"utc":"2026-02-03T07:56:40.0962545Z","gate":"G15_CHECKLIST_AUTO_SYNC","result":"PASS","ai_signature":"PYM JBZ","head":"64c69d4a17f78125a01c4b410e99f132a6225a83","evidence":{"qg":"QG_G15_CHECKLIST_AUTO_SYNC_20260203_075639.json"}}
 {"utc":"2026-02-03T08:15:52.5060606Z","gate":"G16_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"2debded69eba7d9ae68abf7ddd993adcf28daa19","evidence":{"qg":"QG_G16_DONE_20260203_081551.json"}}
+{"utc":"2026-02-03T08:20:35.2147606Z","gate":"G17_DONE","result":"PASS","ai_signature":"PYM JBZ","head":"8635b560d5542c53c6e19c6f38f64eb94d5166b3","evidence":{"qg":"QG_G17_DONE_20260203_082034.json"}}
