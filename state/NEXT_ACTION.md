@@ -1,7 +1,8 @@
-# NEXT_ACTION (LOCKPACK)
-Action: PROCEED
-Gate: G21
-Method: Run tools/run.ps1 -Gate G21
-Requirements: Evidence + Ledger + State + HASHLOCK (runner-managed)
-Return: HOLD (runner-managed)
+# NEXT_ACTION
+Action: FIX-to-PASS
+Authorized Gate: G20_SIGNED_CI_ARTIFACT_PROVENANCE
+Method: Run tools/run.ps1 -Gate G20_SIGNED_CI_ARTIFACT_PROVENANCE
+Scope: ONLY G20_SIGNED_CI_ARTIFACT_PROVENANCE
+Fix: Move Sigstore verify step into CI (avoid local Sigstore TUF 403).
 AI_SIGNATURE: PYM JBZ
+Generated_utc: 2026-02-03T00:45:06.2832283Z

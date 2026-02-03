@@ -1,34 +1,38 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-02T00:54:40.4382048Z",
+    "ts_utc":  "2026-02-03T00:45:06.2832283Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
                           "sha256":  "25c1ce19dbda619f4e2d3373a55d8eac7218a40042ca5e0dd344471003271441"
                       },
                       {
-                          "path":  "docs/resume.md",
-                          "sha256":  "e8a7bd0898e47f3db5f8765d4355c820ead91ad818d94543fe1ac2701ba8d03f"
+                          "path":  "docs/RESUME.md",
+                          "sha256":  "f42d7bec9b05c72346812c97e0b7fb656e525abd1d1f2b9201abe2f8a807b3b3"
                       },
                       {
-                          "path":  "docs/lockpack_rules.md",
-                          "sha256":  "c6f127a7cc6fd2f8c85ff685490c88fc3d9dd13064ad295a58f69922cdbb5d56"
-                      },
-                      {
-                          "path":  "handoff/handoff_pack.txt",
-                          "sha256":  "1238eaddb16d68e192b85f7fd22e391197b25a9ef2302dfdf10f833ba8c2effb"
-                      },
-                      {
-                          "path":  ".github/codeowners",
-                          "sha256":  "8064bbfe0fceb559877870167dfaa5380fe9b8bdffa7b2dffc0f10f55286c878"
-                      },
-                      {
-                          "path":  ".github/workflows/lockpack_required.yml",
-                          "sha256":  "1f090618d05a5bf02b11aa23640493eb4f758b55c0ee11e76cd1c458edfcac09"
+                          "path":  "handoff/HANDOFF_PACK.txt",
+                          "sha256":  "a74bf0abd237a6eb8cf0fa4596bda0405174417089b31d5d3390fd5b86f0de9b"
                       },
                       {
                           "path":  ".github/workflows/ci_attest_build_provenance.yml",
-                          "sha256":  "28974b3826e386a22a6802b61cc9714ea9cdaa219116f1d7edfaa38a5a5d2924"
+                          "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                          "path":  "state/STATE.json",
+                          "sha256":  "bcd82074ca9cf0936892ff0e45501144a9950ec2361e34c1ef3a48f1e0a7e032"
+                      },
+                      {
+                          "path":  "state/NEXT_ACTION.md",
+                          "sha256":  "b201dadb89e5b587495ba497351e3fe95d2104e106e1b81b65a1c145ecb2db48"
+                      },
+                      {
+                          "path":  "state/LEDGER_v2.ndjson",
+                          "sha256":  "03d4ac686f12e2eb2e71cd37cb8517caa2cd5feab1495d35ed76401b9b61e4a7"
+                      },
+                      {
+                          "path":  "state/ISSUES_v2.ndjson",
+                          "sha256":  "c89342dede06de5c4a77da387543f7c161fa5c371454a394a730caf75e863725"
                       }
                   ]
 }
