@@ -1,10 +1,10 @@
 {
     "version":  1,
-    "ts_utc":  "2026-02-03T09:47:36.3588024Z",
+    "ts_utc":  "2026-02-08T22:25:35.8813762Z",
     "protected":  [
                       {
                           "path":  "tools/run.ps1",
-                          "sha256":  "696ef92ab8ce5d5b69c0fe4b939060d20629443cf2487f328c49da3c8838adf4"
+                          "sha256":  "a57755fabd4c5740bd2954e39bded5464340fb28672f661db5192c3be251c5f2"
                       },
                       {
                           "path":  "docs/RESUME.md",
@@ -20,19 +20,33 @@
                       },
                       {
                           "path":  "state/STATE.json",
-                          "sha256":  "9c1f101054ca524d31539b574ed9c37aa1b093d4a8ba5d5790be5a48586d05e6"
+                          "sha256":  "e0cdc482dfeb77dee490e8334d812ed28300e21d1b051c7af3af69b92a764a65"
                       },
                       {
                           "path":  "state/NEXT_ACTION.md",
-                          "sha256":  "dc651055e53fd0da45728547d6612e1faf7b42b8edc7cb7b8fcf94505c1425c5"
+                          "sha256":  "c3827b412eeea41db80cc3dfe6457dadc61f999d65d8a6b7d188fd9dbb1c832a"
                       },
                       {
                           "path":  "state/LEDGER_v2.ndjson",
-                          "sha256":  "e50c5823b8d0779967b832265986a9a30196f804a6a4772c176245810fb112e6"
+                          "sha256":  "d56600bb1736708e806dc4414e49ad480cf31fbb2acb3ce2950aebd120285da3"
                       },
                       {
                           "path":  "state/ISSUES_v2.ndjson",
                           "sha256":  "2c15587fc773a4ccf808410f5e78422148af6194768264e508fa2888f52fbec3"
                       }
-                  ]
+                  ],
+    "files":  {
+                  "state/STATE.json":  "0ed107c3ffcd002576235baef115dd5c48628becd8caa66ecab4a9ded14b8266",
+                  "src/main.tsx":  "37270d311b4ef64daf4415eed7b7753b6c4c2aa01adc3745cbc9713e0fa6fe95",
+                  "src/pwa/register.ts":  "5c90d228f289758674f9b6d464a0c4f8fca395f5c1d5ad774948c1945e564510",
+                  "tools/run.ps1":  "c5a7f4618b9cf9ae5a2f59b99c49764ec62a9136fcc5bfce93b93a57e804f1cb",
+                  "package.json":  "fe996ce8811dabc4e16a0680d3bf0430ced7b841e111c3e85e791ad942fd252d",
+                  "src/pwa/InstallBanner.tsx":  "7fddfbecf3e7b7a60536b91b6406d3af7617e95a45547aa55c19977dc5af79a9",
+                  "public/manifest.webmanifest":  "8f67e32c4437822f3196297c451cf11c842795218fa4ab15285f54fece1dc363",
+                  "package-lock.json":  "d48be1c6aec55dc82fc29d292407f6d16d4edc09f31b894f5d6e0d610796913d",
+                  "public/sw.js":  "4d834907f85ec1afacc7b04293ba0a821d9c4ef448b003e57ca52b44c72047b7",
+                  "docs/product/BACKLOG_LOCK_2026.md":  "e23273455c7502b9568c30f78d7eb0f5e0792ccf22bd722ca08cb6f7c2ba9a25",
+                  "state/NEXT_ACTION.md":  "3af49da47c5aa8ae6a0000e66607dd4e6c2300b0aaa4ad5ff95d58d8a1e6503a"
+              },
+    "updated_utc":  "2026-02-03T21:26:58.5265118Z"
 }

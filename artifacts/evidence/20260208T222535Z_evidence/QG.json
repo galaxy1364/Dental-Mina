@@ -1,0 +1,22 @@
+{
+    "result":  "ABORTED",
+    "gate":  "G38_CAPACITOR_DEVICE_SMOKE",
+    "ts_utc":  "2026-02-08T22:25:35.8813762Z",
+    "project":  "Dental-Mina",
+    "signature":  "PYM JBZ",
+    "checks":  {
+                   "abort_safe":  true,
+                   "pending":  0,
+                   "js_errors":  {
+                                     "onerror":  0,
+                                     "unhandledrejection":  0,
+                                     "console_error":  0
+                                 },
+                   "build_ok":  true,
+                   "android_smoke":  "needs_java",
+                   "ios_smoke":  "needs_macos_for_simulator",
+                   "capacitor_config":  true,
+                   "android_shell":  true,
+                   "ios_shell":  true
+               }
+}
