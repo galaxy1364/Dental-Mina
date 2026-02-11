@@ -1,0 +1,73 @@
+﻿build_apk	Checkout	2026-02-10T21:21:26.3042851Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Checkout	2026-02-10T21:21:26.3043798Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:21:27.8930412Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:21:27.8932322Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	∩╗┐2026-02-10T21:21:28.1307781Z ##[group]Run set -euo pipefail
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1308826Z [36;1mset -euo pipefail[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1309739Z [36;1mSDKROOT="${ANDROID_SDK_ROOT}"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1310767Z [36;1mecho "SDKROOT=$SDKROOT"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1311692Z [36;1mrm -rf "$SDKROOT"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1312635Z [36;1mmkdir -p "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1313636Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1314329Z [36;1mecho "Diagnostics:"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1315335Z [36;1mwhich curl || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1316181Z [36;1mpython3 -V || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1317339Z [36;1mls -lah /usr/local/lib/android/sdk/cmdline-tools || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1318582Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1319627Z [36;1m# A) Prefer preinstalled sdkmanager (copy into writable SDKROOT)[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1321473Z [36;1mPRE="/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1322939Z [36;1mif [ -x "$PRE" ]; then[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1324469Z [36;1m  echo "Using preinstalled sdkmanager; copying cmdline-tools to writable SDKROOT"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1326867Z [36;1m  cp -a /usr/local/lib/android/sdk/cmdline-tools/* "$SDKROOT/cmdline-tools/" || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1328466Z [36;1mfi[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1329091Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1330572Z [36;1m# B) If still no sdkmanager in SDKROOT, download cmdline-tools and extract via python (no unzip/apt)[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1332759Z [36;1mif [ ! -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager" ]; then[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1334463Z [36;1m  echo "Preinstalled not usable; downloading cmdline-tools..."[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1335952Z [36;1m  cd "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1337691Z [36;1m  URL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1339742Z [36;1m  curl -fL --retry 5 --retry-delay 2 "$URL" -o cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1341000Z [36;1m  ls -lah cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1341867Z [36;1m  python3 - <<'PY'[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1342697Z [36;1m  import zipfile, os[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1343617Z [36;1m  z=zipfile.ZipFile("cmdline.zip")[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1344618Z [36;1m  z.extractall(".")[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1345877Z [36;1m  print("Extracted top-level:", os.listdir("."))[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1346981Z [36;1m  PY[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1347834Z [36;1m  rm -f cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1348669Z [36;1m  rm -rf latest[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1349499Z [36;1m  if [ -d "cmdline-tools" ]; then[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1350506Z [36;1m    mv cmdline-tools latest[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1351389Z [36;1m  else[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1414474Z [36;1m    D="$(find . -maxdepth 4 -type f -path "*/bin/sdkmanager" | head -n 1 || true)"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1417204Z [36;1m    test -n "$D"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1418731Z [36;1m    BASE="$(dirname "$(dirname "$D")")"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1420510Z [36;1m    mv "$BASE" latest[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1421931Z [36;1m  fi[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1423002Z [36;1mfi[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1424036Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1425745Z [36;1mtest -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1428815Z [36;1mexport PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1430966Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1431640Z [36;1msdkmanager --version[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1433484Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1435979Z [36;1m(yes | sdkmanager --sdk_root="$SDKROOT" --licenses) || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1477132Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1478334Z env:
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1479399Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1481253Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1483271Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1485273Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1486660Z ##[endgroup]
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1573963Z SDKROOT=/home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1597683Z Diagnostics:
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1612564Z /usr/bin/curl
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1624619Z Python 3.12.3
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1647485Z total 12K
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1648259Z drwxrwxrwx  3 root root 4.0K Feb  1 21:30 .
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1649798Z drwxrwxrwx 11 root root 4.0K Feb  1 21:33 ..
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1650985Z drwxrwxrwx  4 root root 4.0K Feb  1 21:30 latest
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:28.1657368Z Using preinstalled sdkmanager; copying cmdline-tools to writable SDKROOT
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:37.1120580Z /home/runner/work/_temp/b0d9bf23-22aa-484c-aa23-b9f7c7395095.sh: line 49: warning: here-document at line 26 delimited by end-of-file (wanted `PY')
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:37.1122454Z /home/runner/work/_temp/b0d9bf23-22aa-484c-aa23-b9f7c7395095.sh: line 50: syntax error: unexpected end of file
+build_apk	Install Android SDK (writable) + accept licenses (fallback-safe)	2026-02-10T21:21:37.1135880Z ##[error]Process completed with exit code 2.
