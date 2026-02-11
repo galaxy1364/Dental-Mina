@@ -1,0 +1,17 @@
+﻿build_apk	Checkout	2026-02-10T21:25:23.5331339Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-10T21:25:23.5332477Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-10T21:25:24.4610674Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-10T21:25:24.4611098Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6855632Z [36;1mecho "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6856081Z [36;1mls -lah "$ANDROID_SDK_ROOT" || true[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6856556Z [36;1mls -lah "$ANDROID_SDK_ROOT/cmdline-tools" || true[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6857033Z [36;1mls -lah "$ANDROID_SDK_ROOT/platforms" || true[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6857495Z [36;1mls -lah "$ANDROID_SDK_ROOT/build-tools" || true[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6858039Z [36;1mif [ -x "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]; then[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6858663Z [36;1m  "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --version || true[0m
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6901132Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6901550Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.6983177Z ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+build_apk	Diagnostics (Android SDK on runner)	2026-02-10T21:25:24.7932412Z drwxrwxrwx  2 root root 4.0K Feb  1 21:30 licenses
+build_apk	Locate gradlew	2026-02-10T21:25:33.2751782Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate gradlew	2026-02-10T21:25:33.2752065Z   ANDROID_HOME: /usr/local/lib/android/sdk
