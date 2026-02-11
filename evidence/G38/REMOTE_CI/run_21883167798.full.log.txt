@@ -1,0 +1,193 @@
+﻿build_apk	Set up job	∩╗┐2026-02-10T21:31:58.7325841Z Current runner version: '2.331.0'
+build_apk	Set up job	2026-02-10T21:31:58.7351690Z ##[group]Runner Image Provisioner
+build_apk	Set up job	2026-02-10T21:31:58.7352504Z Hosted Compute Agent
+build_apk	Set up job	2026-02-10T21:31:58.7353124Z Version: 20260123.484
+build_apk	Set up job	2026-02-10T21:31:58.7353882Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build_apk	Set up job	2026-02-10T21:31:58.7354637Z Build Date: 2026-01-23T19:41:17Z
+build_apk	Set up job	2026-02-10T21:31:58.7355330Z Worker ID: {f726321f-b888-4347-8dd4-04768635c7c1}
+build_apk	Set up job	2026-02-10T21:31:58.7356030Z Azure Region: westus3
+build_apk	Set up job	2026-02-10T21:31:58.7356570Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:31:58.7357950Z ##[group]Operating System
+build_apk	Set up job	2026-02-10T21:31:58.7358675Z Ubuntu
+build_apk	Set up job	2026-02-10T21:31:58.7359103Z 24.04.3
+build_apk	Set up job	2026-02-10T21:31:58.7359543Z LTS
+build_apk	Set up job	2026-02-10T21:31:58.7360063Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:31:58.7360582Z ##[group]Runner Image
+build_apk	Set up job	2026-02-10T21:31:58.7361106Z Image: ubuntu-24.04
+build_apk	Set up job	2026-02-10T21:31:58.7361642Z Version: 20260201.15.1
+build_apk	Set up job	2026-02-10T21:31:58.7362688Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build_apk	Set up job	2026-02-10T21:31:58.7364663Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build_apk	Set up job	2026-02-10T21:31:58.7365583Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:31:58.7366707Z ##[group]GITHUB_TOKEN Permissions
+build_apk	Set up job	2026-02-10T21:31:58.7368748Z Contents: read
+build_apk	Set up job	2026-02-10T21:31:58.7369307Z Metadata: read
+build_apk	Set up job	2026-02-10T21:31:58.7369824Z Packages: read
+build_apk	Set up job	2026-02-10T21:31:58.7370359Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:31:58.7372507Z Secret source: Actions
+build_apk	Set up job	2026-02-10T21:31:58.7373293Z Prepare workflow directory
+build_apk	Set up job	2026-02-10T21:31:58.7774286Z Prepare all required actions
+build_apk	Set up job	2026-02-10T21:31:58.7815679Z Getting action download info
+build_apk	Set up job	2026-02-10T21:31:59.2612817Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build_apk	Set up job	2026-02-10T21:31:59.3893145Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build_apk	Set up job	2026-02-10T21:32:00.4049008Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build_apk	Set up job	2026-02-10T21:32:00.4953043Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build_apk	Set up job	2026-02-10T21:32:00.7205010Z Complete job name: build_apk
+build_apk	Checkout	∩╗┐2026-02-10T21:32:00.7946220Z ##[group]Run actions/checkout@v4
+build_apk	Checkout	2026-02-10T21:32:00.7947230Z with:
+build_apk	Checkout	2026-02-10T21:32:00.7947663Z   repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:00.7948413Z   token: ***
+build_apk	Checkout	2026-02-10T21:32:00.7948807Z   ssh-strict: true
+build_apk	Checkout	2026-02-10T21:32:00.7949277Z   ssh-user: git
+build_apk	Checkout	2026-02-10T21:32:00.7949691Z   persist-credentials: true
+build_apk	Checkout	2026-02-10T21:32:00.7950149Z   clean: true
+build_apk	Checkout	2026-02-10T21:32:00.7950567Z   sparse-checkout-cone-mode: true
+build_apk	Checkout	2026-02-10T21:32:00.7951073Z   fetch-depth: 1
+build_apk	Checkout	2026-02-10T21:32:00.7951472Z   fetch-tags: false
+build_apk	Checkout	2026-02-10T21:32:00.7951896Z   show-progress: true
+build_apk	Checkout	2026-02-10T21:32:00.7952341Z   lfs: false
+build_apk	Checkout	2026-02-10T21:32:00.7952721Z   submodules: false
+build_apk	Checkout	2026-02-10T21:32:00.7953125Z   set-safe-directory: true
+build_apk	Checkout	2026-02-10T21:32:00.7954028Z env:
+build_apk	Checkout	2026-02-10T21:32:00.7954495Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-10T21:32:00.7955112Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-10T21:32:00.7955634Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:00.9075705Z Syncing repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:00.9077596Z ##[group]Getting Git version info
+build_apk	Checkout	2026-02-10T21:32:00.9078339Z Working directory is '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-10T21:32:00.9079338Z [command]/usr/bin/git version
+build_apk	Checkout	2026-02-10T21:32:00.9179788Z git version 2.52.0
+build_apk	Checkout	2026-02-10T21:32:00.9206624Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:00.9221260Z Temporarily overriding HOME='/home/runner/work/_temp/1256a7d4-5bb1-4a4c-a12a-dad0cc9a2d6c' before making global git config changes
+build_apk	Checkout	2026-02-10T21:32:00.9223001Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Checkout	2026-02-10T21:32:00.9234987Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:00.9281901Z Deleting the contents of '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-10T21:32:00.9285840Z ##[group]Initializing the repository
+build_apk	Checkout	2026-02-10T21:32:00.9290006Z [command]/usr/bin/git init /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:00.9429606Z hint: Using 'master' as the name for the initial branch. This default branch name
+build_apk	Checkout	2026-02-10T21:32:00.9431352Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build_apk	Checkout	2026-02-10T21:32:00.9432852Z hint: to use in all of your new repositories, which will suppress this warning,
+build_apk	Checkout	2026-02-10T21:32:00.9434310Z hint: call:
+build_apk	Checkout	2026-02-10T21:32:00.9434915Z hint:
+build_apk	Checkout	2026-02-10T21:32:00.9435919Z hint: 	git config --global init.defaultBranch <name>
+build_apk	Checkout	2026-02-10T21:32:00.9437449Z hint:
+build_apk	Checkout	2026-02-10T21:32:00.9438326Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build_apk	Checkout	2026-02-10T21:32:00.9439545Z hint: 'development'. The just-created branch can be renamed via this command:
+build_apk	Checkout	2026-02-10T21:32:00.9440501Z hint:
+build_apk	Checkout	2026-02-10T21:32:00.9440996Z hint: 	git branch -m <name>
+build_apk	Checkout	2026-02-10T21:32:00.9441586Z hint:
+build_apk	Checkout	2026-02-10T21:32:00.9442374Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build_apk	Checkout	2026-02-10T21:32:00.9444560Z Initialized empty Git repository in /home/runner/work/Dental-Mina/Dental-Mina/.git/
+build_apk	Checkout	2026-02-10T21:32:00.9450634Z [command]/usr/bin/git remote add origin https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:00.9487946Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:00.9488877Z ##[group]Disabling automatic garbage collection
+build_apk	Checkout	2026-02-10T21:32:00.9492106Z [command]/usr/bin/git config --local gc.auto 0
+build_apk	Checkout	2026-02-10T21:32:00.9520992Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:00.9521944Z ##[group]Setting up auth
+build_apk	Checkout	2026-02-10T21:32:00.9528130Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Checkout	2026-02-10T21:32:00.9562926Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Checkout	2026-02-10T21:32:00.9997655Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Checkout	2026-02-10T21:32:01.0031445Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Checkout	2026-02-10T21:32:01.0262611Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Checkout	2026-02-10T21:32:01.0295897Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Checkout	2026-02-10T21:32:01.0534012Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build_apk	Checkout	2026-02-10T21:32:01.0569468Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:01.0570901Z ##[group]Fetching the repository
+build_apk	Checkout	2026-02-10T21:32:01.0579394Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3aefb013ef2f97830c111a3f70f08c539c29cf2e:refs/remotes/origin/main
+build_apk	Checkout	2026-02-10T21:32:02.2102889Z From https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:32:02.2104968Z  * [new ref]         3aefb013ef2f97830c111a3f70f08c539c29cf2e -> origin/main
+build_apk	Checkout	2026-02-10T21:32:02.2183394Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:02.2185582Z ##[group]Determining the checkout info
+build_apk	Checkout	2026-02-10T21:32:02.2188076Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:02.2191318Z [command]/usr/bin/git sparse-checkout disable
+build_apk	Checkout	2026-02-10T21:32:02.2236314Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build_apk	Checkout	2026-02-10T21:32:02.2263772Z ##[group]Checking out the ref
+build_apk	Checkout	2026-02-10T21:32:02.2267723Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build_apk	Checkout	2026-02-10T21:32:02.3184863Z Switched to a new branch 'main'
+build_apk	Checkout	2026-02-10T21:32:02.3188248Z branch 'main' set up to track 'origin/main'.
+build_apk	Checkout	2026-02-10T21:32:02.3211212Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:32:02.3253015Z [command]/usr/bin/git log -1 --format=%H
+build_apk	Checkout	2026-02-10T21:32:02.3276682Z 3aefb013ef2f97830c111a3f70f08c539c29cf2e
+build_apk	Setup Java 17	∩╗┐2026-02-10T21:32:02.3634266Z ##[group]Run actions/setup-java@v4
+build_apk	Setup Java 17	2026-02-10T21:32:02.3635518Z with:
+build_apk	Setup Java 17	2026-02-10T21:32:02.3636208Z   distribution: temurin
+build_apk	Setup Java 17	2026-02-10T21:32:02.3637042Z   java-version: 17
+build_apk	Setup Java 17	2026-02-10T21:32:02.3637800Z   java-package: jdk
+build_apk	Setup Java 17	2026-02-10T21:32:02.3638608Z   check-latest: false
+build_apk	Setup Java 17	2026-02-10T21:32:02.3639366Z   server-id: github
+build_apk	Setup Java 17	2026-02-10T21:32:02.3640134Z   server-username: GITHUB_ACTOR
+build_apk	Setup Java 17	2026-02-10T21:32:02.3641053Z   server-password: GITHUB_TOKEN
+build_apk	Setup Java 17	2026-02-10T21:32:02.3641982Z   overwrite-settings: true
+build_apk	Setup Java 17	2026-02-10T21:32:02.3642823Z   job-status: success
+build_apk	Setup Java 17	2026-02-10T21:32:02.3643985Z   token: ***
+build_apk	Setup Java 17	2026-02-10T21:32:02.3644648Z env:
+build_apk	Setup Java 17	2026-02-10T21:32:02.3645380Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-10T21:32:02.3646525Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-10T21:32:02.3647522Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-10T21:32:02.5745634Z ##[group]Installed distributions
+build_apk	Setup Java 17	2026-02-10T21:32:02.5970506Z Resolved Java 17.0.18+8 from tool-cache
+build_apk	Setup Java 17	2026-02-10T21:32:02.6036403Z Setting Java 17.0.18+8 as the default
+build_apk	Setup Java 17	2026-02-10T21:32:02.6038666Z Creating toolchains.xml for JDK version 17 from temurin
+build_apk	Setup Java 17	2026-02-10T21:32:02.6072014Z Writing to /home/runner/.m2/toolchains.xml
+build_apk	Setup Java 17	2026-02-10T21:32:02.6073178Z 
+build_apk	Setup Java 17	2026-02-10T21:32:02.6073693Z Java configuration:
+build_apk	Setup Java 17	2026-02-10T21:32:02.6074917Z   Distribution: temurin
+build_apk	Setup Java 17	2026-02-10T21:32:02.6076153Z   Version: 17.0.18+8
+build_apk	Setup Java 17	2026-02-10T21:32:02.6077713Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Java 17	2026-02-10T21:32:02.6078855Z 
+build_apk	Setup Java 17	2026-02-10T21:32:02.6079978Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-10T21:32:02.6094769Z Creating settings.xml with server-id: github
+build_apk	Setup Java 17	2026-02-10T21:32:02.6096544Z Writing to /home/runner/.m2/settings.xml
+build_apk	Setup Node.js (LTS)	∩╗┐2026-02-10T21:32:02.6302165Z ##[group]Run actions/setup-node@v4
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6303126Z with:
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6303868Z   node-version: 24
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6304544Z   cache: npm
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6305189Z   always-auth: false
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6305904Z   check-latest: false
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6306876Z   token: ***
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6307499Z env:
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6308221Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6309360Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6310751Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6312569Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.6314088Z ##[endgroup]
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.8145615Z Found in cache @ /opt/hostedtoolcache/node/24.13.0/x64
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:02.8148277Z ##[group]Environment details
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.3598371Z node: v24.13.0
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.3598839Z npm: 11.6.2
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.3599163Z yarn: 1.22.22
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.3600804Z ##[endgroup]
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.3623050Z [command]/opt/hostedtoolcache/node/24.13.0/x64/bin/npm config get cache
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.6516263Z /home/runner/.npm
+build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.9558786Z npm cache is not found
+build_apk	Locate Capacitor app dir	∩╗┐2026-02-10T21:32:05.9669496Z ##[group]Run set -euo pipefail
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9669864Z [36;1mset -euo pipefail[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9670601Z [36;1mCFG=$(find . -maxdepth 10 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1)[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671369Z [36;1mtest -n "$CFG"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671623Z [36;1mAPPDIR=$(dirname "$CFG")[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671921Z [36;1mtest -f "$APPDIR/package.json"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9672265Z [36;1mecho "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9672616Z [36;1mecho "APPDIR=$APPDIR"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9716992Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9717409Z env:
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9717658Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9718022Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9718481Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9719101Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9719609Z ##[endgroup]
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9867335Z ##[error]Process completed with exit code 1.
+build_apk	Post Setup Java 17	∩╗┐2026-02-10T21:32:05.9982063Z Post job cleanup.
+build_apk	Post Checkout	∩╗┐2026-02-10T21:32:06.1767093Z Post job cleanup.
+build_apk	Post Checkout	2026-02-10T21:32:06.2724188Z [command]/usr/bin/git version
+build_apk	Post Checkout	2026-02-10T21:32:06.2753985Z git version 2.52.0
+build_apk	Post Checkout	2026-02-10T21:32:06.2798826Z Temporarily overriding HOME='/home/runner/work/_temp/ee45ece1-51fe-407e-b7e1-b6530fa40fc1' before making global git config changes
+build_apk	Post Checkout	2026-02-10T21:32:06.2800619Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Post Checkout	2026-02-10T21:32:06.2805866Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Post Checkout	2026-02-10T21:32:06.2844923Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Post Checkout	2026-02-10T21:32:06.2879227Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Post Checkout	2026-02-10T21:32:06.3114415Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Post Checkout	2026-02-10T21:32:06.3136040Z http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-10T21:32:06.3149085Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-10T21:32:06.3182938Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Post Checkout	2026-02-10T21:32:06.3409201Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Post Checkout	2026-02-10T21:32:06.3441778Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Complete job	∩╗┐2026-02-10T21:32:06.3766715Z Cleaning up orphan processes

@@ -23,23 +23,55 @@ jobs:
           node-version: "24"
           cache: "npm"
 
-      - name: Locate Capacitor app dir
+      - name: Locate Capacitor app dir (fallback-safe)
         id: app
         shell: bash
         run: |
           set -euo pipefail
-          CFG=$(find . -maxdepth 10 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1)
-          test -n "$CFG"
-          APPDIR=$(dirname "$CFG")
+          echo "Repo root contents:"; ls -lah
+
+          APPDIR=""
+
+          # 1) Prefer capacitor.config.* anywhere (deeper search)
+          CFG="$(find . -maxdepth 30 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1 || true)"
+          if [ -n "$CFG" ]; then
+            D="$(dirname "$CFG")"
+            if [ -f "$D/package.json" ]; then APPDIR="$D"; fi
+          fi
+
+          # 2) Fallback: first package.json that mentions capacitor
+          if [ -z "$APPDIR" ]; then
+            PJ="$(find . -maxdepth 30 -type f -name "package.json" | head -n 200 || true)"
+            if [ -n "$PJ" ]; then
+              while IFS= read -r p; do
+                if grep -qiE '"@capacitor/|"\s*capacitor\s*"' "$p"; then
+                  APPDIR="$(dirname "$p")"
+                  break
+                fi
+              done <<< "$PJ"
+            fi
+          fi
+
+          # 3) Fallback: common paths (if exist)
+          if [ -z "$APPDIR" ]; then
+            for d in "./apps/dental-mina" "./app" "./apps/app" "./src" "."; do
+              if [ -f "$d/package.json" ]; then APPDIR="$d"; break; fi
+            done
+          fi
+
+          test -n "$APPDIR"
+          echo "APPDIR=$APPDIR"
           test -f "$APPDIR/package.json"
           echo "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"
-          echo "APPDIR=$APPDIR"
 
       - name: Install deps + build web + sync Android (creates gradlew)
         shell: bash
         run: |
           set -euo pipefail
           cd "${{ steps.app.outputs.app_dir }}"
+          echo "Working in: $(pwd)"
+          ls -lah
+
           npm ci
 
           if npm run -s | grep -qE '(^|\s)build(\s|$)'; then

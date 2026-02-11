@@ -1,0 +1,17 @@
+﻿build_apk	Setup Node.js (LTS)	2026-02-10T21:32:05.9558786Z npm cache is not found
+build_apk	Locate Capacitor app dir	∩╗┐2026-02-10T21:32:05.9669496Z ##[group]Run set -euo pipefail
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9669864Z [36;1mset -euo pipefail[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9670601Z [36;1mCFG=$(find . -maxdepth 10 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1)[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671369Z [36;1mtest -n "$CFG"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671623Z [36;1mAPPDIR=$(dirname "$CFG")[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9671921Z [36;1mtest -f "$APPDIR/package.json"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9672265Z [36;1mecho "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9672616Z [36;1mecho "APPDIR=$APPDIR"[0m
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9716992Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9717409Z env:
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9717658Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9718022Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9718481Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9719101Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9719609Z ##[endgroup]
+build_apk	Locate Capacitor app dir	2026-02-10T21:32:05.9867335Z ##[error]Process completed with exit code 1.
