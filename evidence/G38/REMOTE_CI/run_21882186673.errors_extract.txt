@@ -1,0 +1,14 @@
+﻿build_apk	Setup Android SDK	2026-02-10T20:59:48.8130410Z Found preinstalled sdkmanager in /usr/local/lib/android/sdk/cmdline-tools/latest with following source.properties:
+build_apk	Setup Android SDK	2026-02-10T20:59:48.8137268Z Wrong version in preinstalled sdkmanager
+build_apk	Setup Android SDK	2026-02-10T20:59:50.8271452Z [command]/usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager --licenses
+build_apk	Setup Android SDK	2026-02-10T20:59:56.6774400Z 6 of 7 SDK package licenses not accepted.
+build_apk	Setup Android SDK	2026-02-10T20:59:56.6775273Z Review licenses that have not been accepted (y/N)? 
+build_apk	Setup Android SDK	2026-02-10T20:59:56.7668242Z [command]/usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager tools
+build_apk	Setup Android SDK	2026-02-10T21:00:07.0110689Z [==============================         ] 77% Unzipping... tools/bin/sdkmanager 
+build_apk	Setup Android SDK	2026-02-10T21:00:07.0843292Z [command]/usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager platform-tools
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6661238Z [36;1mSDKROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"[0m
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6661805Z [36;1mSM="$(command -v sdkmanager || true)"[0m
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6662846Z [36;1m  if [ -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager" ]; then SM="$SDKROOT/cmdline-tools/latest/bin/sdkmanager"; fi[0m
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6663859Z [36;1m  if [ -z "$SM" ] && [ -x "$SDKROOT/cmdline-tools/*/bin/sdkmanager" ]; then SM="$(ls -1d $SDKROOT/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -n 1)"; fi[0m
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6703821Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Accept Android SDK licenses (non-interactive, robust)	2026-02-10T21:00:08.6704312Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
