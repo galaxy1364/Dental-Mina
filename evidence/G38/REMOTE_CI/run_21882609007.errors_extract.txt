@@ -1,0 +1,29 @@
+﻿build_apk	Checkout	2026-02-10T21:13:27.6485529Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:13:28.5472100Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	∩╗┐2026-02-10T21:13:28.7803472Z ##[group]Run set -euo pipefail
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7804886Z [36;1mset -euo pipefail[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7805887Z [36;1mSDKROOT="${ANDROID_SDK_ROOT}"[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7807027Z [36;1mmkdir -p "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7808177Z [36;1mcd "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7809160Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7810700Z [36;1mURL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7812659Z [36;1mcurl -fsSL "$URL" -o cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7813753Z [36;1munzip -q cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7814886Z [36;1mrm -f cmdline.zip[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7815823Z [36;1mmv cmdline-tools latest[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7816761Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7818060Z [36;1mexport PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7819696Z [36;1m[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7820822Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --licenses >/dev/null || true[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7823523Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0" >/dev/null[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7826241Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --licenses >/dev/null[0m
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7867180Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7868481Z env:
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7869647Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7871532Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7873342Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7875459Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:28.7876923Z ##[endgroup]
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:34.9941997Z yes: standard output: Broken pipe
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:42.0213993Z yes: standard output: Broken pipe
+build_apk	Install Android SDK (writable) + accept licenses (non-interactive)	2026-02-10T21:13:42.0231460Z ##[error]Process completed with exit code 1.

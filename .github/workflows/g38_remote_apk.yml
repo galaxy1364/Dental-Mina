@@ -17,25 +17,36 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install Android SDK (writable) + accept licenses (non-interactive)
+      - name: Install Android SDK (writable, deterministic) + accept licenses
         shell: bash
         run: |
           set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y unzip
+
           SDKROOT="${ANDROID_SDK_ROOT}"
+          echo "SDKROOT=$SDKROOT"
+          rm -rf "$SDKROOT"
           mkdir -p "$SDKROOT/cmdline-tools"
           cd "$SDKROOT/cmdline-tools"
 
           URL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"
-          curl -fsSL "$URL" -o cmdline.zip
+          echo "Downloading: $URL"
+          curl -fL --retry 3 --retry-delay 2 "$URL" -o cmdline.zip
+
           unzip -q cmdline.zip
           rm -f cmdline.zip
+
+          rm -rf latest
+          test -d cmdline-tools
           mv cmdline-tools latest
 
           export PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"
+          sdkmanager --version
 
-          yes | sdkmanager --sdk_root="$SDKROOT" --licenses >/dev/null || true
-          yes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0" >/dev/null
-          yes | sdkmanager --sdk_root="$SDKROOT" --licenses >/dev/null
+          yes | sdkmanager --sdk_root="$SDKROOT" --licenses
+          yes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          yes | sdkmanager --sdk_root="$SDKROOT" --licenses
 
       - name: Locate gradlew
         id: locate
