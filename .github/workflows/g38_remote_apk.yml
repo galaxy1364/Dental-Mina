@@ -17,35 +17,49 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Diagnostics (Android SDK on runner)
+      - name: Setup Node.js (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Locate Capacitor app dir
+        id: app
         shell: bash
         run: |
           set -euo pipefail
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
-          ls -lah "$ANDROID_SDK_ROOT" || true
-          ls -lah "$ANDROID_SDK_ROOT/cmdline-tools" || true
-          ls -lah "$ANDROID_SDK_ROOT/platforms" || true
-          ls -lah "$ANDROID_SDK_ROOT/build-tools" || true
-          if [ -x "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]; then
-            "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --version || true
+          CFG=$(find . -maxdepth 10 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1)
+          test -n "$CFG"
+          APPDIR=$(dirname "$CFG")
+          test -f "$APPDIR/package.json"
+          echo "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"
+          echo "APPDIR=$APPDIR"
+
+      - name: Install deps + build web + sync Android (creates gradlew)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${{ steps.app.outputs.app_dir }}"
+          npm ci
+
+          if npm run -s | grep -qE '(^|\s)build(\s|$)'; then
+            npm run build
           fi
 
-      - name: Locate gradlew
-        id: locate
-        shell: bash
-        run: |
-          set -euo pipefail
-          G=$(find . -maxdepth 12 -type f -name "gradlew" | head -n 1)
-          test -n "$G"
-          chmod +x "$G"
-          D=$(dirname "$G")
-          echo "gradle_dir=$D" >> "$GITHUB_OUTPUT"
+          if [ -d "android" ]; then
+            npx cap sync android
+          else
+            npx cap add android
+            npx cap sync android
+          fi
+
+          test -x "android/gradlew"
 
       - name: Build Debug APK
         shell: bash
         run: |
           set -euo pipefail
-          cd "${{ steps.locate.outputs.gradle_dir }}"
+          cd "${{ steps.app.outputs.app_dir }}/android"
           ./gradlew --no-daemon --stacktrace assembleDebug
 
       - name: Upload APK
