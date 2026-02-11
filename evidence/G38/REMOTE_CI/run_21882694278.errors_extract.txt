@@ -1,0 +1,220 @@
+﻿build_apk	Checkout	2026-02-10T21:16:29.9243281Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:16:30.8343991Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	∩╗┐2026-02-10T21:16:31.0745626Z ##[group]Run set -euo pipefail
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0746838Z [36;1mset -euo pipefail[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0747862Z [36;1msudo apt-get update -y[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0748941Z [36;1msudo apt-get install -y unzip[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0750009Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0751069Z [36;1mSDKROOT="${ANDROID_SDK_ROOT}"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0752186Z [36;1mecho "SDKROOT=$SDKROOT"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0753235Z [36;1mrm -rf "$SDKROOT"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0754263Z [36;1mmkdir -p "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0755455Z [36;1mcd "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0756476Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0758061Z [36;1mURL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0760029Z [36;1mecho "Downloading: $URL"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0761516Z [36;1mcurl -fL --retry 3 --retry-delay 2 "$URL" -o cmdline.zip[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0762878Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0763643Z [36;1munzip -q cmdline.zip[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0764648Z [36;1mrm -f cmdline.zip[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0765547Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0766277Z [36;1mrm -rf latest[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0767168Z [36;1mtest -d cmdline-tools[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0768165Z [36;1mmv cmdline-tools latest[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0769120Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0770580Z [36;1mexport PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0772319Z [36;1msdkmanager --version[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0773231Z [36;1m[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0774161Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --licenses[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0776435Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0778749Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --licenses[0m
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0817857Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0819185Z env:
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0820580Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0822548Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0824426Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0826372Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.0828116Z ##[endgroup]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1623220Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1932064Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1935602Z Get:6 https://packages.microsoft.com/repos/azure-cli noble InRelease [3564 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1946204Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1971265Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.1979905Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.2005545Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3182736Z Get:8 https://packages.microsoft.com/repos/azure-cli noble/main amd64 Packages [2163 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3623331Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1740 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3729071Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [324 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3760058Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3795296Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [16.5 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3814563Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1528 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3966682Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [313 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3971068Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [386 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3984118Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.9 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.3995741Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2588 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4175919Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [593 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4247678Z Get:22 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [91.9 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4293713Z Get:23 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [71.2 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4665286Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4711932Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [32.1 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4713610Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4725814Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4741971Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4750913Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [212 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.4758772Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5223485Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1446 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5364720Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [234 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5388056Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5399826Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9892 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5407858Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [929 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5462021Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [212 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5484630Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5905007Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [19.9 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.5916445Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2445 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.6036605Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [562 kB]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.6077900Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:31.6087319Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [208 B]
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:40.2523835Z Fetched 14.3 MB in 2s (8793 kB/s)
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.0003685Z Reading package lists...
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.0319556Z Reading package lists...
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.1885040Z Building dependency tree...
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.1892906Z Reading state information...
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3633796Z unzip is already the newest version (6.0-28ubuntu4.1).
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3634567Z 0 upgraded, 0 newly installed, 0 to remove and 107 not upgraded.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3651832Z SDKROOT=/home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3678544Z Downloading: https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3728738Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3730054Z                                  Dload  Upload   Total   Spent    Left  Speed
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.3730945Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:41.9176597Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:42.7808688Z  22  157M   22 36.0M    0     0  66.0M      0  0:00:02 --:--:--  0:00:02 66.0M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:43.7955171Z  23  157M   23 36.6M    0     0  26.0M      0  0:00:06  0:00:01  0:00:05 26.0M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:44.7903411Z  49  157M   49 78.1M    0     0  32.2M      0  0:00:04  0:00:02  0:00:02 32.2M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:45.7823020Z  60  157M   60 96.0M    0     0  28.0M      0  0:00:05  0:00:03  0:00:02 28.0M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:46.7761315Z  98  157M   98  156M    0     0  35.3M      0  0:00:04  0:00:04 --:--:-- 35.3M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:46.9016048Z  99  157M   99  157M    0     0  29.1M      0  0:00:05  0:00:05 --:--:-- 24.9M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:46.9016840Z 100  157M  100  157M    0     0  28.5M      0  0:00:05  0:00:05 --:--:-- 29.4M
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:49.2706804Z 16.0
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:49.2707413Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:49.5309419Z Loading local repository...                                                     
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:49.5310832Z [=========                              ] 25% Loading local repository...       
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:51.0189407Z [=========                              ] 25% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.0073566Z [==========                             ] 26% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.0078261Z [============                           ] 31% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.0541754Z [============                           ] 32% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.0548137Z [=============                          ] 33% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.1152830Z [=============                          ] 35% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.1153698Z [==============                         ] 36% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.1666040Z [==============                         ] 37% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.1667099Z [===============                        ] 38% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3366590Z [===============                        ] 39% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3367037Z [================                       ] 40% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3604264Z [================                       ] 41% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3607028Z [================                       ] 42% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3795048Z [=================                      ] 44% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3796158Z [=================                      ] 45% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3915691Z [==================                     ] 46% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.3916593Z [==================                     ] 47% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4131329Z [===================                    ] 48% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4147039Z [===================                    ] 49% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4281254Z [====================                   ] 50% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4282790Z [====================                   ] 51% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4385913Z [====================                   ] 53% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4392815Z [=====================                  ] 54% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4500672Z [=====================                  ] 55% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4503365Z [======================                 ] 56% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4603539Z [======================                 ] 57% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4611081Z [=======================                ] 58% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4717750Z [=======================                ] 59% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4719310Z [========================               ] 60% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4978430Z [========================               ] 61% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.4979653Z [=========================              ] 63% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5109031Z [=========================              ] 64% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5116321Z [=========================              ] 65% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5231049Z [==========================             ] 66% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5242163Z [==========================             ] 67% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5486323Z [===========================            ] 68% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5488334Z [===========================            ] 69% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5925712Z [============================           ] 70% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.5940995Z [============================           ] 72% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6109773Z [=============================          ] 73% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6111239Z [=============================          ] 74% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6206667Z [=============================          ] 75% Fetch remote repository...        
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6356488Z [=============================          ] 75% Computing updates...              
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6360809Z [=======================================] 100% Computing updates...             
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6718855Z 7 of 7 SDK package licenses not accepted.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6721728Z Review licenses that have not been accepted (y/N)? 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6724446Z 1/7: License android-googletv-license:
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6749905Z ---------------------------------------
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6752499Z Terms and Conditions
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6754614Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6756472Z This is the Google TV Add-on for the Android Software Development Kit License Agreement.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6776860Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6777040Z 1. Introduction
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6777262Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6779801Z 1.1 The Google TV Add-on for the Android Software Development Kit (referred to in this License Agreement as the "Google TV Add-on" and specifically including the Android system files, packaged APIs, and Google APIs add-ons) is licensed to you subject to the terms of this License Agreement. This License Agreement forms a legally binding contract between you and Google in relation to your use of the Google TV Add-on.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6783130Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6784057Z 1.2 "Google" means Google Inc., a Delaware corporation with principal place of business at 1600 Amphitheatre Parkway, Mountain View, CA 94043, United States.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6785191Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6785370Z 2. Accepting this License Agreement
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6785706Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6786629Z 2.1 In order to use the Google TV Add-on, you must first agree to this License Agreement. You may not use the Google TV Add-on if you do not accept this License Agreement.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6787748Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6787947Z 2.2 You can accept this License Agreement by:
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6788318Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6788861Z (A) clicking to accept or agree to this License Agreement, where this option is made available to you; or
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6789579Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6790694Z (B) by actually using the Google TV Add-on. In this case, you agree that use of the Google TV Add-on constitutes acceptance of the License Agreement from that point onwards.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6791815Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6793473Z 2.3 You may not use the Google TV Add-on and may not accept the Licensing Agreement if you are a person barred from receiving the Google TV Add-on under the laws of the United States or other countries including the country in which you are resident or from which you use the Google TV Add-on.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6795609Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6797914Z 2.4 If you are agreeing to be bound by this License Agreement on behalf of your employer or other entity, you represent and warrant that you have full legal authority to bind your employer or such entity to this License Agreement. If you do not have the requisite authority, you may not accept the Licensing Agreement or use the Google TV Add-on on behalf of your employer or other entity.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6800583Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6800780Z 3. Google TV Add-on License from Google
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6801121Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6802511Z 3.1 Subject to the terms of this License Agreement, Google grants you a limited, worldwide, royalty-free, non- assignable and non-exclusive license to use the Google TV Add-on solely to develop applications to run on the Google TV platform.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6804124Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6806675Z 3.2 You agree that Google or third parties own all legal right, title and interest in and to the Google TV Add-on, including any Intellectual Property Rights that subsist in the Google TV Add-on. "Intellectual Property Rights" means any and all rights under patent law, copyright law, trade secret law, trademark law, and any and all other proprietary rights. Google reserves all rights not expressly granted to you.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6809465Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6813419Z 3.3 Except to the extent required by applicable third party licenses, you may not copy (except for backup purposes), modify, adapt, redistribute, decompile, reverse engineer, disassemble, or create derivative works of the Google TV Add-on or any part of the Google TV Add-on. Except to the extent required by applicable third party licenses, you may not load any part of the Google TV Add-on onto a mobile handset, television, or any other hardware device except a personal computer, combine any part of the Google TV Add-on with other software, or distribute any software or device incorporating a part of the Google TV Add-on.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6817400Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6819599Z 3.4 Use, reproduction and distribution of components of the Google TV Add-on licensed under an open source software license are governed solely by the terms of that open source software license and not this License Agreement.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6821603Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6824599Z 3.5 You agree that the form and nature of the Google TV Add-on that Google provides may change without prior notice to you and that future versions of the Google TV Add-on may be incompatible with applications developed on previous versions of the Google TV Add-on. You agree that Google may stop (permanently or temporarily) providing the Google TV Add-on (or any features within the Google TV Add-on) to you or to users generally at Google's sole discretion, without prior notice to you.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6827797Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6833084Z 3.6 Nothing in this License Agreement gives you a right to use any of Google's or itΓÇÖs licensorsΓÇÖ trade names, trademarks, service marks, logos, domain names, or other distinctive brand features.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6834446Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6836092Z 3.7 You agree that you will not remove, obscure, or alter any proprietary rights notices (including copyright and trademark notices) that may be affixed to or contained within the Google TV Add-on.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6837440Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6837606Z 4. Use of the Google TV Add-on by You
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6837925Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6840021Z 4.1 Google agrees that it obtains no right, title or interest from you (or your licensors) under this License Agreement in or to any software applications that you develop using the Google TV Add-on, including any intellectual property rights that subsist in those applications.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6845526Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6847721Z 4.2 You agree to use the Google TV Add-on and write applications only for purposes that are permitted by (a) this License Agreement and (b) any applicable law, regulation or generally accepted practices or guidelines in the relevant jurisdictions (including any laws regarding the export of data or software to and from the United States or other relevant countries).
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6850567Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6855499Z 4.3 You agree that if you use the Google TV Add-on to develop applications for general public users, you will protect the privacy and legal rights of those users. If the users provide you with user names, passwords, or other login information or personal information, your must make the users aware that the information will be available to your application, and you must provide legally adequate privacy notice and protection for those users. If your application stores personal or sensitive information provided by users, it must do so securely. If the user provides your application with Google Account information, your application may only use that information to access the user's Google Account when, and for the limited purposes for which, the user has given you explicit permission to do so.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6860937Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6863429Z 4.4 You agree that you will not engage in any activity with the Google TV Add-on, including the development or distribution of an application, that interferes with, disrupts, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of any third party including, but not limited to, Google, Multichannel Video Program Distributors or any mobile communications carrier.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6866146Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6868331Z 4.5 You agree that you are solely responsible for (and that Google has no responsibility to you or to any third party for) any data, content, or resources that you create, transmit or display through the Google TV platform and/or applications for the Google TV platform, and for the consequences of your actions (including any loss or damage which Google may suffer) by doing so.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6870959Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6873301Z 4.6 You agree that you are solely responsible for (and that Google has no responsibility to you or to any third party for) any breach of your obligations under this License Agreement, any applicable third party contract or Terms of Service, or any applicable law or regulation, and for the consequences (including any loss or damage which Google or any third party may suffer) of any such breach.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6876103Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6876263Z 5. Your Developer Credentials
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6876540Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6878247Z 5.1 You agree that you are responsible for maintaining the confidentiality of any developer credentials that may be issued to you by Google or which you may choose yourself and that you will be solely responsible for all applications that are developed under your developer credentials.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6880338Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6880493Z 6. Privacy and Information
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6880767Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6883945Z 6.1 In order to continually innovate and improve the Google TV Add-on, Google may collect certain usage statistics from the software including but not limited to a unique identifier, associated IP address, version number of the software, and information on which tools and/or services in the Google TV Add-on are being used and how they are being used. Before any of this information is collected, the Google TV Add-on will notify you and seek your consent. If you withhold consent, the information will not be collected.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6887298Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6888074Z 6.2 The data collected is examined in the aggregate to improve the Google TV Add-on and is maintained in accordance with Google's Privacy Policy.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6889024Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6889265Z 7. Third Party Applications for the Google TV Platform
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6889658Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6893372Z 7.1 If you use the Google TV Add-on to run applications developed by a third party or that access data, content or resources provided by a third party, you agree that Google is not responsible for those applications, data, content, or resources. You understand that all data, content or resources which you may access through such third party applications are the sole responsibility of the person from which they originated and that Google is not liable for any loss or damage that you may experience as a result of the use or access of any of those third party applications, data, content, or resources.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6897418Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6900597Z 7.2 You should be aware the data, content, and resources presented to you through such a third party application may be protected by intellectual property rights which are owned by the providers (or by other persons or companies on their behalf). You may not modify, rent, lease, loan, sell, distribute or create derivative works based on these data, content, or resources (either in whole or in part) unless you have been specifically given permission to do so by the relevant owners.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6903711Z 
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6905276Z 7.3 You acknowledge that your use of such third party applications, data, content, or resources may be subject to separate terms between you and the relevant third party. In that case, this License Agreement does not affect your legal relationship with these third parties.
+build_apk	Install Android SDK (writable, deterministic) + accept licenses	2026-02-10T21:16:52.6907033Z 

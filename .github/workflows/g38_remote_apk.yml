@@ -17,13 +17,10 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install Android SDK (writable, deterministic) + accept licenses
+      - name: Install Android SDK (writable, no-apt, no-unzip) + accept licenses
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update -y
-          sudo apt-get install -y unzip
-
           SDKROOT="${ANDROID_SDK_ROOT}"
           echo "SDKROOT=$SDKROOT"
           rm -rf "$SDKROOT"
@@ -32,21 +29,37 @@ jobs:
 
           URL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"
           echo "Downloading: $URL"
-          curl -fL --retry 3 --retry-delay 2 "$URL" -o cmdline.zip
+          curl -fL --retry 5 --retry-delay 2 "$URL" -o cmdline.zip
+          ls -lah cmdline.zip
 
-          unzip -q cmdline.zip
+          python3 - <<'PY'
+          import zipfile, os
+          z=zipfile.ZipFile("cmdline.zip")
+          z.extractall(".")
+          print("Extracted top-level:", os.listdir("."))
+          PY
           rm -f cmdline.zip
 
+          # Normalize extracted folder to: cmdline-tools/latest/...
           rm -rf latest
-          test -d cmdline-tools
-          mv cmdline-tools latest
+          if [ -d "cmdline-tools" ]; then
+            mv cmdline-tools latest
+          else
+            # fallback: find first dir that contains bin/sdkmanager
+            D="$(find . -maxdepth 4 -type f -path "*/bin/sdkmanager" | head -n 1 || true)"
+            test -n "$D"
+            BASE="$(dirname "$(dirname "$D")")"
+            mv "$BASE" latest
+          fi
 
+          test -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager"
           export PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"
           sdkmanager --version
 
-          yes | sdkmanager --sdk_root="$SDKROOT" --licenses
+          # install baseline packages (this should handle license prompts via yes)
           yes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          yes | sdkmanager --sdk_root="$SDKROOT" --licenses
+          # one more best-effort license pass; do not block build if it returns nonzero after acceptance
+          (yes | sdkmanager --sdk_root="$SDKROOT" --licenses) || true
 
       - name: Locate gradlew
         id: locate
