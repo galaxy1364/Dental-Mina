@@ -78,11 +78,24 @@ jobs:
             npm run build
           fi
 
+          CAP=""
+          if [ -x "./node_modules/.bin/cap" ]; then
+            CAP="./node_modules/.bin/cap"
+          fi
+
+          run_cap () {
+            if [ -n "$CAP" ]; then
+              "$CAP" "$@"
+            else
+              npm exec --yes --package @capacitor/cli -- cap "$@"
+            fi
+          }
+
           if [ -d "android" ]; then
-            npx cap sync android
+            run_cap sync android
           else
-            npx cap add android
-            npx cap sync android
+            run_cap add android
+            run_cap sync android
           fi
 
           test -x "android/gradlew"
