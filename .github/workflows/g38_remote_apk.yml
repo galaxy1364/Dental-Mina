@@ -7,27 +7,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Locate gradlew
         id: locate
         shell: bash
         run: |
           set -euo pipefail
-          G=$(find . -maxdepth 10 -type f -name "gradlew" | head -n 1)
+          G=$(find . -maxdepth 12 -type f -name "gradlew" | head -n 1)
           test -n "$G"
           chmod +x "$G"
           D=$(dirname "$G")
           echo "gradle_dir=$D" >> "$GITHUB_OUTPUT"
+          echo "gradle_dir=$D"
+
       - name: Build Debug APK
         shell: bash
         run: |
           set -euo pipefail
           cd "${{ steps.locate.outputs.gradle_dir }}"
           ./gradlew --no-daemon --stacktrace assembleDebug
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

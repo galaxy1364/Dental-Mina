@@ -1,0 +1,13 @@
+﻿build_apk	Locate gradlew	∩╗┐2026-02-10T20:43:01.9838497Z ##[group]Run set -euo pipefail
+build_apk	Locate gradlew	2026-02-10T20:43:01.9839560Z [36;1mset -euo pipefail[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9840790Z [36;1mG=$(find . -maxdepth 10 -type f -name "gradlew" | head -n 1)[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9842136Z [36;1mtest -n "$G"[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9843132Z [36;1mchmod +x "$G"[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9843938Z [36;1mD=$(dirname "$G")[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9844905Z [36;1mecho "gradle_dir=$D" >> "$GITHUB_OUTPUT"[0m
+build_apk	Locate gradlew	2026-02-10T20:43:01.9885554Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Locate gradlew	2026-02-10T20:43:01.9886787Z env:
+build_apk	Locate gradlew	2026-02-10T20:43:01.9887839Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate gradlew	2026-02-10T20:43:01.9889742Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate gradlew	2026-02-10T20:43:01.9891213Z ##[endgroup]
+build_apk	Locate gradlew	2026-02-10T20:43:02.0045240Z ##[error]Process completed with exit code 1.
