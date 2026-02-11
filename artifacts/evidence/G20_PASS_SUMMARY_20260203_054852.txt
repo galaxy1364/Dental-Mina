@@ -1,4 +1,0 @@
-﻿GATE=G20_SIGNED_CI_ARTIFACT_PROVENANCE
-AI_SIGNATURE=PYM JBZ
-UTC=2026-02-03T05:48:52.4473884Z
-NOTE=Local Sigstore verifier init may fail; CI verify artifact is source for verification.
