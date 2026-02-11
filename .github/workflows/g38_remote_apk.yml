@@ -17,11 +17,23 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android SDK licenses (non-interactive)
+      - name: Accept Android SDK licenses (non-interactive, robust)
         shell: bash
         run: |
           set -euo pipefail
-          yes | sdkmanager --licenses >/dev/null
+          SDKROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -n "$SDKROOT"
+          SM="$(command -v sdkmanager || true)"
+          if [ -z "$SM" ]; then
+            if [ -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager" ]; then SM="$SDKROOT/cmdline-tools/latest/bin/sdkmanager"; fi
+            if [ -z "$SM" ] && [ -x "$SDKROOT/cmdline-tools/*/bin/sdkmanager" ]; then SM="$(ls -1d $SDKROOT/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -n 1)"; fi
+          fi
+          test -n "$SM"
+          for i in 1 2 3; do
+            (yes | "$SM" --sdk_root="$SDKROOT" --licenses) && exit 0
+            sleep 2
+          done
+          exit 1
 
       - name: Locate gradlew
         id: locate
