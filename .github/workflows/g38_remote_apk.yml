@@ -17,6 +17,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Accept Android SDK licenses (non-interactive)
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | sdkmanager --licenses >/dev/null
+
       - name: Locate gradlew
         id: locate
         shell: bash
@@ -27,7 +33,6 @@ jobs:
           chmod +x "$G"
           D=$(dirname "$G")
           echo "gradle_dir=$D" >> "$GITHUB_OUTPUT"
-          echo "gradle_dir=$D"
 
       - name: Build Debug APK
         shell: bash
