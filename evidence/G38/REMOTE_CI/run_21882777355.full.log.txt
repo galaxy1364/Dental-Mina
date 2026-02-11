@@ -1,0 +1,213 @@
+﻿build_apk	Set up job	∩╗┐2026-02-10T21:18:57.0914357Z Current runner version: '2.331.0'
+build_apk	Set up job	2026-02-10T21:18:57.0941874Z ##[group]Runner Image Provisioner
+build_apk	Set up job	2026-02-10T21:18:57.0942743Z Hosted Compute Agent
+build_apk	Set up job	2026-02-10T21:18:57.0943353Z Version: 20260123.484
+build_apk	Set up job	2026-02-10T21:18:57.0943990Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build_apk	Set up job	2026-02-10T21:18:57.0944653Z Build Date: 2026-01-23T19:41:17Z
+build_apk	Set up job	2026-02-10T21:18:57.0945353Z Worker ID: {acb22ff1-7265-45e7-9c5b-d6f5162c5b0d}
+build_apk	Set up job	2026-02-10T21:18:57.0946071Z Azure Region: westus
+build_apk	Set up job	2026-02-10T21:18:57.0946617Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:18:57.0948107Z ##[group]Operating System
+build_apk	Set up job	2026-02-10T21:18:57.0948702Z Ubuntu
+build_apk	Set up job	2026-02-10T21:18:57.0949179Z 24.04.3
+build_apk	Set up job	2026-02-10T21:18:57.0949748Z LTS
+build_apk	Set up job	2026-02-10T21:18:57.0950336Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:18:57.0950804Z ##[group]Runner Image
+build_apk	Set up job	2026-02-10T21:18:57.0951348Z Image: ubuntu-24.04
+build_apk	Set up job	2026-02-10T21:18:57.0951892Z Version: 20260201.15.1
+build_apk	Set up job	2026-02-10T21:18:57.0952901Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build_apk	Set up job	2026-02-10T21:18:57.0954630Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build_apk	Set up job	2026-02-10T21:18:57.0955547Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:18:57.0956669Z ##[group]GITHUB_TOKEN Permissions
+build_apk	Set up job	2026-02-10T21:18:57.0958673Z Contents: read
+build_apk	Set up job	2026-02-10T21:18:57.0959252Z Metadata: read
+build_apk	Set up job	2026-02-10T21:18:57.0960248Z Packages: read
+build_apk	Set up job	2026-02-10T21:18:57.0960767Z ##[endgroup]
+build_apk	Set up job	2026-02-10T21:18:57.0962983Z Secret source: Actions
+build_apk	Set up job	2026-02-10T21:18:57.0963748Z Prepare workflow directory
+build_apk	Set up job	2026-02-10T21:18:57.1575570Z Prepare all required actions
+build_apk	Set up job	2026-02-10T21:18:57.1615147Z Getting action download info
+build_apk	Set up job	2026-02-10T21:18:57.6463924Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build_apk	Set up job	2026-02-10T21:18:57.7525647Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build_apk	Set up job	2026-02-10T21:18:58.9834034Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build_apk	Set up job	2026-02-10T21:18:59.2220147Z Complete job name: build_apk
+build_apk	Checkout	∩╗┐2026-02-10T21:18:59.2978537Z ##[group]Run actions/checkout@v4
+build_apk	Checkout	2026-02-10T21:18:59.2979892Z with:
+build_apk	Checkout	2026-02-10T21:18:59.2980516Z   repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:18:59.2981749Z   token: ***
+build_apk	Checkout	2026-02-10T21:18:59.2982326Z   ssh-strict: true
+build_apk	Checkout	2026-02-10T21:18:59.2982932Z   ssh-user: git
+build_apk	Checkout	2026-02-10T21:18:59.2983552Z   persist-credentials: true
+build_apk	Checkout	2026-02-10T21:18:59.2984268Z   clean: true
+build_apk	Checkout	2026-02-10T21:18:59.2984884Z   sparse-checkout-cone-mode: true
+build_apk	Checkout	2026-02-10T21:18:59.2985681Z   fetch-depth: 1
+build_apk	Checkout	2026-02-10T21:18:59.2986281Z   fetch-tags: false
+build_apk	Checkout	2026-02-10T21:18:59.2986905Z   show-progress: true
+build_apk	Checkout	2026-02-10T21:18:59.2987538Z   lfs: false
+build_apk	Checkout	2026-02-10T21:18:59.2988112Z   submodules: false
+build_apk	Checkout	2026-02-10T21:18:59.2988743Z   set-safe-directory: true
+build_apk	Checkout	2026-02-10T21:18:59.2989804Z env:
+build_apk	Checkout	2026-02-10T21:18:59.2990761Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Checkout	2026-02-10T21:18:59.2992333Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Checkout	2026-02-10T21:18:59.2993507Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:18:59.4113597Z Syncing repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:18:59.4116228Z ##[group]Getting Git version info
+build_apk	Checkout	2026-02-10T21:18:59.4117506Z Working directory is '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-10T21:18:59.4119159Z [command]/usr/bin/git version
+build_apk	Checkout	2026-02-10T21:18:59.4197899Z git version 2.52.0
+build_apk	Checkout	2026-02-10T21:18:59.4225716Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:18:59.4249905Z Temporarily overriding HOME='/home/runner/work/_temp/21011ff1-6682-494f-b33f-35d8335dfa13' before making global git config changes
+build_apk	Checkout	2026-02-10T21:18:59.4252749Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Checkout	2026-02-10T21:18:59.4255625Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-10T21:18:59.4298966Z Deleting the contents of '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-10T21:18:59.4302996Z ##[group]Initializing the repository
+build_apk	Checkout	2026-02-10T21:18:59.4307011Z [command]/usr/bin/git init /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-10T21:18:59.4439353Z hint: Using 'master' as the name for the initial branch. This default branch name
+build_apk	Checkout	2026-02-10T21:18:59.4441749Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build_apk	Checkout	2026-02-10T21:18:59.4443973Z hint: to use in all of your new repositories, which will suppress this warning,
+build_apk	Checkout	2026-02-10T21:18:59.4446229Z hint: call:
+build_apk	Checkout	2026-02-10T21:18:59.4447159Z hint:
+build_apk	Checkout	2026-02-10T21:18:59.4448457Z hint: 	git config --global init.defaultBranch <name>
+build_apk	Checkout	2026-02-10T21:18:59.4450426Z hint:
+build_apk	Checkout	2026-02-10T21:18:59.4452053Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build_apk	Checkout	2026-02-10T21:18:59.4454668Z hint: 'development'. The just-created branch can be renamed via this command:
+build_apk	Checkout	2026-02-10T21:18:59.4456796Z hint:
+build_apk	Checkout	2026-02-10T21:18:59.4457819Z hint: 	git branch -m <name>
+build_apk	Checkout	2026-02-10T21:18:59.4458993Z hint:
+build_apk	Checkout	2026-02-10T21:18:59.4460883Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build_apk	Checkout	2026-02-10T21:18:59.4463823Z Initialized empty Git repository in /home/runner/work/Dental-Mina/Dental-Mina/.git/
+build_apk	Checkout	2026-02-10T21:18:59.4467523Z [command]/usr/bin/git remote add origin https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:18:59.4498871Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:18:59.4501024Z ##[group]Disabling automatic garbage collection
+build_apk	Checkout	2026-02-10T21:18:59.4503401Z [command]/usr/bin/git config --local gc.auto 0
+build_apk	Checkout	2026-02-10T21:18:59.4537016Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:18:59.4538820Z ##[group]Setting up auth
+build_apk	Checkout	2026-02-10T21:18:59.4545744Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Checkout	2026-02-10T21:18:59.4583021Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Checkout	2026-02-10T21:18:59.4966454Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Checkout	2026-02-10T21:18:59.4998462Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Checkout	2026-02-10T21:18:59.5225600Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Checkout	2026-02-10T21:18:59.5257567Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Checkout	2026-02-10T21:18:59.5495831Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build_apk	Checkout	2026-02-10T21:18:59.5537834Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:18:59.5540899Z ##[group]Fetching the repository
+build_apk	Checkout	2026-02-10T21:18:59.5551373Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +35af055923b857be92527433a0ba01888b5ff2b9:refs/remotes/origin/main
+build_apk	Checkout	2026-02-10T21:19:00.9104155Z From https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-10T21:19:00.9105309Z  * [new ref]         35af055923b857be92527433a0ba01888b5ff2b9 -> origin/main
+build_apk	Checkout	2026-02-10T21:19:00.9140946Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:19:00.9141785Z ##[group]Determining the checkout info
+build_apk	Checkout	2026-02-10T21:19:00.9143416Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:19:00.9149341Z [command]/usr/bin/git sparse-checkout disable
+build_apk	Checkout	2026-02-10T21:19:00.9194899Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build_apk	Checkout	2026-02-10T21:19:00.9223903Z ##[group]Checking out the ref
+build_apk	Checkout	2026-02-10T21:19:00.9227518Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build_apk	Checkout	2026-02-10T21:19:01.0118560Z Switched to a new branch 'main'
+build_apk	Checkout	2026-02-10T21:19:01.0120096Z branch 'main' set up to track 'origin/main'.
+build_apk	Checkout	2026-02-10T21:19:01.0136727Z ##[endgroup]
+build_apk	Checkout	2026-02-10T21:19:01.0180153Z [command]/usr/bin/git log -1 --format=%H
+build_apk	Checkout	2026-02-10T21:19:01.0206821Z 35af055923b857be92527433a0ba01888b5ff2b9
+build_apk	Setup Java 17	∩╗┐2026-02-10T21:19:01.0460288Z ##[group]Run actions/setup-java@v4
+build_apk	Setup Java 17	2026-02-10T21:19:01.0460648Z with:
+build_apk	Setup Java 17	2026-02-10T21:19:01.0460837Z   distribution: temurin
+build_apk	Setup Java 17	2026-02-10T21:19:01.0461240Z   java-version: 17
+build_apk	Setup Java 17	2026-02-10T21:19:01.0461434Z   java-package: jdk
+build_apk	Setup Java 17	2026-02-10T21:19:01.0461641Z   check-latest: false
+build_apk	Setup Java 17	2026-02-10T21:19:01.0461829Z   server-id: github
+build_apk	Setup Java 17	2026-02-10T21:19:01.0462064Z   server-username: GITHUB_ACTOR
+build_apk	Setup Java 17	2026-02-10T21:19:01.0462293Z   server-password: GITHUB_TOKEN
+build_apk	Setup Java 17	2026-02-10T21:19:01.0462519Z   overwrite-settings: true
+build_apk	Setup Java 17	2026-02-10T21:19:01.0462721Z   job-status: success
+build_apk	Setup Java 17	2026-02-10T21:19:01.0463034Z   token: ***
+build_apk	Setup Java 17	2026-02-10T21:19:01.0463202Z env:
+build_apk	Setup Java 17	2026-02-10T21:19:01.0463485Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:19:01.0463956Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Setup Java 17	2026-02-10T21:19:01.0464311Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-10T21:19:01.2534075Z ##[group]Installed distributions
+build_apk	Setup Java 17	2026-02-10T21:19:01.2607307Z Resolved Java 17.0.18+8 from tool-cache
+build_apk	Setup Java 17	2026-02-10T21:19:01.2608536Z Setting Java 17.0.18+8 as the default
+build_apk	Setup Java 17	2026-02-10T21:19:01.2622916Z Creating toolchains.xml for JDK version 17 from temurin
+build_apk	Setup Java 17	2026-02-10T21:19:01.2706668Z Writing to /home/runner/.m2/toolchains.xml
+build_apk	Setup Java 17	2026-02-10T21:19:01.2707313Z 
+build_apk	Setup Java 17	2026-02-10T21:19:01.2710878Z Java configuration:
+build_apk	Setup Java 17	2026-02-10T21:19:01.2711766Z   Distribution: temurin
+build_apk	Setup Java 17	2026-02-10T21:19:01.2712444Z   Version: 17.0.18+8
+build_apk	Setup Java 17	2026-02-10T21:19:01.2713207Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Java 17	2026-02-10T21:19:01.2713847Z 
+build_apk	Setup Java 17	2026-02-10T21:19:01.2714503Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-10T21:19:01.2729363Z Creating settings.xml with server-id: github
+build_apk	Setup Java 17	2026-02-10T21:19:01.2736613Z Writing to /home/runner/.m2/settings.xml
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	∩╗┐2026-02-10T21:19:01.2850447Z ##[group]Run set -euo pipefail
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2850874Z [36;1mset -euo pipefail[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2851191Z [36;1mSDKROOT="${ANDROID_SDK_ROOT}"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2851525Z [36;1mecho "SDKROOT=$SDKROOT"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2851819Z [36;1mrm -rf "$SDKROOT"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2852142Z [36;1mmkdir -p "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2852502Z [36;1mcd "$SDKROOT/cmdline-tools"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2852822Z [36;1m[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2853336Z [36;1mURL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2853952Z [36;1mecho "Downloading: $URL"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2854360Z [36;1mcurl -fL --retry 5 --retry-delay 2 "$URL" -o cmdline.zip[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2854780Z [36;1mls -lah cmdline.zip[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2855052Z [36;1m[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2855262Z [36;1mpython3 - <<'PY'[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2855533Z [36;1mimport zipfile, os[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2855830Z [36;1mz=zipfile.ZipFile("cmdline.zip")[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2856200Z [36;1mz.extractall(".")[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2856513Z [36;1mprint("Extracted top-level:", os.listdir("."))[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2856840Z [36;1mPY[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2857048Z [36;1mrm -f cmdline.zip[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2857280Z [36;1m[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2857682Z [36;1m# Normalize extracted folder to: cmdline-tools/latest/...[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2858121Z [36;1mrm -rf latest[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2858371Z [36;1mif [ -d "cmdline-tools" ]; then[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2858673Z [36;1m  mv cmdline-tools latest[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2858929Z [36;1melse[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2859223Z [36;1m  # fallback: find first dir that contains bin/sdkmanager[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2860249Z [36;1m  D="$(find . -maxdepth 4 -type f -path "*/bin/sdkmanager" | head -n 1 || true)"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2860724Z [36;1m  test -n "$D"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2860990Z [36;1m  BASE="$(dirname "$(dirname "$D")")"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2861308Z [36;1m  mv "$BASE" latest[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2861551Z [36;1mfi[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2861733Z [36;1m[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2862018Z [36;1mtest -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2862583Z [36;1mexport PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2863067Z [36;1msdkmanager --version[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2863542Z [36;1m[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2863889Z [36;1m# install baseline packages (this should handle license prompts via yes)[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2864648Z [36;1myes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2865487Z [36;1m# one more best-effort license pass; do not block build if it returns nonzero after acceptance[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2866167Z [36;1m(yes | sdkmanager --sdk_root="$SDKROOT" --licenses) || true[0m
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2978874Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2979339Z env:
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2979885Z   ANDROID_SDK_ROOT: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2980503Z   ANDROID_HOME: /home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2981082Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2981680Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.2982141Z ##[endgroup]
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.3061736Z SDKROOT=/home/runner/work/Dental-Mina/Dental-Mina/.ci/android-sdk
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.3087445Z Downloading: https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.3140263Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.3141145Z                                  Dload  Upload   Total   Spent    Left  Speed
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:01.3141531Z 
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:02.2991474Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:03.2576824Z  44  157M   44 70.9M    0     0  72.0M      0  0:00:02 --:--:--  0:00:02 72.0M
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:03.2577982Z 100  157M  100  157M    0     0  81.2M      0  0:00:01  0:00:01 --:--:-- 81.2M
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:03.2624657Z -rw-r--r-- 1 runner runner 158M Feb 10 21:19 cmdline.zip
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:03.4789738Z Extracted top-level: ['cmdline-tools', 'cmdline.zip']
+build_apk	Install Android SDK (writable, no-apt, no-unzip) + accept licenses	2026-02-10T21:19:03.5209878Z ##[error]Process completed with exit code 1.
+build_apk	Post Setup Java 17	∩╗┐2026-02-10T21:19:03.5322546Z Post job cleanup.
+build_apk	Post Checkout	∩╗┐2026-02-10T21:19:03.7195177Z Post job cleanup.
+build_apk	Post Checkout	2026-02-10T21:19:03.8154944Z [command]/usr/bin/git version
+build_apk	Post Checkout	2026-02-10T21:19:03.8192210Z git version 2.52.0
+build_apk	Post Checkout	2026-02-10T21:19:03.8240711Z Temporarily overriding HOME='/home/runner/work/_temp/9b467e0e-4b28-4822-af3f-f456fad1cd61' before making global git config changes
+build_apk	Post Checkout	2026-02-10T21:19:03.8242066Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Post Checkout	2026-02-10T21:19:03.8248749Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Post Checkout	2026-02-10T21:19:03.8292308Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Post Checkout	2026-02-10T21:19:03.8329008Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Post Checkout	2026-02-10T21:19:03.8592779Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Post Checkout	2026-02-10T21:19:03.8618110Z http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-10T21:19:03.8635867Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-10T21:19:03.8677996Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Post Checkout	2026-02-10T21:19:03.8936259Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Post Checkout	2026-02-10T21:19:03.8973755Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Complete job	∩╗┐2026-02-10T21:19:03.9333689Z Cleaning up orphan processes

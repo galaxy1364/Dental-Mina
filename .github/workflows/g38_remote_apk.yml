@@ -17,7 +17,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install Android SDK (writable, no-apt, no-unzip) + accept licenses
+      - name: Install Android SDK (writable) + accept licenses (fallback-safe)
         shell: bash
         run: |
           set -euo pipefail
@@ -25,40 +25,49 @@ jobs:
           echo "SDKROOT=$SDKROOT"
           rm -rf "$SDKROOT"
           mkdir -p "$SDKROOT/cmdline-tools"
-          cd "$SDKROOT/cmdline-tools"
 
-          URL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"
-          echo "Downloading: $URL"
-          curl -fL --retry 5 --retry-delay 2 "$URL" -o cmdline.zip
-          ls -lah cmdline.zip
+          echo "Diagnostics:"
+          which curl || true
+          python3 -V || true
+          ls -lah /usr/local/lib/android/sdk/cmdline-tools || true
 
-          python3 - <<'PY'
-          import zipfile, os
-          z=zipfile.ZipFile("cmdline.zip")
-          z.extractall(".")
-          print("Extracted top-level:", os.listdir("."))
-          PY
-          rm -f cmdline.zip
+          # A) Prefer preinstalled sdkmanager (copy into writable SDKROOT)
+          PRE="/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager"
+          if [ -x "$PRE" ]; then
+            echo "Using preinstalled sdkmanager; copying cmdline-tools to writable SDKROOT"
+            cp -a /usr/local/lib/android/sdk/cmdline-tools/* "$SDKROOT/cmdline-tools/" || true
+          fi
 
-          # Normalize extracted folder to: cmdline-tools/latest/...
-          rm -rf latest
-          if [ -d "cmdline-tools" ]; then
-            mv cmdline-tools latest
-          else
-            # fallback: find first dir that contains bin/sdkmanager
-            D="$(find . -maxdepth 4 -type f -path "*/bin/sdkmanager" | head -n 1 || true)"
-            test -n "$D"
-            BASE="$(dirname "$(dirname "$D")")"
-            mv "$BASE" latest
+          # B) If still no sdkmanager in SDKROOT, download cmdline-tools and extract via python (no unzip/apt)
+          if [ ! -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager" ]; then
+            echo "Preinstalled not usable; downloading cmdline-tools..."
+            cd "$SDKROOT/cmdline-tools"
+            URL="https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip"
+            curl -fL --retry 5 --retry-delay 2 "$URL" -o cmdline.zip
+            ls -lah cmdline.zip
+            python3 - <<'PY'
+            import zipfile, os
+            z=zipfile.ZipFile("cmdline.zip")
+            z.extractall(".")
+            print("Extracted top-level:", os.listdir("."))
+            PY
+            rm -f cmdline.zip
+            rm -rf latest
+            if [ -d "cmdline-tools" ]; then
+              mv cmdline-tools latest
+            else
+              D="$(find . -maxdepth 4 -type f -path "*/bin/sdkmanager" | head -n 1 || true)"
+              test -n "$D"
+              BASE="$(dirname "$(dirname "$D")")"
+              mv "$BASE" latest
+            fi
           fi
 
           test -x "$SDKROOT/cmdline-tools/latest/bin/sdkmanager"
           export PATH="$SDKROOT/cmdline-tools/latest/bin:$SDKROOT/platform-tools:$PATH"
-          sdkmanager --version
 
-          # install baseline packages (this should handle license prompts via yes)
+          sdkmanager --version
           yes | sdkmanager --sdk_root="$SDKROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          # one more best-effort license pass; do not block build if it returns nonzero after acceptance
           (yes | sdkmanager --sdk_root="$SDKROOT" --licenses) || true
 
       - name: Locate gradlew
