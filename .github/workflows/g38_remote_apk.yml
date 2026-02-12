@@ -103,10 +103,9 @@ fi
 echo "Using WEB=$WEB"
 
 # Ensure capacitor.config.json uses the detected webDir (CI-only)
-node - <<'NODE'
-const fs = require('fs');
+WEB="$WEB" node - <<'NODE'const fs = require('fs');
 const p = 'capacitor.config.json';
-const web = process.env.WEB;
+const web = process.env.WEB || '';
 let j = {};
 if (fs.existsSync(p)) j = JSON.parse(fs.readFileSync(p,'utf8'));
 j.webDir = web;
