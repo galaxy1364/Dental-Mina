@@ -270,10 +270,10 @@
                                                   "evidence_dir":  "evidence/G42"
                                               },
                   "G43_REAL_APP_RUN_ON_PHONE":  {
-                                                    "status":  "LOCKED_PASS",
+                                                    "status":  "FIX_TO_PASS",
                                                     "ai_signature":  "PYM JBZ",
-                                                    "locked_at_utc":  "2026-02-12T01:58:06.8522929Z",
-                                                    "evidence_dir":  "evidence/G43"
+                                                    "note":  "Prior PASS was invalid: SPA HTML probe used content-match; must validate status=200 + run logs, not rendered text.",
+                                                    "touched_at_utc":  "2026-02-12T02:01:02.5669260Z"
                                                 }
               }
 }

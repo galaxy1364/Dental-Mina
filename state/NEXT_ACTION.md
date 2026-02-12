@@ -1,3 +1,3 @@
-﻿Authorized Gate: G44_REAL_UI_FIRST_SCREEN
-Reason: G43 LOCKED_PASS. Next: build first real usable screen + visible UX (not paperwork).
+﻿Authorized Gate: G43_REAL_APP_RUN_ON_PHONE
+Reason: Fix-to-PASS. Prior probe logic was wrong for SPA; run.ps1 now contains deterministic G43 runner.
 AI_SIGNATURE: PYM JBZ
