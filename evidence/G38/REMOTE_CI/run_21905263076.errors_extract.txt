@@ -1,0 +1,78 @@
+﻿build_apk	Setup Node.js (LTS)	2026-02-11T12:35:10.4006465Z npm cache is not found
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:35:10.4118232Z [36;1m# 1) Prefer capacitor.config.* anywhere (deeper search)[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:35:10.4118953Z [36;1mCFG="$(find . -maxdepth 30 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1 || true)"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	∩╗┐2026-02-11T12:35:10.4396477Z ##[group]Run set -euo pipefail
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4396844Z [36;1mset -euo pipefail[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4397165Z [36;1mcd "./apps/dental-mina"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4397457Z [36;1mecho "Working in: $(pwd)"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4397965Z [36;1mls -lah[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4398176Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4398363Z [36;1mnpm ci[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4398574Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4398820Z [36;1mif npm run -s | grep -qE '(^|\s)build(\s|$)'; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4399152Z [36;1m  npm run build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4399373Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4399564Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4399743Z [36;1mCAP=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4399987Z [36;1mif [ -x "./node_modules/.bin/cap" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4400291Z [36;1m  CAP="./node_modules/.bin/cap"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4400720Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4400921Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4401119Z [36;1mrun_cap () {[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4401352Z [36;1m  if [ -n "$CAP" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4401637Z [36;1m    "$CAP" "$@"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4401856Z [36;1m  else[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4402132Z [36;1m    npm exec --yes --package @capacitor/cli -- cap "$@"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4402474Z [36;1m  fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4402667Z [36;1m}[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4402872Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4403065Z [36;1mif [ -d "android" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4403333Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4403571Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4403776Z [36;1m  run_cap add android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4404027Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4404270Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4404458Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4404657Z [36;1mtest -x "android/gradlew"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4434451Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4434807Z env:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4435034Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4435345Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4435752Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4436235Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4436613Z ##[endgroup]
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4491022Z Working in: /home/runner/work/Dental-Mina/Dental-Mina/apps/dental-mina
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4503991Z total 252K
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4504627Z drwxr-xr-x 4 runner runner 4.0K Feb 11 12:35 .
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4505338Z drwxr-xr-x 3 runner runner 4.0K Feb 11 12:35 ..
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4505803Z -rw-r--r-- 1 runner runner  253 Feb 11 12:35 .gitignore
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4506237Z -rw-r--r-- 1 runner runner 2.5K Feb 11 12:35 README.md
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4506728Z -rw-r--r-- 1 runner runner  128 Feb 11 12:35 capacitor.config.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4507248Z -rw-r--r-- 1 runner runner  616 Feb 11 12:35 eslint.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4507926Z -rw-r--r-- 1 runner runner  377 Feb 11 12:35 index.html
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4508404Z -rw-r--r-- 1 runner runner 188K Feb 11 12:35 package-lock.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4508855Z -rw-r--r-- 1 runner runner 1.2K Feb 11 12:35 package.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4509311Z -rw-r--r-- 1 runner runner   91 Feb 11 12:35 postcss.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4509734Z drwxr-xr-x 2 runner runner 4.0K Feb 11 12:35 public
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4510117Z drwxr-xr-x 3 runner runner 4.0K Feb 11 12:35 src
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4510548Z -rw-r--r-- 1 runner runner  161 Feb 11 12:35 tailwind.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4511009Z -rw-r--r-- 1 runner runner  732 Feb 11 12:35 tsconfig.app.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4511441Z -rw-r--r-- 1 runner runner  119 Feb 11 12:35 tsconfig.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4511888Z -rw-r--r-- 1 runner runner  653 Feb 11 12:35 tsconfig.node.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:10.4512340Z -rw-r--r-- 1 runner runner  161 Feb 11 12:35 vite.config.ts
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0704977Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0705858Z added 282 packages, and audited 283 packages in 5s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0706374Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0707102Z 66 packages are looking for funding
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0718484Z   run `npm fund` for details
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0719895Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.0720254Z found 0 vulnerabilities
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4473585Z Γ£ö Adding native android project in android in 39.27ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4474772Z Γ£ö add in 39.99ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4542795Z [warn] sync could not run--missing dist directory.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4544897Z [success] android platform added!
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4545568Z Follow the Developer Workflow guide to get building:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.4546196Z https://capacitorjs.com/docs/basics/workflow
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.6445912Z [error] Could not find the web assets directory: ./dist.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.6448595Z         Please create it and make sure it has an index.html file. You can change the path of this directory in capacitor.config.json (webDir option). You may need to compile the web assets for your app (typically npm run build). More info: https://capacitorjs.com/docs/basics/workflow#sync-your-project
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:35:15.6531196Z ##[error]Process completed with exit code 1.
