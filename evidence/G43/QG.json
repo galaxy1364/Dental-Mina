@@ -1,0 +1,11 @@
+﻿{
+    "gate":  "G43_REAL_APP_RUN_ON_PHONE",
+    "ai_signature":  "PYM JBZ",
+    "result":  "PASS",
+    "artifacts":  {
+                      "build_log":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G43\\RUN\\build_preview.log.txt",
+                      "probe_log":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G43\\RUN\\probe_lockpack_checklist.log.txt",
+                      "manifest_sha256":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G43\\SNAPSHOT\\manifest.sha256.txt"
+                  },
+    "timestamp_utc":  "2026-02-12T01:58:06.6150298Z"
+}

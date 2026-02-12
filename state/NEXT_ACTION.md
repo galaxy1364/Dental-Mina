@@ -1,3 +1,3 @@
-﻿Authorized Gate: G43_REAL_APP_RUN_ON_PHONE
-Reason: G42 LOCKED_PASS. Next: run app (web + Android) and verify checklist page loads, capture minimal evidence.
+﻿Authorized Gate: G44_REAL_UI_FIRST_SCREEN
+Reason: G43 LOCKED_PASS. Next: build first real usable screen + visible UX (not paperwork).
 AI_SIGNATURE: PYM JBZ

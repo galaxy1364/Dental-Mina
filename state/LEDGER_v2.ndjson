@@ -87,3 +87,4 @@
 {"ts_utc":"2026-02-12T01:43:37.4314846Z","gate":"G41_STATE_RECONCILE_FROM_EVIDENCE","result":"PASS","evidence":["evidence/G41/QG.json","evidence/G41/SNAPSHOT/manifest.sha256.txt"],"ai_signature":"PYM JBZ"}
 {"ts_utc":"2026-02-12T01:46:48.4768630Z","gate":"G41_STATE_RECONCILE_FROM_EVIDENCE","result":"PASS","evidence":["evidence/G41/STATE_LOCK_FIX/QG.json","evidence/G41/STATE_LOCK_FIX/manifest.sha256.txt"],"ai_signature":"PYM JBZ"}
 {"ts_utc":"2026-02-12T01:52:04.6762267Z","gate":"G42_APP_CHECKLIST_0_100","result":"PASS","evidence":["evidence/G42/QG.json","evidence/G42/SNAPSHOT/manifest.sha256.txt","docs/STATUS_CHATPROOF.md"],"ai_signature":"PYM JBZ"}
+{"ts_utc":"2026-02-12T01:58:06.7209287Z","gate":"G43_REAL_APP_RUN_ON_PHONE","result":"PASS","evidence":["evidence/G43/QG.json","evidence/G43/SNAPSHOT/manifest.sha256.txt","evidence/G43/RUN/build_preview.log.txt","evidence/G43/RUN/probe_lockpack_checklist.log.txt"],"ai_signature":"PYM JBZ"}
