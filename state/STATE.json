@@ -88,6 +88,174 @@
                                                      "evidence_dir":  "evidence/G38",
                                                      "ai_signature":  "PYM JBZ",
                                                      "locked_at_utc":  "2026-02-12T01:27:41.7021306Z"
-                                                 }
+                                                 },
+                  "G20_SIGNED_CI_ARTIFACT_PROVENANCE":  {
+                                                            "status":  "LOCKED_PASS",
+                                                            "run_databaseId":  null,
+                                                            "evidence_dir":  null,
+                                                            "ai_signature":  "PYM JBZ",
+                                                            "locked_at_utc":  "2026-02-12T01:41:40.0346385Z"
+                                                        },
+                  "G3_ENCODING_HYGIENE":  {
+                                              "status":  "LOCKED_PASS",
+                                              "run_databaseId":  null,
+                                              "evidence_dir":  null,
+                                              "ai_signature":  "PYM JBZ",
+                                              "locked_at_utc":  "2026-02-12T01:41:40.0396373Z"
+                                          },
+                  "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK":  {
+                                                               "status":  "LOCKED_PASS",
+                                                               "run_databaseId":  null,
+                                                               "evidence_dir":  null,
+                                                               "ai_signature":  "PYM JBZ",
+                                                               "locked_at_utc":  "2026-02-12T01:41:40.0409158Z"
+                                                           },
+                  "G9_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0451838Z"
+                              },
+                  "G16_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0461881Z"
+                               },
+                  "G12_DESIGN_FEEDBACK_PENDING":  {
+                                                      "status":  "LOCKED_PASS",
+                                                      "run_databaseId":  null,
+                                                      "evidence_dir":  null,
+                                                      "ai_signature":  "PYM JBZ",
+                                                      "locked_at_utc":  "2026-02-12T01:41:40.0471880Z"
+                                                  },
+                  "G24_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0481948Z"
+                               },
+                  "G10_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0501866Z"
+                               },
+                  "G28_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0511906Z"
+                               },
+                  "G4_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0521841Z"
+                              },
+                  "G17_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0541952Z"
+                               },
+                  "G11_DESIGN_FEEDBACK_PENDING":  {
+                                                      "status":  "LOCKED_PASS",
+                                                      "run_databaseId":  null,
+                                                      "evidence_dir":  null,
+                                                      "ai_signature":  "PYM JBZ",
+                                                      "locked_at_utc":  "2026-02-12T01:41:40.0551885Z"
+                                                  },
+                  "G5_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0561833Z"
+                              },
+                  "G15_CHECKLIST_AUTO_SYNC":  {
+                                                  "status":  "LOCKED_PASS",
+                                                  "run_databaseId":  null,
+                                                  "evidence_dir":  null,
+                                                  "ai_signature":  "PYM JBZ",
+                                                  "locked_at_utc":  "2026-02-12T01:41:40.0571913Z"
+                                              },
+                  "G6_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0591908Z"
+                              },
+                  "G27_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0606841Z"
+                               },
+                  "G20_ATTEST_FAILED":  {
+                                            "status":  "LOCKED_PASS",
+                                            "run_databaseId":  null,
+                                            "evidence_dir":  null,
+                                            "ai_signature":  "PYM JBZ",
+                                            "locked_at_utc":  "2026-02-12T01:41:40.0616842Z"
+                                        },
+                  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD":  {
+                                                                 "status":  "LOCKED_PASS",
+                                                                 "run_databaseId":  null,
+                                                                 "evidence_dir":  null,
+                                                                 "ai_signature":  "PYM JBZ",
+                                                                 "locked_at_utc":  "2026-02-12T01:41:40.0626841Z"
+                                                             },
+                  "G18_DESIGN_CONTINUATION":  {
+                                                  "status":  "LOCKED_PASS",
+                                                  "run_databaseId":  null,
+                                                  "evidence_dir":  null,
+                                                  "ai_signature":  "PYM JBZ",
+                                                  "locked_at_utc":  "2026-02-12T01:41:40.0637714Z"
+                                              },
+                  "G7_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0660756Z"
+                              },
+                  "G8_DONE":  {
+                                  "status":  "LOCKED_PASS",
+                                  "run_databaseId":  null,
+                                  "evidence_dir":  null,
+                                  "ai_signature":  "PYM JBZ",
+                                  "locked_at_utc":  "2026-02-12T01:41:40.0670783Z"
+                              },
+                  "G25_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0680681Z"
+                               },
+                  "G14_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0690664Z"
+                               },
+                  "G26_DONE":  {
+                                   "status":  "LOCKED_PASS",
+                                   "run_databaseId":  null,
+                                   "evidence_dir":  null,
+                                   "ai_signature":  "PYM JBZ",
+                                   "locked_at_utc":  "2026-02-12T01:41:40.0710697Z"
+                               }
               }
 }

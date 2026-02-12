@@ -1,0 +1,9 @@
+﻿{
+    "gate":  "G41_STATE_RECONCILE_FROM_EVIDENCE",
+    "ai_signature":  "PYM JBZ",
+    "result":  "PASS",
+    "artifacts":  {
+                      "manifest_sha256":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G41\\SNAPSHOT\\manifest.sha256.txt"
+                  },
+    "timestamp_utc":  "2026-02-12T01:43:37.3747821Z"
+}
