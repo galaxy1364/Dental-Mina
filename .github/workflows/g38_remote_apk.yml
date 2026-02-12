@@ -82,7 +82,37 @@ jobs:
           else
             echo "FATAL: no build script and no vite binary"; exit 1
           fi
-          test -f "dist/index.html"
+          WEB=""
+for d in dist build www; do
+  if [ -f "$d/index.html" ]; then WEB="$d"; break; fi
+done
+
+echo "---- DIAG: web output ----"
+ls -lah || true
+(test -d dist && (echo "dist:"; ls -lah dist) || true)
+(test -d build && (echo "build:"; ls -lah build) || true)
+(test -d www && (echo "www:"; ls -lah www) || true)
+
+if [ -z "$WEB" ]; then
+  echo "FATAL: cannot find web output (expected dist/build/www with index.html)"
+  echo "---- find index.html ----"
+  (find . -maxdepth 4 -type f -name "index.html" -print || true)
+  exit 1
+fi
+
+echo "Using WEB=$WEB"
+
+# Ensure capacitor.config.json uses the detected webDir (CI-only)
+node - <<'NODE'
+const fs = require('fs');
+const p = 'capacitor.config.json';
+const web = process.env.WEB;
+let j = {};
+if (fs.existsSync(p)) j = JSON.parse(fs.readFileSync(p,'utf8'));
+j.webDir = web;
+fs.writeFileSync(p, JSON.stringify(j, null, 2));
+console.log('patched capacitor.config.json webDir ->', web);
+NODE
           CAP=""
           if [ -x "./node_modules/.bin/cap" ]; then
             CAP="./node_modules/.bin/cap"
