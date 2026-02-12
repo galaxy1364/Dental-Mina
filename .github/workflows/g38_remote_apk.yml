@@ -1,4 +1,4 @@
-﻿name: G38 Remote APK Build
+name: G38 Remote APK Build
 on:
   workflow_dispatch:
   push:
