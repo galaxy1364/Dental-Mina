@@ -74,10 +74,15 @@ jobs:
 
           npm ci
 
+          # Build web assets (must produce dist/index.html)
           if npm run -s | grep -qE '(^|\s)build(\s|$)'; then
             npm run build
+          elif [ -x "./node_modules/.bin/vite" ]; then
+            ./node_modules/.bin/vite build
+          else
+            echo "FATAL: no build script and no vite binary"; exit 1
           fi
-
+          test -f "dist/index.html"
           CAP=""
           if [ -x "./node_modules/.bin/cap" ]; then
             CAP="./node_modules/.bin/cap"
