@@ -1,3 +1,3 @@
-﻿Authorized Gate: G41_STATE_RECONCILE_FROM_EVIDENCE
-Reason: G38 is LOCKED_PASS. Next: reconcile STATE from evidence pack and lock continuity.
+﻿Authorized Gate: G42_APP_CHECKLIST_0_100
+Reason: G41 LOCKED_PASS finalized. Next: add in-app 0-100 tickable checklist (IndexedDB) + chat-proof STATUS doc.
 AI_SIGNATURE: PYM JBZ

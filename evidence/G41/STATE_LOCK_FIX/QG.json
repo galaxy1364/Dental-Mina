@@ -1,0 +1,10 @@
+﻿{
+    "gate":  "G41_STATE_RECONCILE_FROM_EVIDENCE",
+    "ai_signature":  "PYM JBZ",
+    "result":  "PASS",
+    "note":  "STATE lock fix (Add-Member) + local exclude for generated dirs",
+    "artifacts":  {
+                      "manifest_sha256":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G41\\STATE_LOCK_FIX\\manifest.sha256.txt"
+                  },
+    "timestamp_utc":  "2026-02-12T01:46:48.4333213Z"
+}

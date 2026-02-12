@@ -256,6 +256,12 @@
                                    "evidence_dir":  null,
                                    "ai_signature":  "PYM JBZ",
                                    "locked_at_utc":  "2026-02-12T01:41:40.0710697Z"
-                               }
+                               },
+                  "G41_STATE_RECONCILE_FROM_EVIDENCE":  {
+                                                            "status":  "LOCKED_PASS",
+                                                            "ai_signature":  "PYM JBZ",
+                                                            "locked_at_utc":  "2026-02-12T01:46:48.2057510Z",
+                                                            "evidence_dir":  "evidence/G41"
+                                                        }
               }
 }

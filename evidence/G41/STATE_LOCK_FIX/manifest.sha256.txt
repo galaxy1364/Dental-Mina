@@ -1,0 +1,3 @@
+﻿cdc2d56858be032b1e398545d2c7e8b07956cbe06ae8cf82c35dc6abfa681434  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\state\STATE.json
+63e895e6198958a7f33195d5c5c471e9759ae765705c8931bf3f42dcc293334a  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\state\LEDGER_v2.ndjson
+28660f8fea449ca13cafa36bcdfdaf995735a91d3f446b8bac9a573ba973bf02  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\state\NEXT_ACTION.md
