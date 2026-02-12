@@ -1,6 +1,9 @@
 ﻿name: G38 Remote APK Build
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 jobs:
   build_apk:
     runs-on: ubuntu-latest
