@@ -1,0 +1,12 @@
+﻿{
+    "gate":  "G38_CAPACITOR_DEVICE_SMOKE",
+    "ai_signature":  "PYM JBZ",
+    "result":  "PASS",
+    "github_run_databaseId":  "21907743043",
+    "artifacts":  {
+                      "apk":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G38\\REMOTE_APK\\apps\\dental-mina\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+                      "ci_log":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G38\\REMOTE_CI\\run_21907743043.full.log.txt",
+                      "manifest_sha256":  "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G38\\SNAPSHOT\\manifest.sha256.txt"
+                  },
+    "timestamp_utc":  "2026-02-12T01:27:41.3665504Z"
+}

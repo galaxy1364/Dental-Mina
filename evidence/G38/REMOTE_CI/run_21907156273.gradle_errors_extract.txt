@@ -1,0 +1,48 @@
+﻿build_apk	Checkout	2026-02-11T13:33:56.4960500Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-11T13:33:56.4961617Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T13:33:57.5396906Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T13:33:57.5398301Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Node.js	2026-02-11T13:33:57.7826482Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Node.js	2026-02-11T13:33:57.7827783Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6840083Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6840505Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7080883Z [36;1m  if [ -f "$d/index.html" ]; then WEB="$d"; break; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7082050Z [36;1m  echo "FATAL: cannot find web output (dist/build/www index.html)"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7127597Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7128092Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5693129Z dist/index.html                   0.47 kB Γöé gzip:  0.30 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5694186Z dist/assets/index-CUBma3Gv.css    4.04 kB Γöé gzip:  1.35 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5695070Z dist/assets/index-N_iI2_gF.js   191.55 kB Γöé gzip: 60.37 kB
+build_apk	Build Debug APK	2026-02-11T13:34:05.2379634Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Build Debug APK	2026-02-11T13:34:05.2380124Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Build Debug APK	2026-02-11T13:35:21.7951095Z > Task :app:preBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.7951692Z > Task :app:preDebugBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.7952341Z > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8974791Z > Task :app:javaPreCompileDebug
+build_apk	Build Debug APK	2026-02-11T13:35:51.8946909Z > Task :app:checkDebugAarMetadata
+build_apk	Build Debug APK	2026-02-11T13:36:02.8951863Z > Task :app:processDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.0947101Z > Task :app:generateDebugResValues
+build_apk	Build Debug APK	2026-02-11T13:36:04.0949875Z > Task :app:compileDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.1971284Z > Task :app:mapDebugSourceSetPaths
+build_apk	Build Debug APK	2026-02-11T13:36:04.2989407Z > Task :app:generateDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.9956465Z > Task :app:packageDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.0956315Z > Task :app:mergeDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.3978820Z > Task :app:createDebugCompatibleScreenManifests
+build_apk	Build Debug APK	2026-02-11T13:36:06.3979615Z > Task :app:extractDeepLinksDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.5959595Z > Task :app:parseDebugLocalResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.6963523Z > Task :app:processDebugMainManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.9962662Z > Task :app:processDebugManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.9964845Z > Task :app:processDebugManifestForPackage
+build_apk	Build Debug APK	2026-02-11T13:36:06.9969601Z > Task :app:mergeDebugShaders
+build_apk	Build Debug APK	2026-02-11T13:36:07.0949713Z > Task :app:compileDebugShaders NO-SOURCE
+build_apk	Build Debug APK	2026-02-11T13:36:11.9970206Z FAILURE: Build failed with an exception.
+build_apk	Build Debug APK	2026-02-11T13:36:11.9973955Z * What went wrong:
+build_apk	Build Debug APK	2026-02-11T13:36:11.9976428Z Execution failed for task ':capacitor-android:compileDebugJavaWithJavac'.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0001220Z * Exception is:
+build_apk	Build Debug APK	2026-02-11T13:36:12.0002203Z org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':capacitor-android:compileDebugJavaWithJavac'.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0018702Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0083039Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0084268Z Caused by: java.lang.IllegalArgumentException: error: invalid source release: 21
+build_apk	Build Debug APK	2026-02-11T13:36:12.1010532Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1050748Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1051625Z BUILD FAILED in 2m 6s

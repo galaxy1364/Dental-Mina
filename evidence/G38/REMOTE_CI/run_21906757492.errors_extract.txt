@@ -1,0 +1,7 @@
+﻿build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:07.0646963Z [36;1m  echo "FATAL: no build script and no vite binary"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:07.0648878Z [36;1m  echo "FATAL: cannot find web output (dist/build/www index.html)"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:13.0901077Z [31merror during build:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:13.0901569Z [31mBuild failed with 1 error:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:13.0902155Z [31m[MISSING_EXPORT] Error:[0m "isEnabled" is not exported by "src/lib/flags.tsx".
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:13.0908376Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/Dental-Mina/Dental-Mina/apps/dental-mina/node_modules/rolldown/dist/shared/src-CYkh2Ybc.mjs:2659:18)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:22:13.1321676Z ##[error]Process completed with exit code 1.

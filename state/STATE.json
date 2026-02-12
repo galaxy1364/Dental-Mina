@@ -1,4 +1,4 @@
-{
+﻿{
     "project":  {
                     "name":  "Dental-Mina",
                     "signature":  "PYM JBZ"
@@ -80,5 +80,14 @@
                         "G39_PRODUCT_LAYER_ROADMAP_LOCK_2026",
                         "G40_PRODUCT_FEATURE_BACKLOG_LOCK_2026",
                         "G41_REPAIR_BUILD_BASELINE"
-                    ]
+                    ],
+    "gates":  {
+                  "G38_CAPACITOR_DEVICE_SMOKE":  {
+                                                     "status":  "LOCKED_PASS",
+                                                     "run_databaseId":  "21907743043",
+                                                     "evidence_dir":  "evidence/G38",
+                                                     "ai_signature":  "PYM JBZ",
+                                                     "locked_at_utc":  "2026-02-12T01:27:41.7021306Z"
+                                                 }
+              }
 }

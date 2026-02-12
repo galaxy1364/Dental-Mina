@@ -1,0 +1,5 @@
+﻿5c4a4c85d5db674ece724b5ce0a9b0c2b5660d507c19af6e0ae9cae47b157ca0  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\.github\workflows\g38_remote_apk.yml
+f16508f7d2606d5901c6fd4428b6aa17fe8342ca1bdbaf89e9db84d36e47a858  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\capacitor.config.json
+bfd93f0a66eaf44baf7f7864a5564e28ae6b21e332a65f536b909d8ff6c0f4b5  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\src\lib\flags.tsx
+788e29412286ff2401879a8fcdb76c8a411717a0f5071af9a6624c0e16a6b4c4  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\REMOTE_CI\run_21907743043.full.log.txt
+c7137f9c6ff69495dd4aa554335e5b4f59a5f52308f397d33ab8ca5c5a7a6985  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\REMOTE_APK\apps\dental-mina\android\app\build\outputs\apk\debug\app-debug.apk

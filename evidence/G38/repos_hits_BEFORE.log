@@ -1,0 +1,17 @@
+﻿C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\capacitor-cordova-android-plugins\build.gradle:8:        google()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\capacitor-cordova-android-plugins\build.gradle:9:        mavenCentral()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\capacitor-cordova-android-plugins\build.gradle:37:    google()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\capacitor-cordova-android-plugins\build.gradle:38:    mavenCentral()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:6:        maven { url 'https://maven.aliyun.com/repository/google' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:7:        maven { url 'https://maven.aliyun.com/repository/central' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:9:        google()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:10:        mavenCentral()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:25:        google()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\build.gradle:26:        mavenCentral()
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:3:        maven { url 'https://maven.aliyun.com/repository/google' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:4:        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:5:        maven { url 'https://maven.aliyun.com/repository/central' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:7:        maven { url 'https://maven.aliyun.com/repository/google' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:8:        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:9:        maven { url 'https://maven.aliyun.com/repository/central' }
+C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\apps\dental-mina\android\settings.gradle:10:        mavenCentral()

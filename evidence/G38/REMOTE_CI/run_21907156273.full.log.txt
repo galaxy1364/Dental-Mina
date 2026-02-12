@@ -1,0 +1,582 @@
+﻿build_apk	Set up job	∩╗┐2026-02-11T13:33:54.9836046Z Current runner version: '2.331.0'
+build_apk	Set up job	2026-02-11T13:33:54.9863150Z ##[group]Runner Image Provisioner
+build_apk	Set up job	2026-02-11T13:33:54.9864544Z Hosted Compute Agent
+build_apk	Set up job	2026-02-11T13:33:54.9865706Z Version: 20260123.484
+build_apk	Set up job	2026-02-11T13:33:54.9866858Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build_apk	Set up job	2026-02-11T13:33:54.9868284Z Build Date: 2026-01-23T19:41:17Z
+build_apk	Set up job	2026-02-11T13:33:54.9869479Z Worker ID: {4f51e528-3f5f-440a-951d-6692c4398296}
+build_apk	Set up job	2026-02-11T13:33:54.9870415Z Azure Region: northcentralus
+build_apk	Set up job	2026-02-11T13:33:54.9870999Z ##[endgroup]
+build_apk	Set up job	2026-02-11T13:33:54.9872974Z ##[group]Operating System
+build_apk	Set up job	2026-02-11T13:33:54.9873946Z Ubuntu
+build_apk	Set up job	2026-02-11T13:33:54.9874735Z 24.04.3
+build_apk	Set up job	2026-02-11T13:33:54.9875354Z LTS
+build_apk	Set up job	2026-02-11T13:33:54.9875964Z ##[endgroup]
+build_apk	Set up job	2026-02-11T13:33:54.9876463Z ##[group]Runner Image
+build_apk	Set up job	2026-02-11T13:33:54.9877102Z Image: ubuntu-24.04
+build_apk	Set up job	2026-02-11T13:33:54.9878087Z Version: 20260201.15.1
+build_apk	Set up job	2026-02-11T13:33:54.9879105Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build_apk	Set up job	2026-02-11T13:33:54.9880842Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build_apk	Set up job	2026-02-11T13:33:54.9881798Z ##[endgroup]
+build_apk	Set up job	2026-02-11T13:33:54.9882958Z ##[group]GITHUB_TOKEN Permissions
+build_apk	Set up job	2026-02-11T13:33:54.9885263Z Contents: read
+build_apk	Set up job	2026-02-11T13:33:54.9885919Z Metadata: read
+build_apk	Set up job	2026-02-11T13:33:54.9886525Z Packages: read
+build_apk	Set up job	2026-02-11T13:33:54.9886998Z ##[endgroup]
+build_apk	Set up job	2026-02-11T13:33:54.9890015Z Secret source: Actions
+build_apk	Set up job	2026-02-11T13:33:54.9891096Z Prepare workflow directory
+build_apk	Set up job	2026-02-11T13:33:55.0326485Z Prepare all required actions
+build_apk	Set up job	2026-02-11T13:33:55.0381126Z Getting action download info
+build_apk	Set up job	2026-02-11T13:33:55.4565891Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build_apk	Set up job	2026-02-11T13:33:55.5762562Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build_apk	Set up job	2026-02-11T13:33:56.0677952Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build_apk	Set up job	2026-02-11T13:33:56.1639353Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build_apk	Set up job	2026-02-11T13:33:56.4117915Z Complete job name: build_apk
+build_apk	Checkout	∩╗┐2026-02-11T13:33:56.4946659Z ##[group]Run actions/checkout@v4
+build_apk	Checkout	2026-02-11T13:33:56.4948146Z with:
+build_apk	Checkout	2026-02-11T13:33:56.4948883Z   repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:56.4950164Z   token: ***
+build_apk	Checkout	2026-02-11T13:33:56.4950908Z   ssh-strict: true
+build_apk	Checkout	2026-02-11T13:33:56.4951638Z   ssh-user: git
+build_apk	Checkout	2026-02-11T13:33:56.4952380Z   persist-credentials: true
+build_apk	Checkout	2026-02-11T13:33:56.4953221Z   clean: true
+build_apk	Checkout	2026-02-11T13:33:56.4953967Z   sparse-checkout-cone-mode: true
+build_apk	Checkout	2026-02-11T13:33:56.4954878Z   fetch-depth: 1
+build_apk	Checkout	2026-02-11T13:33:56.4955645Z   fetch-tags: false
+build_apk	Checkout	2026-02-11T13:33:56.4956384Z   show-progress: true
+build_apk	Checkout	2026-02-11T13:33:56.4957131Z   lfs: false
+build_apk	Checkout	2026-02-11T13:33:56.4957957Z   submodules: false
+build_apk	Checkout	2026-02-11T13:33:56.4958702Z   set-safe-directory: true
+build_apk	Checkout	2026-02-11T13:33:56.4959748Z env:
+build_apk	Checkout	2026-02-11T13:33:56.4960500Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-11T13:33:56.4961617Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-11T13:33:56.4962562Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:56.6060797Z Syncing repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:56.6063444Z ##[group]Getting Git version info
+build_apk	Checkout	2026-02-11T13:33:56.6064747Z Working directory is '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-11T13:33:56.6066566Z [command]/usr/bin/git version
+build_apk	Checkout	2026-02-11T13:33:56.6141641Z git version 2.52.0
+build_apk	Checkout	2026-02-11T13:33:56.6168878Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:56.6184910Z Temporarily overriding HOME='/home/runner/work/_temp/688107a8-0fac-49a0-b316-7bfcbb4b8225' before making global git config changes
+build_apk	Checkout	2026-02-11T13:33:56.6188299Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Checkout	2026-02-11T13:33:56.6191671Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:56.6238753Z Deleting the contents of '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-11T13:33:56.6242282Z ##[group]Initializing the repository
+build_apk	Checkout	2026-02-11T13:33:56.6246516Z [command]/usr/bin/git init /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:56.6368400Z hint: Using 'master' as the name for the initial branch. This default branch name
+build_apk	Checkout	2026-02-11T13:33:56.6370371Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build_apk	Checkout	2026-02-11T13:33:56.6373534Z hint: to use in all of your new repositories, which will suppress this warning,
+build_apk	Checkout	2026-02-11T13:33:56.6375966Z hint: call:
+build_apk	Checkout	2026-02-11T13:33:56.6377164Z hint:
+build_apk	Checkout	2026-02-11T13:33:56.6378845Z hint: 	git config --global init.defaultBranch <name>
+build_apk	Checkout	2026-02-11T13:33:56.6380847Z hint:
+build_apk	Checkout	2026-02-11T13:33:56.6382615Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build_apk	Checkout	2026-02-11T13:33:56.6385703Z hint: 'development'. The just-created branch can be renamed via this command:
+build_apk	Checkout	2026-02-11T13:33:56.6388266Z hint:
+build_apk	Checkout	2026-02-11T13:33:56.6389410Z hint: 	git branch -m <name>
+build_apk	Checkout	2026-02-11T13:33:56.6390725Z hint:
+build_apk	Checkout	2026-02-11T13:33:56.6392489Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build_apk	Checkout	2026-02-11T13:33:56.6395194Z Initialized empty Git repository in /home/runner/work/Dental-Mina/Dental-Mina/.git/
+build_apk	Checkout	2026-02-11T13:33:56.6398649Z [command]/usr/bin/git remote add origin https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:56.6425800Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:56.6428281Z ##[group]Disabling automatic garbage collection
+build_apk	Checkout	2026-02-11T13:33:56.6430413Z [command]/usr/bin/git config --local gc.auto 0
+build_apk	Checkout	2026-02-11T13:33:56.6461032Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:56.6463641Z ##[group]Setting up auth
+build_apk	Checkout	2026-02-11T13:33:56.6468996Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Checkout	2026-02-11T13:33:56.6503724Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Checkout	2026-02-11T13:33:56.6849261Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Checkout	2026-02-11T13:33:56.6883254Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Checkout	2026-02-11T13:33:56.7106703Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Checkout	2026-02-11T13:33:56.7139871Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Checkout	2026-02-11T13:33:56.7376183Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build_apk	Checkout	2026-02-11T13:33:56.7412069Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:56.7414345Z ##[group]Fetching the repository
+build_apk	Checkout	2026-02-11T13:33:56.7424160Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +62363907ad4a7cd7183b2cd8c58344e3738b22c8:refs/remotes/origin/main
+build_apk	Checkout	2026-02-11T13:33:57.3917113Z From https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T13:33:57.3919109Z  * [new ref]         62363907ad4a7cd7183b2cd8c58344e3738b22c8 -> origin/main
+build_apk	Checkout	2026-02-11T13:33:57.3954534Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:57.3956838Z ##[group]Determining the checkout info
+build_apk	Checkout	2026-02-11T13:33:57.3959495Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:57.3962904Z [command]/usr/bin/git sparse-checkout disable
+build_apk	Checkout	2026-02-11T13:33:57.4009399Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build_apk	Checkout	2026-02-11T13:33:57.4039111Z ##[group]Checking out the ref
+build_apk	Checkout	2026-02-11T13:33:57.4043400Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build_apk	Checkout	2026-02-11T13:33:57.4977194Z Switched to a new branch 'main'
+build_apk	Checkout	2026-02-11T13:33:57.4979379Z branch 'main' set up to track 'origin/main'.
+build_apk	Checkout	2026-02-11T13:33:57.4994393Z ##[endgroup]
+build_apk	Checkout	2026-02-11T13:33:57.5032504Z [command]/usr/bin/git log -1 --format=%H
+build_apk	Checkout	2026-02-11T13:33:57.5056558Z 62363907ad4a7cd7183b2cd8c58344e3738b22c8
+build_apk	Setup Java 17	∩╗┐2026-02-11T13:33:57.5386376Z ##[group]Run actions/setup-java@v4
+build_apk	Setup Java 17	2026-02-11T13:33:57.5387658Z with:
+build_apk	Setup Java 17	2026-02-11T13:33:57.5388319Z   distribution: temurin
+build_apk	Setup Java 17	2026-02-11T13:33:57.5389098Z   java-version: 17
+build_apk	Setup Java 17	2026-02-11T13:33:57.5389811Z   java-package: jdk
+build_apk	Setup Java 17	2026-02-11T13:33:57.5390532Z   check-latest: false
+build_apk	Setup Java 17	2026-02-11T13:33:57.5391264Z   server-id: github
+build_apk	Setup Java 17	2026-02-11T13:33:57.5391991Z   server-username: GITHUB_ACTOR
+build_apk	Setup Java 17	2026-02-11T13:33:57.5392867Z   server-password: GITHUB_TOKEN
+build_apk	Setup Java 17	2026-02-11T13:33:57.5393734Z   overwrite-settings: true
+build_apk	Setup Java 17	2026-02-11T13:33:57.5394524Z   job-status: success
+build_apk	Setup Java 17	2026-02-11T13:33:57.5395547Z   token: ***
+build_apk	Setup Java 17	2026-02-11T13:33:57.5396194Z env:
+build_apk	Setup Java 17	2026-02-11T13:33:57.5396906Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T13:33:57.5398301Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T13:33:57.5399262Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-11T13:33:57.7421281Z ##[group]Installed distributions
+build_apk	Setup Java 17	2026-02-11T13:33:57.7560350Z Resolved Java 17.0.18+8 from tool-cache
+build_apk	Setup Java 17	2026-02-11T13:33:57.7570375Z Setting Java 17.0.18+8 as the default
+build_apk	Setup Java 17	2026-02-11T13:33:57.7572564Z Creating toolchains.xml for JDK version 17 from temurin
+build_apk	Setup Java 17	2026-02-11T13:33:57.7583641Z Writing to /home/runner/.m2/toolchains.xml
+build_apk	Setup Java 17	2026-02-11T13:33:57.7584861Z 
+build_apk	Setup Java 17	2026-02-11T13:33:57.7585185Z Java configuration:
+build_apk	Setup Java 17	2026-02-11T13:33:57.7586367Z   Distribution: temurin
+build_apk	Setup Java 17	2026-02-11T13:33:57.7587746Z   Version: 17.0.18+8
+build_apk	Setup Java 17	2026-02-11T13:33:57.7589300Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Java 17	2026-02-11T13:33:57.7590507Z 
+build_apk	Setup Java 17	2026-02-11T13:33:57.7591413Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-11T13:33:57.7606692Z Creating settings.xml with server-id: github
+build_apk	Setup Java 17	2026-02-11T13:33:57.7608991Z Writing to /home/runner/.m2/settings.xml
+build_apk	Setup Node.js	∩╗┐2026-02-11T13:33:57.7820364Z ##[group]Run actions/setup-node@v4
+build_apk	Setup Node.js	2026-02-11T13:33:57.7821295Z with:
+build_apk	Setup Node.js	2026-02-11T13:33:57.7821936Z   node-version: 22
+build_apk	Setup Node.js	2026-02-11T13:33:57.7822636Z   cache: npm
+build_apk	Setup Node.js	2026-02-11T13:33:57.7823299Z   always-auth: false
+build_apk	Setup Node.js	2026-02-11T13:33:57.7824042Z   check-latest: false
+build_apk	Setup Node.js	2026-02-11T13:33:57.7825069Z   token: ***
+build_apk	Setup Node.js	2026-02-11T13:33:57.7825749Z env:
+build_apk	Setup Node.js	2026-02-11T13:33:57.7826482Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Node.js	2026-02-11T13:33:57.7827783Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Node.js	2026-02-11T13:33:57.7829121Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js	2026-02-11T13:33:57.7830792Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js	2026-02-11T13:33:57.7832129Z ##[endgroup]
+build_apk	Setup Node.js	2026-02-11T13:33:57.9688534Z Found in cache @ /opt/hostedtoolcache/node/22.22.0/x64
+build_apk	Setup Node.js	2026-02-11T13:33:57.9695289Z ##[group]Environment details
+build_apk	Setup Node.js	2026-02-11T13:33:58.3672296Z node: v22.22.0
+build_apk	Setup Node.js	2026-02-11T13:33:58.3672821Z npm: 10.9.4
+build_apk	Setup Node.js	2026-02-11T13:33:58.3673111Z yarn: 1.22.22
+build_apk	Setup Node.js	2026-02-11T13:33:58.3673886Z ##[endgroup]
+build_apk	Setup Node.js	2026-02-11T13:33:58.3694580Z [command]/opt/hostedtoolcache/node/22.22.0/x64/bin/npm config get cache
+build_apk	Setup Node.js	2026-02-11T13:33:58.5344617Z /home/runner/.npm
+build_apk	Setup Node.js	2026-02-11T13:33:58.6669068Z npm cache is not found
+build_apk	Locate Capacitor app dir (fallback-safe)	∩╗┐2026-02-11T13:33:58.6785655Z ##[group]Run set -euo pipefail
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6786154Z [36;1mset -euo pipefail[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6786494Z [36;1mAPPDIR=""[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6787241Z [36;1mCFG="$(find . -maxdepth 30 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1 || true)"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6788594Z [36;1mif [ -n "$CFG" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6788948Z [36;1m  D="$(dirname "$CFG")"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6789359Z [36;1m  if [ -f "$D/package.json" ]; then APPDIR="$D"; fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6789759Z [36;1mfi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6790043Z [36;1mif [ -z "$APPDIR" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6790486Z [36;1m  for d in "./apps/dental-mina" "./app" "./apps/app" "./src" "."; do[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6791013Z [36;1m    if [ -f "$d/package.json" ]; then APPDIR="$d"; break; fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6791430Z [36;1m  done[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6791691Z [36;1mfi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6791966Z [36;1mtest -n "$APPDIR"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6792331Z [36;1mecho "APPDIR=$APPDIR"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6792711Z [36;1mecho "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6839281Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6839771Z env:
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6840083Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6840505Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6840994Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6841589Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.6842084Z ##[endgroup]
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T13:33:58.7002192Z APPDIR=./apps/dental-mina
+build_apk	Install deps + build web + sync Android (creates gradlew)	∩╗┐2026-02-11T13:33:58.7075335Z ##[group]Run set -euo pipefail
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7075820Z [36;1mset -euo pipefail[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7076166Z [36;1mcd "./apps/dental-mina"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7076510Z [36;1mnpm ci[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7076778Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7077118Z [36;1mif npm run -s | grep -qE '(^|\s)build(\s|$)'; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7077777Z [36;1m  npm run build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7078164Z [36;1melif [ -x "./node_modules/.bin/vite" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7078563Z [36;1m  ./node_modules/.bin/vite build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7078904Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7079267Z [36;1m  echo "FATAL: no build script and no vite binary"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7079692Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7079944Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7080190Z [36;1mWEB=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7080484Z [36;1mfor d in dist build www; do[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7080883Z [36;1m  if [ -f "$d/index.html" ]; then WEB="$d"; break; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7081285Z [36;1mdone[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7081592Z [36;1mif [ -z "$WEB" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7082050Z [36;1m  echo "FATAL: cannot find web output (dist/build/www index.html)"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7082516Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7082769Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7083034Z [36;1mWEB="$WEB" node - <<'NODE'[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7083377Z [36;1mconst fs = require('fs');[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7083769Z [36;1mconst p = 'capacitor.config.json';[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7084153Z [36;1mconst web = process.env.WEB || '';[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7084510Z [36;1mlet j = {};[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7084912Z [36;1mif (fs.existsSync(p)) j = JSON.parse(fs.readFileSync(p,'utf8'));[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7085379Z [36;1mj.webDir = web;[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7085750Z [36;1mfs.writeFileSync(p, JSON.stringify(j, null, 2));[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7086275Z [36;1mconsole.log('patched capacitor.config.json webDir ->', web);[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7086729Z [36;1mNODE[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7086994Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7087245Z [36;1mCAP=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7087937Z [36;1mif [ -x "./node_modules/.bin/cap" ]; then CAP="./node_modules/.bin/cap"; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7088427Z [36;1mrun_cap () {[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7088900Z [36;1m  if [ -n "$CAP" ]; then "$CAP" "$@"; else npm exec --yes --package @capacitor/cli -- cap "$@"; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7089415Z [36;1m}[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7089679Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7089950Z [36;1mif [ -d "android" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7090368Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7090687Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7090968Z [36;1m  run_cap add android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7091306Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7091622Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7091878Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7092148Z [36;1mtest -x "android/gradlew"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7126581Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7127034Z env:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7127597Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7128092Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7128580Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7129191Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:33:58.7129658Z ##[endgroup]
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7114962Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7115823Z added 282 packages, and audited 283 packages in 5s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7116439Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7116710Z 66 packages are looking for funding
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7117211Z   run `npm fund` for details
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7129543Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:03.7144558Z found 0 vulnerabilities
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.0774908Z [36mrolldown-vite v7.2.5 [32mbuilding client environment for production...[36m[39m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.1070477Z [2K
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5091111Z transforming...Γ£ô 15 modules transformed.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5311122Z rendering chunks...
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5651450Z computing gzip size...
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5693129Z dist/index.html                   0.47 kB Γöé gzip:  0.30 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5694186Z dist/assets/index-CUBma3Gv.css    4.04 kB Γöé gzip:  1.35 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5695070Z dist/assets/index-N_iI2_gF.js   191.55 kB Γöé gzip: 60.37 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.5697598Z [32mΓ£ô built in 491ms[39m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.6372199Z patched capacitor.config.json webDir -> dist
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.8769144Z Γ£ö Adding native android project in android in 41.94ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.8770276Z Γ£ö add in 42.72ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9016026Z Γ£ö Copying web assets from dist to android/app/src/main/assets/public in 3.35ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9020308Z Γ£ö Creating capacitor.config.json in android/app/src/main/assets in 358.74╬╝s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9077806Z Γ£ö copy android in 17.62ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9204360Z Γ£ö Updating Android plugins in 4.33ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9396949Z Γ£ö update android in 27.58ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9433363Z Γ£ö Syncing Gradle in 176.47╬╝s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9456945Z [success] android platform added!
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9458653Z Follow the Developer Workflow guide to get building:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:04.9459533Z https://capacitorjs.com/docs/basics/workflow
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.1631660Z Γ£ö Copying web assets from dist to android/app/src/main/assets/public in 5.64ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.1641500Z Γ£ö Creating capacitor.config.json in android/app/src/main/assets in 632.57╬╝s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.1706033Z Γ£ö copy android in 21.11ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.1814108Z Γ£ö Updating Android plugins in 3.12ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.2078512Z Γ£ö update android in 33.66ms
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:34:05.2138325Z [info] Sync finished in 0.081s
+build_apk	Build Debug APK	∩╗┐2026-02-11T13:34:05.2335332Z ##[group]Run set -euo pipefail
+build_apk	Build Debug APK	2026-02-11T13:34:05.2335823Z [36;1mset -euo pipefail[0m
+build_apk	Build Debug APK	2026-02-11T13:34:05.2336229Z [36;1mcd "./apps/dental-mina/android"[0m
+build_apk	Build Debug APK	2026-02-11T13:34:05.2336760Z [36;1m./gradlew --no-daemon --stacktrace assembleDebug[0m
+build_apk	Build Debug APK	2026-02-11T13:34:05.2378747Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Build Debug APK	2026-02-11T13:34:05.2379303Z env:
+build_apk	Build Debug APK	2026-02-11T13:34:05.2379634Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Build Debug APK	2026-02-11T13:34:05.2380124Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Build Debug APK	2026-02-11T13:34:05.2380737Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Build Debug APK	2026-02-11T13:34:05.2381556Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Build Debug APK	2026-02-11T13:34:05.2382214Z ##[endgroup]
+build_apk	Build Debug APK	2026-02-11T13:34:05.8322727Z Downloading https://services.gradle.org/distributions/gradle-8.14.3-all.zip
+build_apk	Build Debug APK	2026-02-11T13:34:08.8455245Z .....................10%.....................20%......................30%.....................40%......................50%.....................60%.....................70%......................80%.....................90%......................100%
+build_apk	Build Debug APK	2026-02-11T13:34:12.2957575Z 
+build_apk	Build Debug APK	2026-02-11T13:34:12.2958634Z Welcome to Gradle 8.14.3!
+build_apk	Build Debug APK	2026-02-11T13:34:12.2959880Z 
+build_apk	Build Debug APK	2026-02-11T13:34:12.2960300Z Here are the highlights of this release:
+build_apk	Build Debug APK	2026-02-11T13:34:12.2961103Z  - Java 24 support
+build_apk	Build Debug APK	2026-02-11T13:34:12.2961589Z  - GraalVM Native Image toolchain selection
+build_apk	Build Debug APK	2026-02-11T13:34:12.2962187Z  - Enhancements to test reporting
+build_apk	Build Debug APK	2026-02-11T13:34:12.2963970Z  - Build Authoring improvements
+build_apk	Build Debug APK	2026-02-11T13:34:12.2965087Z 
+build_apk	Build Debug APK	2026-02-11T13:34:12.2965800Z For more details see https://docs.gradle.org/8.14.3/release-notes.html
+build_apk	Build Debug APK	2026-02-11T13:34:12.2966563Z 
+build_apk	Build Debug APK	2026-02-11T13:34:12.3979102Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+build_apk	Build Debug APK	2026-02-11T13:34:13.8948501Z Daemon will be stopped at the end of the build 
+build_apk	Build Debug APK	2026-02-11T13:35:18.2948580Z 
+build_apk	Build Debug APK	2026-02-11T13:35:18.2964855Z > Configure project :app
+build_apk	Build Debug APK	2026-02-11T13:35:18.2985177Z WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+build_apk	Build Debug APK	2026-02-11T13:35:20.4947088Z 
+build_apk	Build Debug APK	2026-02-11T13:35:20.4952765Z > Configure project :capacitor-cordova-android-plugins
+build_apk	Build Debug APK	2026-02-11T13:35:20.4958638Z WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+build_apk	Build Debug APK	2026-02-11T13:35:21.7945720Z 
+build_apk	Build Debug APK	2026-02-11T13:35:21.7951095Z > Task :app:preBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.7951692Z > Task :app:preDebugBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.7952341Z > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8948400Z > Task :capacitor-android:preBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8967465Z > Task :capacitor-android:preDebugBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8968683Z > Task :capacitor-cordova-android-plugins:preBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8972994Z > Task :capacitor-cordova-android-plugins:preDebugBuild UP-TO-DATE
+build_apk	Build Debug APK	2026-02-11T13:35:21.8973959Z > Task :capacitor-android:writeDebugAarMetadata
+build_apk	Build Debug APK	2026-02-11T13:35:21.8974791Z > Task :app:javaPreCompileDebug
+build_apk	Build Debug APK	2026-02-11T13:35:21.8976859Z > Task :capacitor-cordova-android-plugins:writeDebugAarMetadata
+build_apk	Build Debug APK	2026-02-11T13:35:21.8978149Z > Task :capacitor-android:processDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:35:51.8946909Z > Task :app:checkDebugAarMetadata
+build_apk	Build Debug APK	2026-02-11T13:36:02.8947553Z > Task :capacitor-cordova-android-plugins:processDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:36:02.8951863Z > Task :app:processDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.0947101Z > Task :app:generateDebugResValues
+build_apk	Build Debug APK	2026-02-11T13:36:04.0949079Z > Task :capacitor-android:generateDebugResValues
+build_apk	Build Debug APK	2026-02-11T13:36:04.0949875Z > Task :app:compileDebugNavigationResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.0950534Z > Task :capacitor-android:generateDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.1954113Z > Task :capacitor-android:packageDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.1955388Z > Task :capacitor-cordova-android-plugins:generateDebugResValues
+build_apk	Build Debug APK	2026-02-11T13:36:04.1957623Z > Task :capacitor-cordova-android-plugins:generateDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.1969909Z > Task :capacitor-cordova-android-plugins:packageDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.1971284Z > Task :app:mapDebugSourceSetPaths
+build_apk	Build Debug APK	2026-02-11T13:36:04.2989407Z > Task :app:generateDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:04.9956465Z > Task :app:packageDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.0956315Z > Task :app:mergeDebugResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.3978820Z > Task :app:createDebugCompatibleScreenManifests
+build_apk	Build Debug APK	2026-02-11T13:36:06.3979615Z > Task :app:extractDeepLinksDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.3998838Z > Task :capacitor-android:extractDeepLinksDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.4946543Z > Task :capacitor-cordova-android-plugins:extractDeepLinksDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.4960239Z > Task :capacitor-android:compileDebugLibraryResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.5958002Z > Task :capacitor-android:processDebugManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.5958870Z > Task :capacitor-cordova-android-plugins:processDebugManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.5959595Z > Task :app:parseDebugLocalResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.5960210Z > Task :capacitor-android:parseDebugLocalResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.5961003Z > Task :capacitor-cordova-android-plugins:compileDebugLibraryResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.6963523Z > Task :app:processDebugMainManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.9962662Z > Task :app:processDebugManifest
+build_apk	Build Debug APK	2026-02-11T13:36:06.9964845Z > Task :app:processDebugManifestForPackage
+build_apk	Build Debug APK	2026-02-11T13:36:06.9965729Z > Task :capacitor-cordova-android-plugins:javaPreCompileDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.9968267Z > Task :capacitor-android:javaPreCompileDebug
+build_apk	Build Debug APK	2026-02-11T13:36:06.9969002Z > Task :capacitor-cordova-android-plugins:parseDebugLocalResources
+build_apk	Build Debug APK	2026-02-11T13:36:06.9969601Z > Task :app:mergeDebugShaders
+build_apk	Build Debug APK	2026-02-11T13:36:07.0946551Z > Task :capacitor-android:generateDebugRFile
+build_apk	Build Debug APK	2026-02-11T13:36:07.0949713Z > Task :app:compileDebugShaders NO-SOURCE
+build_apk	Build Debug APK	2026-02-11T13:36:07.0952598Z > Task :capacitor-cordova-android-plugins:generateDebugRFile
+build_apk	Build Debug APK	2026-02-11T13:36:11.9964328Z 
+build_apk	Build Debug APK	2026-02-11T13:36:11.9970206Z FAILURE: Build failed with an exception.
+build_apk	Build Debug APK	2026-02-11T13:36:11.9972211Z 
+build_apk	Build Debug APK	2026-02-11T13:36:11.9973955Z * What went wrong:
+build_apk	Build Debug APK	2026-02-11T13:36:11.9976428Z Execution failed for task ':capacitor-android:compileDebugJavaWithJavac'.
+build_apk	Build Debug APK	2026-02-11T13:36:11.9979270Z > Java compilation initialization error
+build_apk	Build Debug APK	2026-02-11T13:36:11.9981507Z     error: invalid source release: 21
+build_apk	Build Debug APK	2026-02-11T13:36:11.9983240Z 
+build_apk	Build Debug APK	2026-02-11T13:36:11.9984065Z * Try:
+build_apk	Build Debug APK	2026-02-11T13:36:11.9984639Z > Task :capacitor-android:compileDebugJavaWithJavac FAILED
+build_apk	Build Debug APK	2026-02-11T13:36:11.9985601Z > Run with --info or --debug option to get more log output.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0000147Z > Run with --scan to get full insights.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0000750Z > Get more help at https://help.gradle.org.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0001091Z 
+build_apk	Build Debug APK	2026-02-11T13:36:12.0001220Z * Exception is:
+build_apk	Build Debug APK	2026-02-11T13:36:12.0002203Z org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':capacitor-android:compileDebugJavaWithJavac'.
+build_apk	Build Debug APK	2026-02-11T13:36:12.0003841Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0005121Z 	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0006355Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0008134Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0009874Z 	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0011643Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0013382Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0015411Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0016926Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0018702Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0020452Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0022105Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0023695Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0025589Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0028003Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0029949Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0031607Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0033259Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0034948Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0036640Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0038951Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0040479Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0042227Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0044263Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0046483Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0072509Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0074255Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0076345Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0078519Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0080036Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0081569Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0083039Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0084268Z Caused by: java.lang.IllegalArgumentException: error: invalid source release: 21
+build_apk	Build Debug APK	2026-02-11T13:36:12.0085264Z 	at jdk.compiler/com.sun.tools.javac.main.Arguments.error(Arguments.java:905)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0086299Z 	at jdk.compiler/com.sun.tools.javac.main.Arguments.doProcessArgs(Arguments.java:383)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0087642Z 	at jdk.compiler/com.sun.tools.javac.main.Arguments.processArgs(Arguments.java:347)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0096274Z 	at jdk.compiler/com.sun.tools.javac.main.Arguments.init(Arguments.java:246)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0097772Z 	at jdk.compiler/com.sun.tools.javac.api.JavacTool.getTask(JavacTool.java:191)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0098946Z 	at org.gradle.api.internal.tasks.compile.JdkTools$DefaultIncrementalAwareCompiler.getTask(JdkTools.java:99)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0100290Z 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.createCompileTask(JdkJavaCompiler.java:113)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0101507Z 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:76)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0102634Z 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0104047Z 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0105584Z 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0106965Z 	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:38)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0139022Z 	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0140965Z 	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:38)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0142875Z 	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0144734Z 	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0146682Z 	at org.gradle.jvm.toolchain.internal.DefaultToolchainJavaCompiler.execute(DefaultToolchainJavaCompiler.java:57)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0148212Z 	at org.gradle.api.tasks.compile.JavaCompile.lambda$createToolchainCompiler$3(JavaCompile.java:206)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0149460Z 	at org.gradle.api.internal.tasks.compile.CleaningJavaCompiler.execute(CleaningJavaCompiler.java:53)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0151157Z 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalCompilerFactory.lambda$createRebuildAllCompiler$0(IncrementalCompilerFactory.java:55)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0152818Z 	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:70)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0154210Z 	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:44)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0156179Z 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:66)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0158512Z 	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0160660Z 	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:64)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0162856Z 	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0164977Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0167049Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0210379Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0212051Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0213642Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0215241Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0217188Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0219337Z 	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler.execute(CompileJavaBuildOperationReportingCompiler.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0221033Z 	at org.gradle.api.tasks.compile.JavaCompile.performCompilation(JavaCompile.java:224)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0222322Z 	at org.gradle.api.tasks.compile.JavaCompile.performIncrementalCompilation(JavaCompile.java:165)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0223488Z 	at org.gradle.api.tasks.compile.JavaCompile.compile(JavaCompile.java:150)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0224532Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0225781Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0227242Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0228629Z 	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0229929Z 	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.doExecute(IncrementalTaskAction.java:45)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0231477Z 	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0232989Z 	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.execute(IncrementalTaskAction.java:26)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0234498Z 	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0236057Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:244)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0258716Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0260415Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0262238Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0263784Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0265464Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0267061Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0268720Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0270014Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0271319Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0272846Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0274286Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0275538Z 	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0276921Z 	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0278200Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0279249Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0280812Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0309127Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0311470Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0313093Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0314712Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0316306Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0318059Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0319404Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0320638Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0380970Z 	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0382772Z 	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0384020Z 	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0385409Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0387059Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0388828Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0390387Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0392518Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0394224Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0396011Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0428176Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0429986Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0431519Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0432990Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0434493Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0435532Z 	at org.gradle.internal.Either$Right.fold(Either.java:175)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0436452Z 	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0437807Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0439015Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0440431Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0441984Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0443485Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0444944Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0446331Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0447807Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0449921Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0451989Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0454056Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0456172Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0473407Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0475306Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0477013Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0478569Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0479822Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0480967Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0482644Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0485096Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0487668Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0489473Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0491071Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0492888Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0494779Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0496567Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0498364Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0499850Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0501431Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0502905Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0504383Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0506046Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0507777Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0509145Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0510874Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0512923Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0514247Z 
+build_apk	Build Debug APK	2026-02-11T13:36:12.0515498Z [Incubating] Problems report is available at: file:///home/runner/work/Dental-Mina/Dental-Mina/apps/dental-mina/android/build/reports/problems/problems-report.html
+build_apk	Build Debug APK	2026-02-11T13:36:12.0989079Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0990777Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0992053Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0993242Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0994387Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0995649Z 	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:64)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0997283Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+build_apk	Build Debug APK	2026-02-11T13:36:12.0999199Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1001058Z 	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1002972Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1004817Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1007123Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1008940Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1010532Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1012166Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1013716Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1015211Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1016973Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1021895Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1023588Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1025122Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1026696Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1028424Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1029948Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1031503Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1032908Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1034515Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1036459Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1039217Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1041021Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1042772Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1044834Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1046546Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1048037Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1049398Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1050748Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+build_apk	Build Debug APK	2026-02-11T13:36:12.1051438Z 
+build_apk	Build Debug APK	2026-02-11T13:36:12.1051450Z 
+build_apk	Build Debug APK	2026-02-11T13:36:12.1051625Z BUILD FAILED in 2m 6s
+build_apk	Build Debug APK	2026-02-11T13:36:12.1052123Z 39 actionable tasks: 39 executed
+build_apk	Build Debug APK	2026-02-11T13:36:12.3316980Z ##[error]Process completed with exit code 1.
+build_apk	Post Setup Java 17	∩╗┐2026-02-11T13:36:12.3432849Z Post job cleanup.
+build_apk	Post Checkout	∩╗┐2026-02-11T13:36:12.5291304Z Post job cleanup.
+build_apk	Post Checkout	2026-02-11T13:36:12.6284069Z [command]/usr/bin/git version
+build_apk	Post Checkout	2026-02-11T13:36:12.6326642Z git version 2.52.0
+build_apk	Post Checkout	2026-02-11T13:36:12.6374175Z Temporarily overriding HOME='/home/runner/work/_temp/4a2ed065-6a43-491e-99d0-5a9cfa0b86a1' before making global git config changes
+build_apk	Post Checkout	2026-02-11T13:36:12.6376026Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Post Checkout	2026-02-11T13:36:12.6390116Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Post Checkout	2026-02-11T13:36:12.6429941Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Post Checkout	2026-02-11T13:36:12.6466686Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Post Checkout	2026-02-11T13:36:12.6723855Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Post Checkout	2026-02-11T13:36:12.6748963Z http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-11T13:36:12.6762767Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-11T13:36:12.6797067Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Post Checkout	2026-02-11T13:36:12.7053354Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Post Checkout	2026-02-11T13:36:12.7093188Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Complete job	∩╗┐2026-02-11T13:36:12.7475434Z Cleaning up orphan processes

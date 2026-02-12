@@ -1,0 +1,14 @@
+﻿> C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1704:FAILURE: Build failed with an exception.
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1705:
+> C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1706:* What went wrong:
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1707:A problem occurred configuring project ':capacitor-cordova-android-plugins'.
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1708:> Could not resolve all artifacts for configuration 'classpath'.
+> C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1709:   > Could not find com.android.tools.build:gradle:8.10.0.
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1710:     Searched in the following locations:
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1711:       - https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/8.10.0/gradle-8.10.0.pom
+> C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1864:Caused by: org.gradle.api.internal.artifacts.ivyservice.TypedResolveException: Could not resolve all artifacts for configuration 'classpath'.
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1865:	at org.gradle.api.internal.artifacts.ResolveExceptionMapper.mapFailure(ResolveExceptionMapper.java:73)
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:1866:	at org.gradle.api.internal.artifacts.ResolveExceptionMapper.mapFailures(ResolveExceptionMapper.java:65)
+> C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:2043:Caused by: org.gradle.internal.resolve.ModuleVersionNotFoundException: Could not find com.android.tools.build:gradle:8.10.0.
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:2044:Searched in the following locations:
+  C:\Users\MOSTAFA.ARAD\Desktop\Dental-Mina_GIT\evidence\G38\gradle_assembleDebug_AFTER_PIN_AGP.log:2045:  - https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/8.10.0/gradle-8.10.0.pom

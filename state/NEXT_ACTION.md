@@ -1,8 +1,3 @@
-﻿# NEXT_ACTION (LOCKPACK)
-Authorized Gate: G38_CAPACITOR_DEVICE_SMOKE
+﻿Authorized Gate: G41_STATE_RECONCILE_FROM_EVIDENCE
+Reason: G38 is LOCKED_PASS. Next: reconcile STATE from evidence pack and lock continuity.
 AI_SIGNATURE: PYM JBZ
-
-USER_ACTIONS_RED:
-- 🔴 گوشی لازم نیست.
-- 🔴 Remote Build را اجرا کن تا APK ساخته شود.
-- 🔴 بعد از دانلود APK، تازه گوشی را وصل می‌کنی.

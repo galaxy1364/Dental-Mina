@@ -1,0 +1,14 @@
+﻿build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:47.3229661Z [36;1m  echo "FATAL: no build script and no vite binary"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:47.3231538Z [36;1m  echo "FATAL: cannot find web output (dist/build/www index.html)"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2729558Z [31merror during build:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2730273Z [31mBuild failed with 4 errors:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2731398Z [31m[UNRESOLVED_IMPORT] Error:[0m Could not resolve './pages/PatientDetail' in src/App.tsx
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2740028Z  [38;5;240m  Γöé[0m                                      Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ Module not found.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2741549Z [31m[UNRESOLVED_IMPORT] Error:[0m Could not resolve './pages/Finance' in src/App.tsx
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2748668Z  [38;5;240m  Γöé[0m                             Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ Module not found.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2750199Z [31m[UNRESOLVED_IMPORT] Error:[0m Could not resolve './pages/Flags' in src/App.tsx
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2756730Z  [38;5;240m   Γöé[0m                          Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ Module not found.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2758317Z [31m[UNRESOLVED_IMPORT] Error:[0m Could not resolve './lib/flags' in src/App.tsx
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2766608Z  [38;5;240m   Γöé[0m                                 Γò░ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ Module not found.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2769376Z     at aggregateBindingErrorsIntoJsError (file:///home/runner/work/Dental-Mina/Dental-Mina/apps/dental-mina/node_modules/rolldown/dist/shared/src-CYkh2Ybc.mjs:2659:18)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:14:52.2932699Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,88 @@
+﻿build_apk	Install deps + build web + sync Android (creates gradlew)	∩╗┐2026-02-11T13:30:06.5303401Z ##[group]Run set -euo pipefail
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5303813Z [36;1mset -euo pipefail[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5304104Z [36;1mcd "./apps/dental-mina"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5304394Z [36;1mnpm ci[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5304616Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5304908Z [36;1mif npm run -s | grep -qE '(^|\s)build(\s|$)'; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5305265Z [36;1m  npm run build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5305602Z [36;1melif [ -x "./node_modules/.bin/vite" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5305944Z [36;1m  ./node_modules/.bin/vite build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5306236Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5306556Z [36;1m  echo "FATAL: no build script and no vite binary"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5306908Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5307126Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5307330Z [36;1mWEB=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5307583Z [36;1mfor d in dist build www; do[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5308281Z [36;1m  if [ -f "$d/index.html" ]; then WEB="$d"; break; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5308679Z [36;1mdone[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5308959Z [36;1mif [ -z "$WEB" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5309363Z [36;1m  echo "FATAL: cannot find web output (dist/build/www index.html)"; exit 1[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5309762Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5309975Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5310202Z [36;1mWEB="$WEB" node - <<'NODE'[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5310503Z [36;1mconst fs = require('fs');[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5310830Z [36;1mconst p = 'capacitor.config.json';[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5311159Z [36;1mconst web = process.env.WEB || '';[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5311461Z [36;1mlet j = {};[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5311813Z [36;1mif (fs.existsSync(p)) j = JSON.parse(fs.readFileSync(p,'utf8'));[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5312218Z [36;1mj.webDir = web;[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5312549Z [36;1mfs.writeFileSync(p, JSON.stringify(j, null, 2));[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5313012Z [36;1mconsole.log('patched capacitor.config.json webDir ->', web);[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5313400Z [36;1mNODE[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5313625Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5313842Z [36;1mCAP=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5314196Z [36;1mif [ -x "./node_modules/.bin/cap" ]; then CAP="./node_modules/.bin/cap"; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5314621Z [36;1mrun_cap () {[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5315046Z [36;1m  if [ -n "$CAP" ]; then "$CAP" "$@"; else npm exec --yes --package @capacitor/cli -- cap "$@"; fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5315510Z [36;1m}[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5315730Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5315968Z [36;1mif [ -d "android" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5316274Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5316617Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5316864Z [36;1m  run_cap add android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5317138Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5317400Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5317611Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5318006Z [36;1mtest -x "android/gradlew"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5351782Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5352168Z env:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5352436Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5352778Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5353200Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5353714Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:06.5354116Z ##[endgroup]
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3730654Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3731884Z added 282 packages, and audited 283 packages in 4s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3732349Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3732615Z 66 packages are looking for funding
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3733126Z   run `npm fund` for details
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3740049Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.3740474Z found 0 vulnerabilities
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.7319204Z [36mrolldown-vite v7.2.5 [32mbuilding client environment for production...[36m[39m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:10.7598077Z [2K
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1198663Z transforming...Γ£ô 15 modules transformed.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1423896Z rendering chunks...
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1748167Z computing gzip size...
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1788903Z dist/index.html                   0.47 kB Γöé gzip:  0.30 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1789846Z dist/assets/index-CUBma3Gv.css    4.04 kB Γöé gzip:  1.35 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1790750Z dist/assets/index-N_iI2_gF.js   191.55 kB Γöé gzip: 60.37 kB
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.1792441Z [32mΓ£ô built in 446ms[39m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2461694Z <anonymous_script>:1
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2462408Z ∩╗┐{
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2462673Z ^
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2462865Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2463208Z SyntaxError: Unexpected token '∩╗┐', "∩╗┐{
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2463669Z     "ap"... is not valid JSON
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2464083Z     at JSON.parse (<anonymous>)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2464512Z     at [stdin]:5:32
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2464974Z     at runScriptInThisContext (node:internal/vm:209:10)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2465572Z     at node:internal/process/execution:446:12
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2466108Z     at [stdin]-wrapper:6:24
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2466514Z     at runScriptInContext (node:internal/process/execution:444:60)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2466973Z     at evalFunction (node:internal/process/execution:279:30)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2467487Z     at evalTypeScript (node:internal/process/execution:291:3)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2468145Z     at node:internal/main/eval_stdin:53:5
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2468519Z     at Socket.<anonymous> (node:internal/process/execution:201:5)
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2468790Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2468901Z Node.js v22.22.0
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T13:30:11.2506057Z ##[error]Process completed with exit code 1.
