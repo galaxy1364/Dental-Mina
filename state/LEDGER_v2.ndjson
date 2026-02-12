@@ -86,3 +86,4 @@
 {"ts_utc":"2026-02-12T01:27:41.5255834Z","gate":"G38_CAPACITOR_DEVICE_SMOKE","result":"PASS","run_databaseId":"21907743043","evidence":["evidence/G38/QG.json","evidence/G38/REMOTE_CI/run_21907743043.full.log.txt","evidence/G38/SNAPSHOT/manifest.sha256.txt","evidence/G38/REMOTE_APK/"],"ai_signature":"PYM JBZ"}
 {"ts_utc":"2026-02-12T01:43:37.4314846Z","gate":"G41_STATE_RECONCILE_FROM_EVIDENCE","result":"PASS","evidence":["evidence/G41/QG.json","evidence/G41/SNAPSHOT/manifest.sha256.txt"],"ai_signature":"PYM JBZ"}
 {"ts_utc":"2026-02-12T01:46:48.4768630Z","gate":"G41_STATE_RECONCILE_FROM_EVIDENCE","result":"PASS","evidence":["evidence/G41/STATE_LOCK_FIX/QG.json","evidence/G41/STATE_LOCK_FIX/manifest.sha256.txt"],"ai_signature":"PYM JBZ"}
+{"ts_utc":"2026-02-12T01:52:04.6762267Z","gate":"G42_APP_CHECKLIST_0_100","result":"PASS","evidence":["evidence/G42/QG.json","evidence/G42/SNAPSHOT/manifest.sha256.txt","docs/STATUS_CHATPROOF.md"],"ai_signature":"PYM JBZ"}

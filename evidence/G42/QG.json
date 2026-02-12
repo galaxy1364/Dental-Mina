@@ -1,0 +1,12 @@
+{
+  "gate": "G42_APP_CHECKLIST_0_100",
+  "ai_signature": "PYM JBZ",
+  "result": "PASS",
+  "artifacts": {
+    "checklist_page": "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\apps\\dental-mina\\src\\lockpack\\Checklist0_100Page.tsx",
+    "app_tsx": "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\apps\\dental-mina\\src\\App.tsx",
+    "status_doc": "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\docs\\STATUS_CHATPROOF.md",
+    "manifest_sha256": "C:\\Users\\MOSTAFA.ARAD\\Desktop\\Dental-Mina_GIT\\evidence\\G42\\SNAPSHOT\\manifest.sha256.txt"
+  },
+  "timestamp_utc": "2026-02-12T01:52:04.6075337Z"
+}

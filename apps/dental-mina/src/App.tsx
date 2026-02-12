@@ -1,4 +1,8 @@
+import Checklist0_100Page from "./lockpack/Checklist0_100Page";
 export default function App() {
+  if (typeof window !== "undefined" && window.location && window.location.pathname === "/lockpack-checklist") {
+    return <Checklist0_100Page />;
+  }
   return (
     <div style={{ padding: 16, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial" }}>
       <h1 style={{ margin: 0, color: "#0a7a3b" }}>Dental-Mina</h1>
@@ -8,17 +12,17 @@ export default function App() {
 
       <div style={{ marginTop: 16, display: "grid", gap: 12 }}>
         <div style={{ padding: 12, borderRadius: 14, background: "rgba(0,0,0,0.04)" }}>
-          <strong>Scheduling / نوبت‌دهی</strong>
+          <strong>Scheduling / Ù†ÙˆØ¨Øªâ€ŒØ¯Ù‡ÛŒ</strong>
           <div style={{ opacity: 0.75, marginTop: 6 }}>Placeholder</div>
         </div>
 
         <div style={{ padding: 12, borderRadius: 14, background: "rgba(0,0,0,0.04)" }}>
-          <strong>Finance / مالی</strong>
+          <strong>Finance / Ù…Ø§Ù„ÛŒ</strong>
           <div style={{ opacity: 0.75, marginTop: 6 }}>Placeholder</div>
         </div>
 
         <div style={{ padding: 12, borderRadius: 14, background: "rgba(0,0,0,0.04)" }}>
-          <strong>Patients / بیماران</strong>
+          <strong>Patients / Ø¨ÛŒÙ…Ø§Ø±Ø§Ù†</strong>
           <div style={{ opacity: 0.75, marginTop: 6 }}>Placeholder</div>
         </div>
       </div>

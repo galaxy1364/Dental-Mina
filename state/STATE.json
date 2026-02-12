@@ -1,267 +1,273 @@
-﻿{
-    "project":  {
-                    "name":  "Dental-Mina",
-                    "signature":  "PYM JBZ"
-                },
-    "gate":  {
-                 "current":  "G38_CAPACITOR_DEVICE_SMOKE",
-                 "locked_pass":  [
-                                     "G0_BOOTSTRAP",
-                                     "G1_SINGLE_COMMAND",
-                                     "G2_SANITY_HYGIENE",
-                                     "G3_ENCODING_HYGIENE",
-                                     "G4_EVIDENCE_PACK_OK",
-                                     "G5_REPLAY_RESTORE_OK",
-                                     "G6_PWA_INSTALL_OK",
-                                     "G7_SCALE_100K_OK",
-                                     "G8_SECURITY_BASE_OK",
-                                     "G9_IRAN_CORE_OK",
-                                     "G10_DESIGN_REVIEW_PACK",
-                                     "G11_DESIGN_V2_COLORFUL",
-                                     "G12_DESIGN_V5_ICON_POLISH",
-                                     "G12_DESIGN_V6_ICON_SYSTEM",
-                                     "G13_LOCKPACK_CANON_DOCS_FIX",
-                                     "G14_LOCKPACK_PS51_UNICODE_SAFE",
-                                     "G15_CHECKLIST_AUTO_SYNC",
-                                     "G16_HANDOFF_AUTOGEN",
-                                     "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
-                                     "G18_DESIGN_CONTINUATION",
-                                     "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
-                                     "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
-                                     "G30_MODULARITY_EXTENSIBILITY_LOCK_2026",
-                                     "G31_MODULE_REGISTRY_CONTRACTS_LOCK",
-                                     "G32_FEATURE_FLAGS_FOUNDATION",
-                                     "G33_OFFLINE_FIRST_SYNC_LOCK_2026",
-                                     "G34_SYNC_ENGINE_FOUNDATION",
-                                     "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
-                                     "G36_PWA_BASELINE_IMPLEMENTATION",
-                                     "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR",
-                                     "G38_CAPACITOR_DEVICE_SMOKE"
-                                 ],
-                 "last_pass":  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
-             },
-    "last_pass":  "G38_CAPACITOR_DEVICE_SMOKE",
-    "last_fail":  null,
-    "active_issue":  null,
-    "next_action_hash":  "c3827b412eeea41db80cc3dfe6457dadc61f999d65d8a6b7d188fd9dbb1c832a",
-    "updated_utc":  "2026-02-08T22:25:35.8813762Z",
-    "locked_pass":  [
-                        "G10_DESIGN_REVIEW_PACK",
-                        "G20_SIGNED_CI_ARTIFACT_PROVENANCE",
-                        "G3_ENCODING_HYGIENE",
-                        "G4_DONE",
-                        "G5_DONE",
-                        "G6_DONE",
-                        "G7_DONE",
-                        "G8_DONE",
-                        "G9_DONE",
-                        "G10_DONE",
-                        "G11_DESIGN_FEEDBACK_PENDING",
-                        "G12_DESIGN_FEEDBACK_PENDING",
-                        "G14_DONE",
-                        "G15_CHECKLIST_AUTO_SYNC",
-                        "G16_DONE",
-                        "G17_DONE",
-                        "G18_DESIGN_CONTINUATION",
-                        "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
-                        "G20_ATTEST_FAILED",
-                        "G24_DONE",
-                        "G25_DONE",
-                        "G26_DONE",
-                        "G27_DONE",
-                        "G28_DONE",
-                        "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
-                        "G33_OFFLINE_FIRST_SYNC_LOCK_2026",
-                        "G34_SYNC_ENGINE_FOUNDATION",
-                        "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
-                        "G36_PWA_BASELINE_IMPLEMENTATION",
-                        "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR",
-                        "G38_CAPACITOR_DEVICE_SMOKE",
-                        "G39_PRODUCT_LAYER_ROADMAP_LOCK_2026",
-                        "G40_PRODUCT_FEATURE_BACKLOG_LOCK_2026",
-                        "G41_REPAIR_BUILD_BASELINE"
-                    ],
-    "gates":  {
-                  "G38_CAPACITOR_DEVICE_SMOKE":  {
-                                                     "status":  "LOCKED_PASS",
-                                                     "run_databaseId":  "21907743043",
-                                                     "evidence_dir":  "evidence/G38",
-                                                     "ai_signature":  "PYM JBZ",
-                                                     "locked_at_utc":  "2026-02-12T01:27:41.7021306Z"
-                                                 },
-                  "G20_SIGNED_CI_ARTIFACT_PROVENANCE":  {
-                                                            "status":  "LOCKED_PASS",
-                                                            "run_databaseId":  null,
-                                                            "evidence_dir":  null,
-                                                            "ai_signature":  "PYM JBZ",
-                                                            "locked_at_utc":  "2026-02-12T01:41:40.0346385Z"
-                                                        },
-                  "G3_ENCODING_HYGIENE":  {
-                                              "status":  "LOCKED_PASS",
-                                              "run_databaseId":  null,
-                                              "evidence_dir":  null,
-                                              "ai_signature":  "PYM JBZ",
-                                              "locked_at_utc":  "2026-02-12T01:41:40.0396373Z"
-                                          },
-                  "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK":  {
-                                                               "status":  "LOCKED_PASS",
-                                                               "run_databaseId":  null,
-                                                               "evidence_dir":  null,
-                                                               "ai_signature":  "PYM JBZ",
-                                                               "locked_at_utc":  "2026-02-12T01:41:40.0409158Z"
-                                                           },
-                  "G9_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0451838Z"
-                              },
-                  "G16_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0461881Z"
-                               },
-                  "G12_DESIGN_FEEDBACK_PENDING":  {
-                                                      "status":  "LOCKED_PASS",
-                                                      "run_databaseId":  null,
-                                                      "evidence_dir":  null,
-                                                      "ai_signature":  "PYM JBZ",
-                                                      "locked_at_utc":  "2026-02-12T01:41:40.0471880Z"
-                                                  },
-                  "G24_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0481948Z"
-                               },
-                  "G10_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0501866Z"
-                               },
-                  "G28_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0511906Z"
-                               },
-                  "G4_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0521841Z"
-                              },
-                  "G17_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0541952Z"
-                               },
-                  "G11_DESIGN_FEEDBACK_PENDING":  {
-                                                      "status":  "LOCKED_PASS",
-                                                      "run_databaseId":  null,
-                                                      "evidence_dir":  null,
-                                                      "ai_signature":  "PYM JBZ",
-                                                      "locked_at_utc":  "2026-02-12T01:41:40.0551885Z"
-                                                  },
-                  "G5_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0561833Z"
-                              },
-                  "G15_CHECKLIST_AUTO_SYNC":  {
-                                                  "status":  "LOCKED_PASS",
-                                                  "run_databaseId":  null,
-                                                  "evidence_dir":  null,
-                                                  "ai_signature":  "PYM JBZ",
-                                                  "locked_at_utc":  "2026-02-12T01:41:40.0571913Z"
-                                              },
-                  "G6_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0591908Z"
-                              },
-                  "G27_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0606841Z"
-                               },
-                  "G20_ATTEST_FAILED":  {
-                                            "status":  "LOCKED_PASS",
-                                            "run_databaseId":  null,
-                                            "evidence_dir":  null,
-                                            "ai_signature":  "PYM JBZ",
-                                            "locked_at_utc":  "2026-02-12T01:41:40.0616842Z"
-                                        },
-                  "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD":  {
-                                                                 "status":  "LOCKED_PASS",
-                                                                 "run_databaseId":  null,
-                                                                 "evidence_dir":  null,
-                                                                 "ai_signature":  "PYM JBZ",
-                                                                 "locked_at_utc":  "2026-02-12T01:41:40.0626841Z"
-                                                             },
-                  "G18_DESIGN_CONTINUATION":  {
-                                                  "status":  "LOCKED_PASS",
-                                                  "run_databaseId":  null,
-                                                  "evidence_dir":  null,
-                                                  "ai_signature":  "PYM JBZ",
-                                                  "locked_at_utc":  "2026-02-12T01:41:40.0637714Z"
-                                              },
-                  "G7_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0660756Z"
-                              },
-                  "G8_DONE":  {
-                                  "status":  "LOCKED_PASS",
-                                  "run_databaseId":  null,
-                                  "evidence_dir":  null,
-                                  "ai_signature":  "PYM JBZ",
-                                  "locked_at_utc":  "2026-02-12T01:41:40.0670783Z"
-                              },
-                  "G25_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0680681Z"
-                               },
-                  "G14_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0690664Z"
-                               },
-                  "G26_DONE":  {
-                                   "status":  "LOCKED_PASS",
-                                   "run_databaseId":  null,
-                                   "evidence_dir":  null,
-                                   "ai_signature":  "PYM JBZ",
-                                   "locked_at_utc":  "2026-02-12T01:41:40.0710697Z"
-                               },
-                  "G41_STATE_RECONCILE_FROM_EVIDENCE":  {
-                                                            "status":  "LOCKED_PASS",
-                                                            "ai_signature":  "PYM JBZ",
-                                                            "locked_at_utc":  "2026-02-12T01:46:48.2057510Z",
-                                                            "evidence_dir":  "evidence/G41"
-                                                        }
-              }
+{
+  "project": {
+    "name": "Dental-Mina",
+    "signature": "PYM JBZ"
+  },
+  "gate": {
+    "current": "G38_CAPACITOR_DEVICE_SMOKE",
+    "locked_pass": [
+      "G0_BOOTSTRAP",
+      "G1_SINGLE_COMMAND",
+      "G2_SANITY_HYGIENE",
+      "G3_ENCODING_HYGIENE",
+      "G4_EVIDENCE_PACK_OK",
+      "G5_REPLAY_RESTORE_OK",
+      "G6_PWA_INSTALL_OK",
+      "G7_SCALE_100K_OK",
+      "G8_SECURITY_BASE_OK",
+      "G9_IRAN_CORE_OK",
+      "G10_DESIGN_REVIEW_PACK",
+      "G11_DESIGN_V2_COLORFUL",
+      "G12_DESIGN_V5_ICON_POLISH",
+      "G12_DESIGN_V6_ICON_SYSTEM",
+      "G13_LOCKPACK_CANON_DOCS_FIX",
+      "G14_LOCKPACK_PS51_UNICODE_SAFE",
+      "G15_CHECKLIST_AUTO_SYNC",
+      "G16_HANDOFF_AUTOGEN",
+      "G17_PS51_UTF8_BOM_OPERATOR_DOCS",
+      "G18_DESIGN_CONTINUATION",
+      "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+      "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
+      "G30_MODULARITY_EXTENSIBILITY_LOCK_2026",
+      "G31_MODULE_REGISTRY_CONTRACTS_LOCK",
+      "G32_FEATURE_FLAGS_FOUNDATION",
+      "G33_OFFLINE_FIRST_SYNC_LOCK_2026",
+      "G34_SYNC_ENGINE_FOUNDATION",
+      "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
+      "G36_PWA_BASELINE_IMPLEMENTATION",
+      "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR",
+      "G38_CAPACITOR_DEVICE_SMOKE"
+    ],
+    "last_pass": "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD"
+  },
+  "last_pass": "G38_CAPACITOR_DEVICE_SMOKE",
+  "last_fail": null,
+  "active_issue": null,
+  "next_action_hash": "c3827b412eeea41db80cc3dfe6457dadc61f999d65d8a6b7d188fd9dbb1c832a",
+  "updated_utc": "2026-02-08T22:25:35.8813762Z",
+  "locked_pass": [
+    "G10_DESIGN_REVIEW_PACK",
+    "G20_SIGNED_CI_ARTIFACT_PROVENANCE",
+    "G3_ENCODING_HYGIENE",
+    "G4_DONE",
+    "G5_DONE",
+    "G6_DONE",
+    "G7_DONE",
+    "G8_DONE",
+    "G9_DONE",
+    "G10_DONE",
+    "G11_DESIGN_FEEDBACK_PENDING",
+    "G12_DESIGN_FEEDBACK_PENDING",
+    "G14_DONE",
+    "G15_CHECKLIST_AUTO_SYNC",
+    "G16_DONE",
+    "G17_DONE",
+    "G18_DESIGN_CONTINUATION",
+    "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD",
+    "G20_ATTEST_FAILED",
+    "G24_DONE",
+    "G25_DONE",
+    "G26_DONE",
+    "G27_DONE",
+    "G28_DONE",
+    "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK",
+    "G33_OFFLINE_FIRST_SYNC_LOCK_2026",
+    "G34_SYNC_ENGINE_FOUNDATION",
+    "G35_PWA_INSTALLABLE_MOBILE_LOCK_2026",
+    "G36_PWA_BASELINE_IMPLEMENTATION",
+    "G37_MOBILE_WRAPPER_BASELINE_CAPACITOR",
+    "G38_CAPACITOR_DEVICE_SMOKE",
+    "G39_PRODUCT_LAYER_ROADMAP_LOCK_2026",
+    "G40_PRODUCT_FEATURE_BACKLOG_LOCK_2026",
+    "G41_REPAIR_BUILD_BASELINE"
+  ],
+  "gates": {
+    "G38_CAPACITOR_DEVICE_SMOKE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": "21907743043",
+      "evidence_dir": "evidence/G38",
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:27:41.7021306Z"
+    },
+    "G20_SIGNED_CI_ARTIFACT_PROVENANCE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0346385Z"
+    },
+    "G3_ENCODING_HYGIENE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0396373Z"
+    },
+    "G29_CROSS_PLATFORM_WRAPPER_PATH_LOCK": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0409158Z"
+    },
+    "G9_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0451838Z"
+    },
+    "G16_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0461881Z"
+    },
+    "G12_DESIGN_FEEDBACK_PENDING": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.047188Z"
+    },
+    "G24_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0481948Z"
+    },
+    "G10_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0501866Z"
+    },
+    "G28_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0511906Z"
+    },
+    "G4_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0521841Z"
+    },
+    "G17_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0541952Z"
+    },
+    "G11_DESIGN_FEEDBACK_PENDING": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0551885Z"
+    },
+    "G5_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0561833Z"
+    },
+    "G15_CHECKLIST_AUTO_SYNC": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0571913Z"
+    },
+    "G6_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0591908Z"
+    },
+    "G27_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0606841Z"
+    },
+    "G20_ATTEST_FAILED": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0616842Z"
+    },
+    "G19_CODEOWNERS_HASHLOCK_PROTECTED_PROD": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0626841Z"
+    },
+    "G18_DESIGN_CONTINUATION": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0637714Z"
+    },
+    "G7_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0660756Z"
+    },
+    "G8_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0670783Z"
+    },
+    "G25_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0680681Z"
+    },
+    "G14_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0690664Z"
+    },
+    "G26_DONE": {
+      "status": "LOCKED_PASS",
+      "run_databaseId": null,
+      "evidence_dir": null,
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:41:40.0710697Z"
+    },
+    "G41_STATE_RECONCILE_FROM_EVIDENCE": {
+      "status": "LOCKED_PASS",
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:46:48.205751Z",
+      "evidence_dir": "evidence/G41"
+    },
+    "G42_APP_CHECKLIST_0_100": {
+      "status": "LOCKED_PASS",
+      "ai_signature": "PYM JBZ",
+      "locked_at_utc": "2026-02-12T01:52:04.7317641Z",
+      "evidence_dir": "evidence/G42"
+    }
+  }
 }

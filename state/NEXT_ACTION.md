@@ -1,3 +1,3 @@
-﻿Authorized Gate: G42_APP_CHECKLIST_0_100
-Reason: G41 LOCKED_PASS finalized. Next: add in-app 0-100 tickable checklist (IndexedDB) + chat-proof STATUS doc.
+﻿Authorized Gate: G43_REAL_APP_RUN_ON_PHONE
+Reason: G42 LOCKED_PASS. Next: run app (web + Android) and verify checklist page loads, capture minimal evidence.
 AI_SIGNATURE: PYM JBZ
