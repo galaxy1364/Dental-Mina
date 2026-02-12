@@ -1,0 +1,313 @@
+﻿build_apk	Set up job	∩╗┐2026-02-11T12:28:40.0282123Z Current runner version: '2.331.0'
+build_apk	Set up job	2026-02-11T12:28:40.0307395Z ##[group]Runner Image Provisioner
+build_apk	Set up job	2026-02-11T12:28:40.0308287Z Hosted Compute Agent
+build_apk	Set up job	2026-02-11T12:28:40.0308844Z Version: 20260123.484
+build_apk	Set up job	2026-02-11T12:28:40.0309393Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+build_apk	Set up job	2026-02-11T12:28:40.0310126Z Build Date: 2026-01-23T19:41:17Z
+build_apk	Set up job	2026-02-11T12:28:40.0310732Z Worker ID: {b4165641-9bc7-463f-873c-87fc07e561a0}
+build_apk	Set up job	2026-02-11T12:28:40.0311443Z Azure Region: northcentralus
+build_apk	Set up job	2026-02-11T12:28:40.0312009Z ##[endgroup]
+build_apk	Set up job	2026-02-11T12:28:40.0313424Z ##[group]Operating System
+build_apk	Set up job	2026-02-11T12:28:40.0314022Z Ubuntu
+build_apk	Set up job	2026-02-11T12:28:40.0314564Z 24.04.3
+build_apk	Set up job	2026-02-11T12:28:40.0315072Z LTS
+build_apk	Set up job	2026-02-11T12:28:40.0315517Z ##[endgroup]
+build_apk	Set up job	2026-02-11T12:28:40.0316035Z ##[group]Runner Image
+build_apk	Set up job	2026-02-11T12:28:40.0316761Z Image: ubuntu-24.04
+build_apk	Set up job	2026-02-11T12:28:40.0317287Z Version: 20260201.15.1
+build_apk	Set up job	2026-02-11T12:28:40.0318212Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260201.15/images/ubuntu/Ubuntu2404-Readme.md
+build_apk	Set up job	2026-02-11T12:28:40.0319885Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260201.15
+build_apk	Set up job	2026-02-11T12:28:40.0320801Z ##[endgroup]
+build_apk	Set up job	2026-02-11T12:28:40.0321867Z ##[group]GITHUB_TOKEN Permissions
+build_apk	Set up job	2026-02-11T12:28:40.0323870Z Contents: read
+build_apk	Set up job	2026-02-11T12:28:40.0324501Z Metadata: read
+build_apk	Set up job	2026-02-11T12:28:40.0325002Z Packages: read
+build_apk	Set up job	2026-02-11T12:28:40.0325466Z ##[endgroup]
+build_apk	Set up job	2026-02-11T12:28:40.0327975Z Secret source: Actions
+build_apk	Set up job	2026-02-11T12:28:40.0329051Z Prepare workflow directory
+build_apk	Set up job	2026-02-11T12:28:40.0843013Z Prepare all required actions
+build_apk	Set up job	2026-02-11T12:28:40.0900977Z Getting action download info
+build_apk	Set up job	2026-02-11T12:28:40.4903715Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build_apk	Set up job	2026-02-11T12:28:40.6099656Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+build_apk	Set up job	2026-02-11T12:28:41.0918389Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build_apk	Set up job	2026-02-11T12:28:41.1824204Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build_apk	Set up job	2026-02-11T12:28:41.4261020Z Complete job name: build_apk
+build_apk	Checkout	∩╗┐2026-02-11T12:28:41.5033879Z ##[group]Run actions/checkout@v4
+build_apk	Checkout	2026-02-11T12:28:41.5034906Z with:
+build_apk	Checkout	2026-02-11T12:28:41.5035396Z   repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:41.5036562Z   token: ***
+build_apk	Checkout	2026-02-11T12:28:41.5037035Z   ssh-strict: true
+build_apk	Checkout	2026-02-11T12:28:41.5037528Z   ssh-user: git
+build_apk	Checkout	2026-02-11T12:28:41.5038025Z   persist-credentials: true
+build_apk	Checkout	2026-02-11T12:28:41.5038682Z   clean: true
+build_apk	Checkout	2026-02-11T12:28:41.5039246Z   sparse-checkout-cone-mode: true
+build_apk	Checkout	2026-02-11T12:28:41.5039965Z   fetch-depth: 1
+build_apk	Checkout	2026-02-11T12:28:41.5040514Z   fetch-tags: false
+build_apk	Checkout	2026-02-11T12:28:41.5041071Z   show-progress: true
+build_apk	Checkout	2026-02-11T12:28:41.5041636Z   lfs: false
+build_apk	Checkout	2026-02-11T12:28:41.5042133Z   submodules: false
+build_apk	Checkout	2026-02-11T12:28:41.5042836Z   set-safe-directory: true
+build_apk	Checkout	2026-02-11T12:28:41.5043949Z env:
+build_apk	Checkout	2026-02-11T12:28:41.5044517Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-11T12:28:41.5045368Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Checkout	2026-02-11T12:28:41.5046098Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:41.6126852Z Syncing repository: galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:41.6129193Z ##[group]Getting Git version info
+build_apk	Checkout	2026-02-11T12:28:41.6130238Z Working directory is '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-11T12:28:41.6131922Z [command]/usr/bin/git version
+build_apk	Checkout	2026-02-11T12:28:41.6206724Z git version 2.52.0
+build_apk	Checkout	2026-02-11T12:28:41.6233182Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:41.6250683Z Temporarily overriding HOME='/home/runner/work/_temp/135850b5-97cb-4abd-9640-6b123358566b' before making global git config changes
+build_apk	Checkout	2026-02-11T12:28:41.6254683Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Checkout	2026-02-11T12:28:41.6258111Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:41.6304801Z Deleting the contents of '/home/runner/work/Dental-Mina/Dental-Mina'
+build_apk	Checkout	2026-02-11T12:28:41.6308520Z ##[group]Initializing the repository
+build_apk	Checkout	2026-02-11T12:28:41.6313858Z [command]/usr/bin/git init /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:41.6424303Z hint: Using 'master' as the name for the initial branch. This default branch name
+build_apk	Checkout	2026-02-11T12:28:41.6427163Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build_apk	Checkout	2026-02-11T12:28:41.6429631Z hint: to use in all of your new repositories, which will suppress this warning,
+build_apk	Checkout	2026-02-11T12:28:41.6430744Z hint: call:
+build_apk	Checkout	2026-02-11T12:28:41.6431164Z hint:
+build_apk	Checkout	2026-02-11T12:28:41.6431782Z hint: 	git config --global init.defaultBranch <name>
+build_apk	Checkout	2026-02-11T12:28:41.6432589Z hint:
+build_apk	Checkout	2026-02-11T12:28:41.6433332Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build_apk	Checkout	2026-02-11T12:28:41.6435291Z hint: 'development'. The just-created branch can be renamed via this command:
+build_apk	Checkout	2026-02-11T12:28:41.6436616Z hint:
+build_apk	Checkout	2026-02-11T12:28:41.6437070Z hint: 	git branch -m <name>
+build_apk	Checkout	2026-02-11T12:28:41.6437640Z hint:
+build_apk	Checkout	2026-02-11T12:28:41.6438459Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build_apk	Checkout	2026-02-11T12:28:41.6440659Z Initialized empty Git repository in /home/runner/work/Dental-Mina/Dental-Mina/.git/
+build_apk	Checkout	2026-02-11T12:28:41.6443917Z [command]/usr/bin/git remote add origin https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:41.6475384Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:41.6476965Z ##[group]Disabling automatic garbage collection
+build_apk	Checkout	2026-02-11T12:28:41.6479027Z [command]/usr/bin/git config --local gc.auto 0
+build_apk	Checkout	2026-02-11T12:28:41.6507645Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:41.6509028Z ##[group]Setting up auth
+build_apk	Checkout	2026-02-11T12:28:41.6513871Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Checkout	2026-02-11T12:28:41.6543621Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Checkout	2026-02-11T12:28:41.6894259Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Checkout	2026-02-11T12:28:41.6924096Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Checkout	2026-02-11T12:28:41.7147015Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Checkout	2026-02-11T12:28:41.7177132Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Checkout	2026-02-11T12:28:41.7410347Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build_apk	Checkout	2026-02-11T12:28:41.7447520Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:41.7448597Z ##[group]Fetching the repository
+build_apk	Checkout	2026-02-11T12:28:41.7463354Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5ed261de95dd8a456d8b72d7bd3bb81cec207a54:refs/remotes/origin/main
+build_apk	Checkout	2026-02-11T12:28:42.3867565Z From https://github.com/galaxy1364/Dental-Mina
+build_apk	Checkout	2026-02-11T12:28:42.3870231Z  * [new ref]         5ed261de95dd8a456d8b72d7bd3bb81cec207a54 -> origin/main
+build_apk	Checkout	2026-02-11T12:28:42.3903577Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:42.3905163Z ##[group]Determining the checkout info
+build_apk	Checkout	2026-02-11T12:28:42.3907479Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:42.3910926Z [command]/usr/bin/git sparse-checkout disable
+build_apk	Checkout	2026-02-11T12:28:42.3952594Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build_apk	Checkout	2026-02-11T12:28:42.3980784Z ##[group]Checking out the ref
+build_apk	Checkout	2026-02-11T12:28:42.3984139Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build_apk	Checkout	2026-02-11T12:28:42.4864432Z Switched to a new branch 'main'
+build_apk	Checkout	2026-02-11T12:28:42.4866501Z branch 'main' set up to track 'origin/main'.
+build_apk	Checkout	2026-02-11T12:28:42.4883564Z ##[endgroup]
+build_apk	Checkout	2026-02-11T12:28:42.4920838Z [command]/usr/bin/git log -1 --format=%H
+build_apk	Checkout	2026-02-11T12:28:42.4944254Z 5ed261de95dd8a456d8b72d7bd3bb81cec207a54
+build_apk	Setup Java 17	∩╗┐2026-02-11T12:28:42.5291327Z ##[group]Run actions/setup-java@v4
+build_apk	Setup Java 17	2026-02-11T12:28:42.5292616Z with:
+build_apk	Setup Java 17	2026-02-11T12:28:42.5293370Z   distribution: temurin
+build_apk	Setup Java 17	2026-02-11T12:28:42.5294247Z   java-version: 17
+build_apk	Setup Java 17	2026-02-11T12:28:42.5295070Z   java-package: jdk
+build_apk	Setup Java 17	2026-02-11T12:28:42.5295883Z   check-latest: false
+build_apk	Setup Java 17	2026-02-11T12:28:42.5296849Z   server-id: github
+build_apk	Setup Java 17	2026-02-11T12:28:42.5297672Z   server-username: GITHUB_ACTOR
+build_apk	Setup Java 17	2026-02-11T12:28:42.5298620Z   server-password: GITHUB_TOKEN
+build_apk	Setup Java 17	2026-02-11T12:28:42.5299574Z   overwrite-settings: true
+build_apk	Setup Java 17	2026-02-11T12:28:42.5300449Z   job-status: success
+build_apk	Setup Java 17	2026-02-11T12:28:42.5301545Z   token: ***
+build_apk	Setup Java 17	2026-02-11T12:28:42.5302255Z env:
+build_apk	Setup Java 17	2026-02-11T12:28:42.5303046Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T12:28:42.5304200Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Java 17	2026-02-11T12:28:42.5305231Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-11T12:28:42.7475085Z ##[group]Installed distributions
+build_apk	Setup Java 17	2026-02-11T12:28:42.7589513Z Resolved Java 17.0.18+8 from tool-cache
+build_apk	Setup Java 17	2026-02-11T12:28:42.7591217Z Setting Java 17.0.18+8 as the default
+build_apk	Setup Java 17	2026-02-11T12:28:42.7593058Z Creating toolchains.xml for JDK version 17 from temurin
+build_apk	Setup Java 17	2026-02-11T12:28:42.7639652Z Writing to /home/runner/.m2/toolchains.xml
+build_apk	Setup Java 17	2026-02-11T12:28:42.7640821Z 
+build_apk	Setup Java 17	2026-02-11T12:28:42.7641159Z Java configuration:
+build_apk	Setup Java 17	2026-02-11T12:28:42.7642458Z   Distribution: temurin
+build_apk	Setup Java 17	2026-02-11T12:28:42.7643753Z   Version: 17.0.18+8
+build_apk	Setup Java 17	2026-02-11T12:28:42.7645535Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Java 17	2026-02-11T12:28:42.7647377Z 
+build_apk	Setup Java 17	2026-02-11T12:28:42.7648733Z ##[endgroup]
+build_apk	Setup Java 17	2026-02-11T12:28:42.7663042Z Creating settings.xml with server-id: github
+build_apk	Setup Java 17	2026-02-11T12:28:42.7668311Z Writing to /home/runner/.m2/settings.xml
+build_apk	Setup Node.js (LTS)	∩╗┐2026-02-11T12:28:42.7877035Z ##[group]Run actions/setup-node@v4
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7878023Z with:
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7878692Z   node-version: 20
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7879412Z   cache: npm
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7880106Z   always-auth: false
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7880874Z   check-latest: false
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7881879Z   token: ***
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7882561Z env:
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7883330Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7884490Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7885860Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7888003Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.7889409Z ##[endgroup]
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.9728694Z Found in cache @ /opt/hostedtoolcache/node/20.20.0/x64
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:42.9732730Z ##[group]Environment details
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.3218601Z node: v20.20.0
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.3219748Z npm: 10.8.2
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.3220672Z yarn: 1.22.22
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.3222235Z ##[endgroup]
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.3244521Z [command]/opt/hostedtoolcache/node/20.20.0/x64/bin/npm config get cache
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.4413374Z /home/runner/.npm
+build_apk	Setup Node.js (LTS)	2026-02-11T12:28:43.6396641Z npm cache is not found
+build_apk	Locate Capacitor app dir (fallback-safe)	∩╗┐2026-02-11T12:28:43.6528716Z ##[group]Run set -euo pipefail
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6529525Z [36;1mset -euo pipefail[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6530225Z [36;1mecho "Repo root contents:"; ls -lah[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6530928Z [36;1m[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6531539Z [36;1mAPPDIR=""[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6532115Z [36;1m[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6532801Z [36;1m# 1) Prefer capacitor.config.* anywhere (deeper search)[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6534069Z [36;1mCFG="$(find . -maxdepth 30 -type f \( -name "capacitor.config.ts" -o -name "capacitor.config.json" -o -name "capacitor.config.js" \) | head -n 1 || true)"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6535237Z [36;1mif [ -n "$CFG" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6535904Z [36;1m  D="$(dirname "$CFG")"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6536783Z [36;1m  if [ -f "$D/package.json" ]; then APPDIR="$D"; fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6537517Z [36;1mfi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6538064Z [36;1m[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6538750Z [36;1m# 2) Fallback: first package.json that mentions capacitor[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6539529Z [36;1mif [ -z "$APPDIR" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6540414Z [36;1m  PJ="$(find . -maxdepth 30 -type f -name "package.json" | head -n 200 || true)"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6541513Z [36;1m  if [ -n "$PJ" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6542183Z [36;1m    while IFS= read -r p; do[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6542968Z [36;1m      if grep -qiE '"@capacitor/|"\s*capacitor\s*"' "$p"; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6543769Z [36;1m        APPDIR="$(dirname "$p")"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6544432Z [36;1m        break[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6545033Z [36;1m      fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6545624Z [36;1m    done <<< "$PJ"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6546357Z [36;1m  fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6546923Z [36;1mfi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6547483Z [36;1m[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6548084Z [36;1m# 3) Fallback: common paths (if exist)[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6548815Z [36;1mif [ -z "$APPDIR" ]; then[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6549622Z [36;1m  for d in "./apps/dental-mina" "./app" "./apps/app" "./src" "."; do[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6550538Z [36;1m    if [ -f "$d/package.json" ]; then APPDIR="$d"; break; fi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6551282Z [36;1m  done[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6551852Z [36;1mfi[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6552411Z [36;1m[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6552982Z [36;1mtest -n "$APPDIR"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6553632Z [36;1mecho "APPDIR=$APPDIR"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6554307Z [36;1mtest -f "$APPDIR/package.json"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6555064Z [36;1mecho "app_dir=$APPDIR" >> "$GITHUB_OUTPUT"[0m
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6598493Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6599291Z env:
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6599909Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6600648Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6601489Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6602470Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6603286Z ##[endgroup]
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6690238Z Repo root contents:
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6699417Z total 84K
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6700259Z drwxr-xr-x 12 runner runner 4.0K Feb 11 12:28 .
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6701170Z drwxr-xr-x  3 runner runner 4.0K Feb 11 12:28 ..
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6702055Z drwxr-xr-x  7 runner runner 4.0K Feb 11 12:28 .git
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6702955Z drwxr-xr-x  3 runner runner 4.0K Feb 11 12:28 .github
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6703859Z -rw-r--r--  1 runner runner    0 Feb 11 12:28 .gitignore
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6704740Z drwxr-xr-x  4 runner runner 4.0K Feb 11 12:28 app
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6705769Z drwxr-xr-x  3 runner runner 4.0K Feb 11 12:28 apps
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6707380Z drwxr-xr-x  2 runner runner 4.0K Feb 11 12:28 docs
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6708830Z drwxr-xr-x  3 runner runner 4.0K Feb 11 12:28 evidence
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6710330Z drwxr-xr-x  2 runner runner 4.0K Feb 11 12:28 handoff
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6712001Z drwxr-xr-x 29 runner runner 4.0K Feb 11 12:28 node_modules
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6713639Z -rw-r--r--  1 runner runner  30K Feb 11 12:28 package-lock.json
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6715570Z -rw-r--r--  1 runner runner  156 Feb 11 12:28 package.json
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6770466Z drwxr-xr-x  2 runner runner 4.0K Feb 11 12:28 state
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6771585Z drwxr-xr-x  2 runner runner 4.0K Feb 11 12:28 tools
+build_apk	Locate Capacitor app dir (fallback-safe)	2026-02-11T12:28:43.6773042Z APPDIR=./apps/dental-mina
+build_apk	Install deps + build web + sync Android (creates gradlew)	∩╗┐2026-02-11T12:28:43.6850322Z ##[group]Run set -euo pipefail
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6851062Z [36;1mset -euo pipefail[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6851775Z [36;1mcd "./apps/dental-mina"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6852445Z [36;1mecho "Working in: $(pwd)"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6853139Z [36;1mls -lah[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6853704Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6854246Z [36;1mnpm ci[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6854804Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6855451Z [36;1mif npm run -s | grep -qE '(^|\s)build(\s|$)'; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6856530Z [36;1m  npm run build[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6857177Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6857720Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6858262Z [36;1mCAP=""[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6858901Z [36;1mif [ -x "./node_modules/.bin/cap" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6859824Z [36;1m  CAP="./node_modules/.bin/cap"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6860469Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6861014Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6861563Z [36;1mrun_cap () {[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6862170Z [36;1m  if [ -n "$CAP" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6862834Z [36;1m    "$CAP" "$@"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6863428Z [36;1m  else[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6864103Z [36;1m    npm exec --yes --package @capacitor/cli -- cap "$@"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6864848Z [36;1m  fi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6865395Z [36;1m}[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6865940Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6866619Z [36;1mif [ -d "android" ]; then[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6867289Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6867906Z [36;1melse[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6868485Z [36;1m  run_cap add android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6869121Z [36;1m  run_cap sync android[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6869737Z [36;1mfi[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6870264Z [36;1m[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6870829Z [36;1mtest -x "android/gradlew"[0m
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6903090Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6903835Z env:
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6904438Z   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6905153Z   ANDROID_HOME: /usr/local/lib/android/sdk
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6905977Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6907055Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6907847Z ##[endgroup]
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6971605Z Working in: /home/runner/work/Dental-Mina/Dental-Mina/apps/dental-mina
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6984581Z total 252K
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6985584Z drwxr-xr-x 4 runner runner 4.0K Feb 11 12:28 .
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6986574Z drwxr-xr-x 3 runner runner 4.0K Feb 11 12:28 ..
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6987449Z -rw-r--r-- 1 runner runner  253 Feb 11 12:28 .gitignore
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6988332Z -rw-r--r-- 1 runner runner 2.5K Feb 11 12:28 README.md
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6989274Z -rw-r--r-- 1 runner runner  116 Feb 11 12:28 capacitor.config.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6990250Z -rw-r--r-- 1 runner runner  616 Feb 11 12:28 eslint.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6991152Z -rw-r--r-- 1 runner runner  377 Feb 11 12:28 index.html
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6992073Z -rw-r--r-- 1 runner runner 188K Feb 11 12:28 package-lock.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6993004Z -rw-r--r-- 1 runner runner 1.2K Feb 11 12:28 package.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6993930Z -rw-r--r-- 1 runner runner   91 Feb 11 12:28 postcss.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6994814Z drwxr-xr-x 2 runner runner 4.0K Feb 11 12:28 public
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6995660Z drwxr-xr-x 3 runner runner 4.0K Feb 11 12:28 src
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6996891Z -rw-r--r-- 1 runner runner  161 Feb 11 12:28 tailwind.config.js
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6997876Z -rw-r--r-- 1 runner runner  732 Feb 11 12:28 tsconfig.app.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6998803Z -rw-r--r-- 1 runner runner  119 Feb 11 12:28 tsconfig.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.6999722Z -rw-r--r-- 1 runner runner  653 Feb 11 12:28 tsconfig.node.json
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:43.7000670Z -rw-r--r-- 1 runner runner  161 Feb 11 12:28 vite.config.ts
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:44.4113817Z npm warn EBADENGINE Unsupported engine {
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:44.4114974Z npm warn EBADENGINE   package: '@capacitor/cli@8.0.2',
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:44.4116536Z npm warn EBADENGINE   required: { node: '>=22.0.0' },
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:44.4117490Z npm warn EBADENGINE   current: { node: 'v20.20.0', npm: '10.8.2' }
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:44.4118189Z npm warn EBADENGINE }
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0526618Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0527951Z added 282 packages, and audited 283 packages in 4s
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0528505Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0528809Z 66 packages are looking for funding
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0529333Z   run `npm fund` for details
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0540543Z 
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.0541079Z found 0 vulnerabilities
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.2279236Z [31m[fatal][39m The Capacitor CLI requires NodeJS >=22.0.0
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.2280011Z         Please install the latest LTS version.
+build_apk	Install deps + build web + sync Android (creates gradlew)	2026-02-11T12:28:48.2319078Z ##[error]Process completed with exit code 1.
+build_apk	Post Setup Java 17	∩╗┐2026-02-11T12:28:48.2440031Z Post job cleanup.
+build_apk	Post Checkout	∩╗┐2026-02-11T12:28:48.4224729Z Post job cleanup.
+build_apk	Post Checkout	2026-02-11T12:28:48.5198229Z [command]/usr/bin/git version
+build_apk	Post Checkout	2026-02-11T12:28:48.5238957Z git version 2.52.0
+build_apk	Post Checkout	2026-02-11T12:28:48.5286556Z Temporarily overriding HOME='/home/runner/work/_temp/bc59749d-5a40-4238-91e7-77318d0fb12a' before making global git config changes
+build_apk	Post Checkout	2026-02-11T12:28:48.5288770Z Adding repository directory to the temporary git global config as a safe directory
+build_apk	Post Checkout	2026-02-11T12:28:48.5293650Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dental-Mina/Dental-Mina
+build_apk	Post Checkout	2026-02-11T12:28:48.5337681Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_apk	Post Checkout	2026-02-11T12:28:48.5373623Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_apk	Post Checkout	2026-02-11T12:28:48.5624553Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_apk	Post Checkout	2026-02-11T12:28:48.5649856Z http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-11T12:28:48.5685346Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build_apk	Post Checkout	2026-02-11T12:28:48.5708320Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_apk	Post Checkout	2026-02-11T12:28:48.6003339Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_apk	Post Checkout	2026-02-11T12:28:48.6045418Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_apk	Complete job	∩╗┐2026-02-11T12:28:48.6442417Z Cleaning up orphan processes

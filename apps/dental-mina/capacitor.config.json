@@ -1,6 +1,6 @@
 ﻿{
-  "appId": "com.dentalmina.app",
-  "appName": "Dental-Mina",
-  "webDir": "dist",
-  "bundledWebRuntime": false
+    "appId":  "com.dentalmina.app",
+    "appName":  "Dental-Mina",
+    "webDir":  "dist",
+    "bundledWebRuntime":  false
 }
