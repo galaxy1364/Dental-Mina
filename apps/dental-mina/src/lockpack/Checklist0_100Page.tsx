@@ -42,10 +42,10 @@ async function dbSet<T>(key: string, val: T): Promise<void> {
 }
 
 function defaultItems(): Item[] {
-  // 0..100 (101 آیتم) — ساده و قابل توسعه
+  // 0..100 (101 Ø¢ÛŒØªÙ…) â€” Ø³Ø§Ø¯Ù‡ Ùˆ Ù‚Ø§Ø¨Ù„ ØªÙˆØ³Ø¹Ù‡
   return Array.from({ length: 101 }, (_, i) => ({
     id: i,
-    title: `بند ${i}`,
+    title: `Ø¨Ù†Ø¯ ${i}`,
     done: false,
   }));
 }
@@ -73,14 +73,14 @@ export function Checklist0_100Page() {
 
   return (
     <div style={{ padding: 16, maxWidth: 720, margin: "0 auto", fontFamily: "system-ui" }}>
-      <h2 style={{ margin: 0 }}>چک‌لیست 0 تا 100 (LOCKPACK)</h2>
+      <h2 style={{ margin: 0 }}>Ú†Ú©â€ŒÙ„ÛŒØ³Øª 0 ØªØ§ 100 (LOCKPACK)</h2>
       <p style={{ marginTop: 8, opacity: 0.8 }}>
-        پیشرفت: {doneCount} / {items.length}
+        Ù¾ÛŒØ´Ø±ÙØª: {doneCount} / {items.length}
       </p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button onClick={reset} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          ریست
+          Ø±ÛŒØ³Øª
         </button>
       </div>
 
@@ -91,14 +91,14 @@ export function Checklist0_100Page() {
             <div style={{ display: "flex", gap: 10, alignItems: "center", width: "100%" }}>
               <div style={{ width: 42, opacity: 0.7 }}>{it.id}</div>
               <div style={{ flex: 1 }}>{it.title}</div>
-              <div style={{ opacity: 0.6 }}>{it.done ? "✓" : ""}</div>
+              <div style={{ opacity: 0.6 }}>{it.done ? "âœ“" : ""}</div>
             </div>
           </label>
         ))}
       </div>
 
       <p style={{ marginTop: 12, opacity: 0.7 }}>
-        ذخیره‌سازی: IndexedDB (پایدار، چت‌پروف)
+        Ø°Ø®ÛŒØ±Ù‡â€ŒØ³Ø§Ø²ÛŒ: IndexedDB (Ù¾Ø§ÛŒØ¯Ø§Ø±ØŒ Ú†Øªâ€ŒÙ¾Ø±ÙˆÙ)
       </p>
     </div>
   );
