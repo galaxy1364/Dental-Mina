@@ -1,0 +1,25 @@
+﻿{
+    "ai_signature":  "PYM JBZ",
+    "gate":  "G43_REAL_APP_RUN_ON_PHONE",
+    "sub_step":  "HISTORY_CLEANUP_STRIP_BLOBS",
+    "utc":  "2026-02-17T08:37:09-08:00",
+    "head":  "ee5c962e1396ee898f6777353e62645ca9abec4e",
+    "checks":  {
+                   "head_tools_run_ps1_blob_bytes":  52919393,
+                   "largest_git_blob_bytes":  52919393,
+                   "push_dry_run":  null,
+                   "git_status_porcelain":  "",
+                   "origin_remote":  "origin\thttps://github.com/galaxy1364/Dental-Mina.git (fetch)\norigin\thttps://github.com/galaxy1364/Dental-Mina.git (push)"
+               },
+    "pass_criteria":  {
+                          "largest_blob_lt_100MB":  true,
+                          "head_run_ps1_under_60MB":  true,
+                          "push_dry_run_up_to_date":  false
+                      },
+    "manifest_sha256":  {
+                            "state/STATE.json":  "7dc61e8a3a93a53fe4e230c569d9bad10926f78b059df8f45e25098597c46adb",
+                            "state/LEDGER_v2.ndjson":  "1b6382ed09fddba7a0951bc46469b21366c5c077b18c2241d85cd0ccdbd0ecb8",
+                            "state/NEXT_ACTION.md":  "ec7f6ef064d2fbbbfac1475aa0b01613ce8105f9d43ffb7e8118ab517dda80f6",
+                            "tools/run.ps1":  "892dc561bcb2d80ce33bd12f180cbd522fe50dfdca4bb24a8f439c6bb4d5b14b"
+                        }
+}
