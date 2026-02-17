@@ -7,7 +7,7 @@
     "checks":  {
                    "head_tools_run_ps1_blob_bytes":  52919393,
                    "largest_git_blob_bytes":  52919393,
-                   "push_dry_run":  null,
+                   "push_dry_run":  "Everything up-to-date",
                    "git_status_porcelain":  "",
                    "origin_remote":  "origin\thttps://github.com/galaxy1364/Dental-Mina.git (fetch)\norigin\thttps://github.com/galaxy1364/Dental-Mina.git (push)"
                },
