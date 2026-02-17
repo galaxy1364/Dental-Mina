@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-
+import { useEffect, useMemo, useState } from 'react';
 type Item = { id: number; title: string; done: boolean };
 
 const DB_NAME = "dental-mina";
@@ -42,10 +41,10 @@ async function dbSet<T>(key: string, val: T): Promise<void> {
 }
 
 function defaultItems(): Item[] {
-  // 0..100 (101 Ø¢ÛŒØªÙ…) â€” Ø³Ø§Ø¯Ù‡ Ùˆ Ù‚Ø§Ø¨Ù„ ØªÙˆØ³Ø¹Ù‡
+  // 0..100 (101 Ã˜Â¢Ã›Å’Ã˜ÂªÃ™â€¦) Ã¢â‚¬â€ Ã˜Â³Ã˜Â§Ã˜Â¯Ã™â€¡ Ã™Ë† Ã™â€šÃ˜Â§Ã˜Â¨Ã™â€ž Ã˜ÂªÃ™Ë†Ã˜Â³Ã˜Â¹Ã™â€¡
   return Array.from({ length: 101 }, (_, i) => ({
     id: i,
-    title: `Ø¨Ù†Ø¯ ${i}`,
+    title: `Ã˜Â¨Ã™â€ Ã˜Â¯ ${i}`,
     done: false,
   }));
 }
@@ -73,14 +72,14 @@ export function Checklist0_100Page() {
 
   return (
     <div style={{ padding: 16, maxWidth: 720, margin: "0 auto", fontFamily: "system-ui" }}>
-      <h2 style={{ margin: 0 }}>Ú†Ú©â€ŒÙ„ÛŒØ³Øª 0 ØªØ§ 100 (LOCKPACK)</h2>
+      <h2 style={{ margin: 0 }}>Ãšâ€ ÃšÂ©Ã¢â‚¬Å’Ã™â€žÃ›Å’Ã˜Â³Ã˜Âª 0 Ã˜ÂªÃ˜Â§ 100 (LOCKPACK)</h2>
       <p style={{ marginTop: 8, opacity: 0.8 }}>
-        Ù¾ÛŒØ´Ø±ÙØª: {doneCount} / {items.length}
+        Ã™Â¾Ã›Å’Ã˜Â´Ã˜Â±Ã™ÂÃ˜Âª: {doneCount} / {items.length}
       </p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button onClick={reset} style={{ padding: "10px 12px", borderRadius: 10 }}>
-          Ø±ÛŒØ³Øª
+          Ã˜Â±Ã›Å’Ã˜Â³Ã˜Âª
         </button>
       </div>
 
@@ -91,14 +90,14 @@ export function Checklist0_100Page() {
             <div style={{ display: "flex", gap: 10, alignItems: "center", width: "100%" }}>
               <div style={{ width: 42, opacity: 0.7 }}>{it.id}</div>
               <div style={{ flex: 1 }}>{it.title}</div>
-              <div style={{ opacity: 0.6 }}>{it.done ? "âœ“" : ""}</div>
+              <div style={{ opacity: 0.6 }}>{it.done ? "Ã¢Å“â€œ" : ""}</div>
             </div>
           </label>
         ))}
       </div>
 
       <p style={{ marginTop: 12, opacity: 0.7 }}>
-        Ø°Ø®ÛŒØ±Ù‡â€ŒØ³Ø§Ø²ÛŒ: IndexedDB (Ù¾Ø§ÛŒØ¯Ø§Ø±ØŒ Ú†Øªâ€ŒÙ¾Ø±ÙˆÙ)
+        Ã˜Â°Ã˜Â®Ã›Å’Ã˜Â±Ã™â€¡Ã¢â‚¬Å’Ã˜Â³Ã˜Â§Ã˜Â²Ã›Å’: IndexedDB (Ã™Â¾Ã˜Â§Ã›Å’Ã˜Â¯Ã˜Â§Ã˜Â±Ã˜Å’ Ãšâ€ Ã˜ÂªÃ¢â‚¬Å’Ã™Â¾Ã˜Â±Ã™Ë†Ã™Â)
       </p>
     </div>
   );
