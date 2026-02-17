@@ -1,4 +1,4 @@
-﻿{
+{
     "project":  {
                     "name":  "Dental-Mina",
                     "signature":  "PYM JBZ"
@@ -275,5 +275,13 @@
                                                     "note":  "Prior PASS was invalid: SPA HTML probe used content-match; must validate status=200 + run logs, not rendered text.",
                                                     "touched_at_utc":  "2026-02-12T02:01:02.5669260Z"
                                                 }
-              }
+              },
+    "lockpack":  {
+                     "ai_signature":  "PYM JBZ",
+                     "current_gate":  "G43_REAL_APP_RUN_ON_PHONE",
+                     "current_status":  "FIX-to-PASS",
+                     "last_update_utc":  "2026-02-17T08:39:36-08:00",
+                     "last_head":  "65c2e2996150d02d581405128228e31987c8fc00",
+                     "last_note":  "HISTORY_CLEANUP pushed + QG.json normalized; next: real phone run evidence for G43."
+                 }
 }
